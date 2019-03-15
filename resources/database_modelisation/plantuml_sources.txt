@@ -4,36 +4,87 @@
 hide methods
 hide stereotypes
 
-table(AIRPORT) {
-}
-table(COUNTRY) {
-}
-table(CITY) {
-}
-table(TIMEZONE) {
-}
-table(DST) {
-}
 table(AIRLINE) {
+#id_airline : INTEGER
++id_country : INTEGER
+active : BOOL
+alias : VARCHAR
+callsing : VARCHAR
+name : VARCHAR
 }
-table(PLANE) {
-}
-table(COMPANY) {
+table(AIRPORT) {
+#id_airport : INTEGER
++id_city : INTEGER
++id_iata : INTEGER
++id_icao : INTEGER
+altitude : FLOAT
+latitude : FLOAT
+longitude : FLOAT
+name : VARCHAR
 }
 table(AIRWAY) {
+#id_airway : INTEGER
++id_airline : INTEGER
++id_airport_dest : INTEGER
++id_airport_src : INTEGER
++id_equipment : INTEGER
++id_plane_type : INTEGER
+stops : INTEGER
+}
+table(CITY) {
+#id_city : INTEGER
++id_country : INTEGER
++id_timezone : INTEGER
+name :VARCHAR
+}
+table(COUNTRY) {
+#id_country
+name : VARCHAR
+inhabitants : DOUBLE
+superficy(km²) : FLOAT
+}
+table(DST) {
+#id_dst : INTEGER
+name : VARCHAR
+}
+table(IATA) {
+#id_iata
+code : VARCHAR(3)
+}
+table(ICAO) {
+#id_icao
+code : VARCHAR(4)
+}
+table(PLANE) {
+#id_plane : INTEGER
++id_airline : INTEGER
++id_plane_type : INTEGER
++id_icao : INTEGER
 }
 table(PLANE_TYPE) {
+#id_plane_type : INTEGER
+type : VARCHAR
 }
-AIRPORT "0,n" ---{ "1,1" PLANE
-AIRPORT "1,n" ---{ "1,1" AIRWAY
-AIRPORT "1,1" }--- "1,n" CITY
-COUNTRY "1,n" --{ "1,1" CITY
-COUNTRY "1,1" }-- "1,n" DST
-COUNTRY "0,n" ---{ "1,1" AIRLINE
-CITY "1,1" }-- "1,n" TIMEZONE
-COMPANY "1,n" --{ "1,1" PLANE
+table(TIMEZONE) {
+#id_timezone : INTEGER
+from_cte : INTEGER
+name : VARCHAR
+}
+
 AIRLINE "1,n" -{ "1,1" PLANE
+AIRPORT "1,n" ---{ "1,1" AIRWAY
+AIRPORT "0,n" ---{ "1,1" PLANE
 AIRWAY "0,n" ---{ "0,1" PLANE
-AIRWAY "1,1" }---- "0,n" PLANE_TYPE
+CITY "1,n" ---{ "1,1" AIRPORT
+COUNTRY "0,n" ---{ "1,1" AIRLINE
+COUNTRY "1,n" --{ "1,1" CITY
+DST "1,n" --{ "1,1" COUNTRY
+IATA "1,n" --{ "1,1" AIRLINE
+IATA "1,n" ---{ "1,1" AIRPORT
+ICAO "1,n" ---{ "1,1" AIRLINE
+ICAO "1,n" ---{ "1,1" AIRPORT
+ICAO "1,n" -{ "1,1" PLANE
+PLANE_TYPE "0,n" --{ "1,1" AIRWAY
 PLANE_TYPE "0,n" --{ "1,1" PLANE
+TIMEZONE "1,n" --{ "1,1" CITY
 @enduml
