@@ -1,0 +1,39 @@
+@startuml
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+hide methods
+hide stereotypes
+
+table(AIRPORT) {
+}
+table(COUNTRY) {
+}
+table(CITY) {
+}
+table(TIMEZONE) {
+}
+table(DST) {
+}
+table(AIRLINE) {
+}
+table(PLANE) {
+}
+table(COMPANY) {
+}
+table(AIRWAY) {
+}
+table(PLANE_TYPE) {
+}
+AIRPORT "0,n" ---{ "1,1" PLANE
+AIRPORT "1,n" ---{ "1,1" AIRWAY
+AIRPORT "1,1" }--- "1,n" CITY
+COUNTRY "1,n" --{ "1,1" CITY
+COUNTRY "1,1" }-- "1,n" DST
+COUNTRY "0,n" ---{ "1,1" AIRLINE
+CITY "1,1" }-- "1,n" TIMEZONE
+COMPANY "1,n" --{ "1,1" PLANE
+AIRLINE "1,n" -{ "1,1" PLANE
+AIRWAY "0,n" ---{ "0,1" PLANE
+AIRWAY "1,1" }---- "0,n" PLANE_TYPE
+PLANE_TYPE "0,n" --{ "1,1" PLANE
+@enduml
