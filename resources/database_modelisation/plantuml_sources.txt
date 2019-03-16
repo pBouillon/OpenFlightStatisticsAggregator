@@ -1,98 +1,117 @@
 @startuml
+
 !define table(x) class x << (T,#FFAAAA) >>
 !define primary_key(x) <u>x</u>
+
 hide methods
 hide stereotypes
 
 table(AIRLINE) {
-#id_airline : INTEGER
-+id_country : INTEGER
-active : BOOL
-alias : VARCHAR
-callsing : VARCHAR
-name : VARCHAR
+    #id_airline : INTEGER
+    +id_country : INTEGER
+    active : BOOL
+    alias : VARCHAR
+    callsing : VARCHAR
+    name : VARCHAR
 }
+
 table(AIRPORT) {
-#id_airport : INTEGER
-+id_city : INTEGER
-+id_iata : INTEGER
-+id_icao : INTEGER
-altitude : FLOAT
-latitude : FLOAT
-longitude : FLOAT
-name : VARCHAR
+    #id_airport : INTEGER
+    +id_city : INTEGER
+    +id_iata : INTEGER
+    +id_icao : INTEGER
+    altitude : FLOAT
+    latitude : FLOAT
+    longitude : FLOAT
+    name : VARCHAR
 }
+
 table(AIRWAY) {
-#id_airway : INTEGER
-+id_airline : INTEGER
-+id_airport_dest : INTEGER
-+id_airport_src : INTEGER
-+id_equipment : INTEGER
-+id_plane_type : INTEGER
-stops : INTEGER
+    #id_airway : INTEGER
+    +id_airline : INTEGER
+    +id_airport_dest : INTEGER
+    +id_airport_src : INTEGER
+    +id_equipment : INTEGER
+    +id_plane_type : INTEGER
+    stops : INTEGER
 }
+
 table(CITY) {
-#id_city : INTEGER
-+id_country : INTEGER
-+id_timezone : INTEGER
-name :VARCHAR
+    #id_city : INTEGER
+    +id_country : INTEGER
+    +id_timezone : INTEGER
+    name :VARCHAR
 }
+
 table(COUNTRY) {
-#id_country
-name : VARCHAR
-inhabitants : DOUBLE
-{field} superficy(km²) : FLOAT
+    #id_country
+    name : VARCHAR
+    inhabitants : DOUBLE
+    {field} superficy(km²) : FLOAT
 }
+
 table(DST) {
-#id_dst : INTEGER
-name : VARCHAR
+    #id_dst : INTEGER
+    name : VARCHAR
 }
+
 table(FLY_ON) {
-#id_fly_on : INTEGER
-+id_airway : INTEGER
-+id_plane : INTEGER
+    #id_fly_on : INTEGER
+    +id_airway : INTEGER
+    +id_plane : INTEGER
 }
 table(IATA) {
-#id_iata
-{field} code : VARCHAR(3)
+    #id_iata
+    {field} code : VARCHAR(3)
 }
 table(ICAO) {
-#id_icao
-{field} code : VARCHAR(4)
+    #id_icao
+    {field} code : VARCHAR(4)
 }
 table(PLANE) {
-#id_plane : INTEGER
-+id_airline : INTEGER
-+id_plane_type : INTEGER
-+id_iata : INTEGER
-{field} icao_code : VARCHAR(4)
+    #id_plane : INTEGER
+    +id_airline : INTEGER
+    +id_plane_type : INTEGER
+    +id_iata : INTEGER
+    {field} icao_code : VARCHAR(4)
 }
 table(PLANE_TYPE) {
-#id_plane_type : INTEGER
-type : VARCHAR
+    #id_plane_type : INTEGER
+    type : VARCHAR
 }
 table(TIMEZONE) {
-#id_timezone : INTEGER
-from_cte : INTEGER
-name : VARCHAR
+    #id_timezone : INTEGER
+    from_cte : INTEGER
+    name : VARCHAR
 }
 
 AIRLINE "1,n" -{ "1,1" PLANE
+
 AIRPORT "1,n" ---{ "1,1" AIRWAY
 AIRPORT "0,n" ---{ "1,1" PLANE
+
 AIRWAY "0,n" ---{ "0,1" PLANE
+
 CITY "1,n" ---{ "1,1" AIRPORT
+
 COUNTRY "0,n" ---{ "1,1" AIRLINE
 COUNTRY "1,n" --{ "1,1" CITY
+
 DST "1,n" --{ "1,1" COUNTRY
+
 FLY_ON "0,n" ---{ "1,1" AIRWAY
 FLY_ON "0,n" ---{ "1,1" PLANE
+
 IATA "1,n" --{ "1,1" AIRLINE
 IATA "1,n" ---{ "1,1" AIRPORT
 IATA "1,n" ---{ "1,1" PLANE
+
 ICAO "1,n" --{ "1,1" AIRLINE
 ICAO "1,n" --{ "1,1" AIRPORT
+
 PLANE_TYPE "0,n" --{ "1,1" AIRWAY
 PLANE_TYPE "0,n" --{ "1,1" PLANE
+
 TIMEZONE "1,n" --{ "1,1" CITY
+
 @enduml
