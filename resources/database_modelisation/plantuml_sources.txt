@@ -41,25 +41,31 @@ table(COUNTRY) {
 #id_country
 name : VARCHAR
 inhabitants : DOUBLE
-superficy(km²) : FLOAT
+{field} superficy(km²) : FLOAT
 }
 table(DST) {
 #id_dst : INTEGER
 name : VARCHAR
 }
+table(FLY_ON) {
+#id_fly_on : INTEGER
++id_airway : INTEGER
++id_plane : INTEGER
+}
 table(IATA) {
 #id_iata
-code : VARCHAR(3)
+{field} code : VARCHAR(3)
 }
 table(ICAO) {
 #id_icao
-code : VARCHAR(4)
+{field} code : VARCHAR(4)
 }
 table(PLANE) {
 #id_plane : INTEGER
 +id_airline : INTEGER
 +id_plane_type : INTEGER
-+id_icao : INTEGER
++id_iata : INTEGER
+{field} icao_code : VARCHAR(4)
 }
 table(PLANE_TYPE) {
 #id_plane_type : INTEGER
@@ -79,11 +85,13 @@ CITY "1,n" ---{ "1,1" AIRPORT
 COUNTRY "0,n" ---{ "1,1" AIRLINE
 COUNTRY "1,n" --{ "1,1" CITY
 DST "1,n" --{ "1,1" COUNTRY
+FLY_ON "0,n" ---{ "1,1" AIRWAY
+FLY_ON "0,n" ---{ "1,1" PLANE
 IATA "1,n" --{ "1,1" AIRLINE
 IATA "1,n" ---{ "1,1" AIRPORT
-ICAO "1,n" ---{ "1,1" AIRLINE
-ICAO "1,n" ---{ "1,1" AIRPORT
-ICAO "1,n" -{ "1,1" PLANE
+IATA "1,n" ---{ "1,1" PLANE
+ICAO "1,n" --{ "1,1" AIRLINE
+ICAO "1,n" --{ "1,1" AIRPORT
 PLANE_TYPE "0,n" --{ "1,1" AIRWAY
 PLANE_TYPE "0,n" --{ "1,1" PLANE
 TIMEZONE "1,n" --{ "1,1" CITY
