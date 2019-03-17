@@ -8,17 +8,19 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+
 from typing import List, Iterator
 
 from pathlib2 import Path
 
-from Exceptions.csv_exceptions import BadFileFormatException
+from exceptions.csv_exceptions import BadFileFormatException
 from csv_utils.utils import Csv, Dat
 
 
 class Normalizer:
-    """
+    """References Normalizer
 
+    Normalize a file with a file to .csv
     """
 
     """Default folder for csv files"""
@@ -26,17 +28,31 @@ class Normalizer:
 
     def __init__(
             self,
-            normalize: str = Dat.ext,
+            to_normalize_ext: str = Dat.ext,
             separator: str = Dat.separator,
     ):
-        self.__normalize = normalize
+        self.__to_normalize_ext = to_normalize_ext
         self.__separator = separator
 
-    def __format_dirty_content(self, content: List[str]) -> Iterator[str]:
-        """
+    @staticmethod
+    def is_valid_csv_row(field: str) -> bool:
+        """Check whether a field is a valid csv field or not
 
-        :param content:
-        :return:
+        :param field: field to check
+        :return: True if valid; False otherwise
+        """
+        return field.startswith(Csv.delimiter) \
+               and field.startswith(Csv.delimiter)
+
+    def __format_dirty_content(self, content: List[str]) -> Iterator[str]:
+        """Format non-csv content
+
+        Read the `content` line per line
+        Then break it down in several fields
+        Finally return a generator with formatted csv rows
+
+        :param content: the non-csv content
+        :return: a generator with lines formatted
         """
         for line in content:
             formatted_line: List[str] = []
@@ -55,7 +71,7 @@ class Normalizer:
                 # adding the field to the current row
                 formatted_line.append(field)
 
-            # add the line
+            # add the line to the generator
             yield Csv.separator.join(formatted_line) + Csv.line_end
 
     def convert_to_csv(
@@ -102,10 +118,10 @@ class Normalizer:
             output.touch()
 
         # formatting content
-        # content = source.read_text(encoding=Csv.encoding)
         with source.open(mode='r', encoding=Dat.encoding) as src:
             content = src.readlines()
 
+        # writing the formatted content
         with output.open(mode='w', encoding=Csv.encoding) as dest:
             for row in self.__format_dirty_content(content):
                 dest.write(row)
@@ -121,7 +137,6 @@ class Normalizer:
         Then normalize each .dat file found to .csv
 
         :param dat_folder: folder containing .dat files
-        :param separator: .dat file delimiter
         :param csv_folder: folder in which store CSV
         :return: None
         """
@@ -142,13 +157,3 @@ class Normalizer:
                 dat_path=str(file),
                 csv_path=f'{csv_folder}{file.name[:-len(Dat.ext)]}{Csv.ext}'
             )
-
-    @staticmethod
-    def is_valid_csv_row(field: str) -> bool:
-        """
-
-        :param field:
-        :return:
-        """
-        return field.startswith(Csv.delimiter) \
-               and field.startswith(Csv.delimiter)

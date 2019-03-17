@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    database_normalizer.csv_utils
-    -----------------------------
+    database_normalizer.exceptions
+    ------------------------------
 
-    Folder for the CSV toolbox.
+    Custom exceptions.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.

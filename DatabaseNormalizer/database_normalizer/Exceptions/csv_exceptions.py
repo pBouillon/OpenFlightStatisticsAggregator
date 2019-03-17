@@ -1,5 +1,0 @@
-class BadFileFormatException(Exception):
-    """
-
-    """
-    pass
