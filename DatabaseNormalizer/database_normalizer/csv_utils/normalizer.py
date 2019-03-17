@@ -20,7 +20,7 @@ from csv_utils.utils import Csv, Dat
 class Normalizer:
     """References Normalizer
 
-    Normalize a file with a file to .csv
+    Normalize a file with a file to .csv.
     """
 
     """Default folder for csv files"""
@@ -31,6 +31,11 @@ class Normalizer:
             to_normalize_ext: str = Dat.ext,
             separator: str = Dat.separator,
     ):
+        """Constructor
+
+        :param to_normalize_ext: extension of the files to normalize
+        :param separator: separator of the parsed files
+        """
         self.__to_normalize_ext = to_normalize_ext
         self.__separator = separator
 
@@ -42,7 +47,7 @@ class Normalizer:
         :return: True if valid; False otherwise
         """
         return field.startswith(Csv.delimiter) \
-               and field.endswith(Csv.delimiter)
+            and field.endswith(Csv.delimiter)
 
     def __format_dirty_content(self, content: List[str]) -> Iterator[str]:
         """Format non-csv content
@@ -105,7 +110,7 @@ class Normalizer:
         # checking output file integrity
         if not csv_path:
             csv_path = f'{self.DEFAULT_OUTPUT_FOLDER}' \
-                     f'{source.name.replace(Dat.ext, Csv.ext)}'
+                f'{source.name.replace(Dat.ext, Csv.ext)}'
         else:
             if not csv_path.endswith(Csv.ext):
                 raise BadFileFormatException(
