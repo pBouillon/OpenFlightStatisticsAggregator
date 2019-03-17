@@ -8,6 +8,7 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+
 from unittest import TestCase
 
 from pathlib2 import Path
