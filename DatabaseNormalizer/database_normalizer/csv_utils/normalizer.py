@@ -35,14 +35,14 @@ class Normalizer:
         self.__separator = separator
 
     @staticmethod
-    def is_valid_csv_row(field: str) -> bool:
+    def is_valid_csv_field(field: str) -> bool:
         """Check whether a field is a valid csv field or not
 
         :param field: field to check
         :return: True if valid; False otherwise
         """
         return field.startswith(Csv.delimiter) \
-               and field.startswith(Csv.delimiter)
+               and field.endswith(Csv.delimiter)
 
     def __format_dirty_content(self, content: List[str]) -> Iterator[str]:
         """Format non-csv content
@@ -63,7 +63,7 @@ class Normalizer:
                 field = field.rstrip()
 
                 # formatting the field if needed
-                if not self.is_valid_csv_row(field):
+                if not self.is_valid_csv_field(field):
                     field = Csv.delimiter \
                             + field.replace('"', '""') \
                             + Csv.delimiter
