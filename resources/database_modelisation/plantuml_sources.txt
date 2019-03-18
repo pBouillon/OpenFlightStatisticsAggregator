@@ -7,7 +7,7 @@ hide methods
 hide stereotypes
 
 table(COUNTRY) {
-    {field} #id_country : NUMBER
+    {field} #id : NUMBER
     {field} +id_dst : NUMBER
     {field} inhabitants : NUMBER    
     {field} name : VARCHAR(50)
@@ -15,22 +15,22 @@ table(COUNTRY) {
 }
 
 table(DST) {
-    {field} #id_dst : NUMBER
+    {field} #id : NUMBER
     {field} name : VARCHAR(15)
 }
 
 table(IATA) {
-    {field} #id_iata : NUMBER
+    {field} #id : NUMBER
     {field} code : VARCHAR(3)
 }
 
 table(ICAO) {
-    {field} #id_icao : NUMBER
+    {field} #id : NUMBER
     {field} code : VARCHAR(4)
 }
 
 table(PLANE_TYPE) {
-    {field} #id_plane_type : NUMBER
+    {field} #id : NUMBER
     {field} type : VARCHAR(50)
     {field} consumption(L/100 km) : NUMBER
     {field} freight(Kg) : NUMBER
@@ -39,13 +39,13 @@ table(PLANE_TYPE) {
 }
 
 table(TIMEZONE) {
-    {field} #id_timezone : NUMBER
+    {field} #id : NUMBER
     {field} from_cte : NUMBER
     {field} name : VARCHAR(100)
 }
 
 table(AIRLINE) {
-    {field} #id_airline : NUMBER
+    {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} active : BOOL
     {field} alias : VARCHAR(50)
@@ -54,20 +54,20 @@ table(AIRLINE) {
 }
 
 table(CITY) {
-    {field} #id_city : NUMBER
+    {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} +id_timezone : NUMBER
     {field} name :VARCHAR(100)
 }
 
 table(FLY_ON) {
-    {field} #id_fly_on : NUMBER
+    {field} #id : NUMBER
     {field} +id_airway : NUMBER
     {field} +id_plane : NUMBER
 }
 
 table(AIRPORT) {
-    {field} #id_airport : NUMBER
+    {field} #id : NUMBER
     {field} +id_city : NUMBER
     {field} +id_iata : NUMBER
     {field} +id_icao : NUMBER
@@ -78,15 +78,15 @@ table(AIRPORT) {
 }
 
 table(PLANE) {
-    {field} #id_plane : NUMBER
+    {field} #id : NUMBER
     {field} +id_airline : NUMBER
     {field} +id_plane_type : NUMBER
     {field} +id_iata : NUMBER
-    {field} icao_code : VARCHAR(4)
+    {field} +id_icao : NUMBER
 }
 
 table(AIRWAY) {
-    {field} #id_airway : NUMBER
+    {field} #id : NUMBER
     {field} +id_airline : NUMBER
     {field} +id_airport_dest : NUMBER
     {field} +id_airport_src : NUMBER
@@ -118,6 +118,7 @@ IATA "1,n" --{ "1,1" PLANE
 
 ICAO "1,n" --{ "1,1" AIRLINE
 ICAO "1,n" --{ "1,1" AIRPORT
+ICAO "1,1" -- "1,1" PLANE
 
 PLANE_TYPE "0,n" --{ "1,1" AIRWAY
 PLANE_TYPE "0,n" --{ "1,1" PLANE
