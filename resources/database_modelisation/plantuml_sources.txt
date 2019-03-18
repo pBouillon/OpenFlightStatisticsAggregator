@@ -20,7 +20,7 @@ table(DST) {
 }
 
 table(IATA) {
-    {field} #id : NUMBER 
+    {field} #id : NUMBER
     {field} code : VARCHAR(3)
 }
 
@@ -90,6 +90,7 @@ table(AIRWAY) {
     {field} +id_airline : NUMBER
     {field} +id_airport_dest : NUMBER
     {field} +id_airport_src : NUMBER
+    {field} +id_equipment : NUMBER
     {field} +id_plane_type : NUMBER
     {field} stops : NUMBER
 }
@@ -97,6 +98,7 @@ table(AIRWAY) {
 AIRLINE "1,n" -{ "1,1" PLANE
 
 AIRPORT "1,n" ---{ "1,1" AIRWAY
+AIRPORT "0,n" ---{ "1,1" PLANE
 
 AIRWAY "0,n" ---{ "0,1" PLANE
 
