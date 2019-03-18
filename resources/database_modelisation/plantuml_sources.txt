@@ -1,0 +1,127 @@
+@startuml
+
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+
+hide methods
+hide stereotypes
+
+table(COUNTRY) {
+    {field} #id_country : NUMBER
+    {field} +id_dst : NUMBER
+    {field} inhabitants : NUMBER    
+    {field} name : VARCHAR(50)
+    {field} superficy(km²) : BINARY_FLOAT
+}
+
+table(DST) {
+    {field} #id_dst : NUMBER
+    {field} name : VARCHAR(15)
+}
+
+table(IATA) {
+    {field} #id_iata : NUMBER
+    {field} code : VARCHAR(3)
+}
+
+table(ICAO) {
+    {field} #id_icao : NUMBER
+    {field} code : VARCHAR(4)
+}
+
+table(PLANE_TYPE) {
+    {field} #id_plane_type : NUMBER
+    {field} type : VARCHAR(50)
+    {field} consumption(L/100 km) : NUMBER
+    {field} freight(Kg) : NUMBER
+    {field} passengers : NUMBER
+    {field} speed(km/h) : NUMBER
+}
+
+table(TIMEZONE) {
+    {field} #id_timezone : NUMBER
+    {field} from_cte : NUMBER
+    {field} name : VARCHAR(100)
+}
+
+table(AIRLINE) {
+    {field} #id_airline : NUMBER
+    {field} +id_country : NUMBER
+    {field} active : BOOL
+    {field} alias : VARCHAR(50)
+    {field} callsing : VARCHAR(50)
+    {field} name : VARCHAR(100)
+}
+
+table(CITY) {
+    {field} #id_city : NUMBER
+    {field} +id_country : NUMBER
+    {field} +id_timezone : NUMBER
+    {field} name :VARCHAR(100)
+}
+
+table(FLY_ON) {
+    {field} #id_fly_on : NUMBER
+    {field} +id_airway : NUMBER
+    {field} +id_plane : NUMBER
+}
+
+table(AIRPORT) {
+    {field} #id_airport : NUMBER
+    {field} +id_city : NUMBER
+    {field} +id_iata : NUMBER
+    {field} +id_icao : NUMBER
+    {field} altitude : BINARY_FLOAT
+    {field} latitude : BINARY_FLOAT
+    {field} longitude : BINARY_FLOAT
+    {field} name : VARCHAR(150)
+}
+
+table(PLANE) {
+    {field} #id_plane : NUMBER
+    {field} +id_airline : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} +id_iata : NUMBER
+    {field} icao_code : VARCHAR(4)
+}
+
+table(AIRWAY) {
+    {field} #id_airway : NUMBER
+    {field} +id_airline : NUMBER
+    {field} +id_airport_dest : NUMBER
+    {field} +id_airport_src : NUMBER
+    {field} +id_equipment : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} stops : NUMBER
+}
+
+AIRLINE "1,n" -{ "1,1" PLANE
+
+AIRPORT "1,n" ---{ "1,1" AIRWAY
+AIRPORT "0,n" ---{ "1,1" PLANE
+
+AIRWAY "0,n" ---{ "0,1" PLANE
+
+CITY "1,n" ---{ "1,1" AIRPORT
+
+COUNTRY "0,n" ---{ "1,1" AIRLINE
+COUNTRY "1,n" --{ "1,1" CITY
+
+DST "1,n" --{ "1,1" COUNTRY
+
+FLY_ON "0,n" ---{ "1,1" AIRWAY
+FLY_ON "0,n" ---{ "1,1" PLANE
+
+IATA "1,n" --{ "1,1" AIRLINE
+IATA "1,n" ---{ "1,1" AIRPORT
+IATA "1,n" --{ "1,1" PLANE
+
+ICAO "1,n" --{ "1,1" AIRLINE
+ICAO "1,n" --{ "1,1" AIRPORT
+
+PLANE_TYPE "0,n" --{ "1,1" AIRWAY
+PLANE_TYPE "0,n" --{ "1,1" PLANE
+
+TIMEZONE "1,n" --{ "1,1" CITY
+
+@enduml
