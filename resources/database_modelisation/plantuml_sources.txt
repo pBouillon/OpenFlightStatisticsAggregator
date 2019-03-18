@@ -8,8 +8,9 @@ hide stereotypes
 
 table(COUNTRY) {
     {field} #id_country : NUMBER
+    {field} +id_dst : NUMBER
     {field} name : VARCHAR(50)
-    {field} inhabitants : DOUBLE
+    {field} inhabitants : NUMBER
     {field} superficy(km²) : BINARY_FLOAT
 }
 
@@ -40,7 +41,7 @@ table(PLANE_TYPE) {
 table(TIMEZONE) {
     {field} #id_timezone : NUMBER
     {field} from_cte : NUMBER
-    {field} name : VARCHAR(15)
+    {field} name : VARCHAR(100)
 }
 
 table(AIRLINE) {
