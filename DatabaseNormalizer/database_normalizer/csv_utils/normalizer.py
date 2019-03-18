@@ -9,7 +9,7 @@
     :licence: MIT, see LICENSE for more details.
 """
 
-from typing import List, Iterator
+from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
@@ -28,16 +28,16 @@ class Normalizer:
 
     def __init__(
             self,
-            to_normalize_ext: str = Dat.ext,
-            separator: str = Dat.separator,
+            to_normalize_ext: Optional[str] = Dat.ext,
+            separator: Optional[str] = Dat.separator,
     ):
         """Constructor
 
         :param to_normalize_ext: extension of the files to normalize
         :param separator: separator of the parsed files
         """
-        self.__to_normalize_ext = to_normalize_ext
-        self.__separator = separator
+        self._to_normalize_ext = to_normalize_ext
+        self._separator = separator
 
     @staticmethod
     def is_valid_csv_field(field: str) -> bool:
@@ -49,7 +49,7 @@ class Normalizer:
         return field.startswith(Csv.delimiter) \
             and field.endswith(Csv.delimiter)
 
-    def __format_dirty_content(self, content: List[str]) -> Iterator[str]:
+    def _format_dirty_content(self, content: List[str]) -> Iterator[str]:
         """Format non-csv content
 
         Read the `content` line per line
@@ -63,7 +63,7 @@ class Normalizer:
             formatted_line: List[str] = []
 
             # for each field in the row
-            for field in line.split(self.__separator):
+            for field in line.split(self._separator):
                 # removing trailing '\n'
                 field = field.rstrip()
 
@@ -82,7 +82,7 @@ class Normalizer:
     def convert_to_csv(
             self,
             dat_path: str,
-            csv_path: str = ''
+            csv_path: Optional[str] = ''
     ) -> None:
         """Convert a .dat file to csv
 
@@ -128,13 +128,13 @@ class Normalizer:
 
         # writing the formatted content
         with output.open(mode='w', encoding=Csv.encoding) as dest:
-            for row in self.__format_dirty_content(content):
+            for row in self._format_dirty_content(content):
                 dest.write(row)
 
     def convert_to_csv_from_folder(
             self,
             dat_folder: str,
-            csv_folder: str = None
+            csv_folder: Optional[str] = None
     ) -> None:
         """Convert all dat in a folder to csv
 
@@ -160,5 +160,5 @@ class Normalizer:
 
             self.convert_to_csv(
                 dat_path=str(file),
-                csv_path=f'{csv_folder}{file.name[:-len(Dat.ext)]}{Csv.ext}'
+                csv_path=f'{csv_folder}{file.name.replace(Dat.ext, Csv.ext)}'
             )

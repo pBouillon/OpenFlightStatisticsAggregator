@@ -9,6 +9,7 @@
     :licence: MIT, see LICENSE for more details.
 """
 
+
 class Csv:
     """References CSV data
     """
