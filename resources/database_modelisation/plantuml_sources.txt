@@ -9,8 +9,8 @@ hide stereotypes
 table(COUNTRY) {
     {field} #id_country : NUMBER
     {field} +id_dst : NUMBER
+    {field} inhabitants : NUMBER    
     {field} name : VARCHAR(50)
-    {field} inhabitants : NUMBER
     {field} superficy(km²) : BINARY_FLOAT
 }
 
@@ -32,9 +32,9 @@ table(ICAO) {
 table(PLANE_TYPE) {
     {field} #id_plane_type : NUMBER
     {field} type : VARCHAR(50)
-    {field} passengers : NUMBER
-    {field} freight(Kg) : NUMBER
     {field} consumption(L/100 km) : NUMBER
+    {field} freight(Kg) : NUMBER
+    {field} passengers : NUMBER
     {field} speed(km/h) : NUMBER
 }
 
