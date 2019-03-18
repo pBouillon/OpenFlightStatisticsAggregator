@@ -13,6 +13,7 @@ from unittest import TestCase
 
 from pathlib2 import Path
 
+from DatabaseNormalizer.tests.csv_utils.utils import FileUtils
 from csv_utils.normalizer import Normalizer
 from csv_utils.utils import Dat
 from exceptions.csv_exceptions import BadFileFormatException
@@ -21,20 +22,11 @@ from exceptions.csv_exceptions import BadFileFormatException
 class TestNormalizer(TestCase):
     """References TestNormalizer
 
-    Test suite for the Normalizer class
+    Test suite for the Normalizer class.
 
     `Dat` and `Csv` may be used in unit tests because they does not
-    contains any logic
+    contains any logic.
     """
-
-    """Dummy dat name for tests purpose"""
-    DUMMY_CSV = 'dummy_csv.csv'
-
-    """Dummy csv name for tests purpose"""
-    DUMMY_DAT = 'dummy_dat.dat'
-
-    """Dummy placeholder for a non-existing resource"""
-    NON_EXISTING_NAME = 'this_does_not_exists/'
 
     def setUp(self) -> None:
         """Initializing the object to test
@@ -43,10 +35,10 @@ class TestNormalizer(TestCase):
             to_normalize_ext=Dat.ext,
             separator=Dat.separator
         )
-        self.dummy_csv = Path(self.DUMMY_CSV)
+        self.dummy_csv = Path(FileUtils.DUMMY_CSV)
         self.dummy_csv.touch()
 
-        self.dummy_dat = Path(self.DUMMY_DAT)
+        self.dummy_dat = Path(FileUtils.DUMMY_DAT)
         self.dummy_dat.touch()
 
     def tearDown(self) -> None:
@@ -88,12 +80,12 @@ class TestNormalizer(TestCase):
         """
         # with an incorrect extension too
         with self.assertRaises(FileNotFoundError):
-            self.normalizer.convert_to_csv(dat_path=self.NON_EXISTING_NAME)
+            self.normalizer.convert_to_csv(dat_path=FileUtils.NON_EXISTING_NAME)
 
         # with the appropriate extension
         with self.assertRaises(FileNotFoundError):
             self.normalizer.convert_to_csv(
-                dat_path=self.NON_EXISTING_NAME + Dat.ext
+                dat_path=FileUtils.NON_EXISTING_NAME + Dat.ext
             )
 
     def test_invalid_convert_to_csv_bad_file_dat_ext(self):
@@ -116,7 +108,7 @@ class TestNormalizer(TestCase):
         """
         with self.assertRaises(BadFileFormatException):
             self.normalizer.convert_to_csv_from_folder(
-                dat_folder=self.NON_EXISTING_NAME
+                dat_folder=FileUtils.NON_EXISTING_NAME
             )
 
     def test_invalid_convert_to_csv_from_folder_not_folder(self):

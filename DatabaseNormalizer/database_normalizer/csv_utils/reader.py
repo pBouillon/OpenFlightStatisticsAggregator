@@ -39,6 +39,7 @@ class Reader:
     def _load_stats(self) -> None:
         """Load stats of the .csv file for future usage
         """
+        self._rows = 0
         for line in self._file.read_text(Csv.encoding).split('\n'):
             if self._columns == -1:
                 self._columns = len(line.split(Csv.separator))
