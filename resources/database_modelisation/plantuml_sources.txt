@@ -40,7 +40,7 @@ table(PLANE_TYPE) {
 
 table(TIMEZONE) {
     {field} #id : NUMBER
-    {field} from_cte : NUMBER
+    {field} from_utc : NUMBER
     {field} name : VARCHAR(100)
 }
 
