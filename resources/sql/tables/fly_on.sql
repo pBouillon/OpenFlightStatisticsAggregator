@@ -10,7 +10,7 @@ CREATE TABLE FLY_ON
         FOREIGN KEY (id_airway)
         REFERENCES  AIRWAY(id),
 
-    CONSTRAINT FK_PLANE_TYPE
+    CONSTRAINT FK_PLANE
         FOREIGN KEY (id_plane)
         REFERENCES  PLANE(id),
 )
