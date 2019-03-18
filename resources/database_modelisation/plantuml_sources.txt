@@ -7,87 +7,91 @@ hide methods
 hide stereotypes
 
 table(COUNTRY) {
-    #id_country : NUMBER
+    {field} #id_country : NUMBER
     {field} name : VARCHAR(50)
-    inhabitants : DOUBLE
+    {field} inhabitants : DOUBLE
     {field} superficy(km²) : BINARY_FLOAT
 }
 
 table(DST) {
-    #id_dst : NUMBER
+    {field} #id_dst : NUMBER
     {field} name : VARCHAR(15)
 }
 
 table(IATA) {
-    #id_iata : NUMBER
+    {field} #id_iata : NUMBER
     {field} code : VARCHAR(3)
 }
 
 table(ICAO) {
-    #id_icao : NUMBER
+    {field} #id_icao : NUMBER
     {field} code : VARCHAR(4)
 }
 
 table(PLANE_TYPE) {
-    #id_plane_type : NUMBER
+    {field} #id_plane_type : NUMBER
     {field} type : VARCHAR(50)
+    {field} passengers : NUMBER
+    {field} freight(Kg) : NUMBER
+    {field} consumption(L/100 km) : NUMBER
+    {field} speed(km/h) : NUMBER
 }
 
 table(TIMEZONE) {
-    #id_timezone : NUMBER
-    from_cte : NUMBER
+    {field} #id_timezone : NUMBER
+    {field} from_cte : NUMBER
     {field} name : VARCHAR(100)
 }
 
 table(AIRLINE) {
-    #id_airline : NUMBER
-    +id_country : NUMBER
-    active : BOOL
+    {field} #id_airline : NUMBER
+    {field} +id_country : NUMBER
+    {field} active : BOOL
     {field} alias : VARCHAR(50)
     {field} callsing : VARCHAR(50)
     {field} name : VARCHAR(100)
 }
 
 table(CITY) {
-    #id_city : NUMBER
-    +id_country : NUMBER
-    +id_timezone : NUMBER
+    {field} #id_city : NUMBER
+    {field} +id_country : NUMBER
+    {field} +id_timezone : NUMBER
     {field} name :VARCHAR(100)
 }
 
 table(FLY_ON) {
-    #id_fly_on : NUMBER
-    +id_airway : NUMBER
-    +id_plane : NUMBER
+    {field} #id_fly_on : NUMBER
+    {field} +id_airway : NUMBER
+    {field} +id_plane : NUMBER
 }
 
 table(AIRPORT) {
-    #id_airport : NUMBER
-    +id_city : NUMBER
-    +id_iata : NUMBER
-    +id_icao : NUMBER
-    altitude : BINARY_FLOAT
-    latitude : BINARY_FLOAT
-    longitude : BINARY_FLOAT
+    {field} #id_airport : NUMBER
+    {field} +id_city : NUMBER
+    {field} +id_iata : NUMBER
+    {field} +id_icao : NUMBER
+    {field} altitude : BINARY_FLOAT
+    {field} latitude : BINARY_FLOAT
+    {field} longitude : BINARY_FLOAT
     {field} name : VARCHAR(150)
 }
 
 table(PLANE) {
-    #id_plane : NUMBER
-    +id_airline : NUMBER
-    +id_plane_type : NUMBER
-    +id_iata : NUMBER
+    {field} #id_plane : NUMBER
+    {field} +id_airline : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} +id_iata : NUMBER
     {field} icao_code : VARCHAR(4)
 }
 
 table(AIRWAY) {
-    #id_airway : NUMBER
-    +id_airline : NUMBER
-    +id_airport_dest : NUMBER
-    +id_airport_src : NUMBER
-    +id_equipment : NUMBER
-    +id_plane_type : NUMBER
-    stops : NUMBER
+    {field} #id_airway : NUMBER
+    {field} +id_airline : NUMBER
+    {field} +id_airport_dest : NUMBER
+    {field} +id_airport_src : NUMBER
+    {field} +id_equipment : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} stops : NUMBER
 }
 
 AIRLINE "1,n" -{ "1,1" PLANE
