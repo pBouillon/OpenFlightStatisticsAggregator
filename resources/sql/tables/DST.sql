@@ -1,5 +1,6 @@
-CREATE TABLE DST (  
-id Number,  
-nom Varchar (15),  
-CONSTRAINT DST_PK PRIMARY KEY (id)  
+CREATE TABLE DST (
+    id		NUMBER		NOT NULL,
+    name	VARCHAR(15)	NOT NULL,
+	
+    CONSTRAINT PK_DST PRIMARY KEY (id)
 )
