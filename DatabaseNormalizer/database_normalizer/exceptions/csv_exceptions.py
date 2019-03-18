@@ -9,6 +9,7 @@
     :licence: MIT, see LICENSE for more details.
 """
 
+
 class BadFileFormatException(Exception):
     """Thrown whenever a file with the wrong format is encountered
     """
