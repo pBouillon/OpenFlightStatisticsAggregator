@@ -1,11 +1,9 @@
 # Projet S6
 
-[![](https://img.shields.io/badge/Git%20Master-Pierre%20Bouillon-green.svg?logo=gitlab&longCache=true&style=popout&colorB=fc6d26&link=https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2&link=mailto:pierre.bouillon@telecomnancy.eu
-)]()
-
 [![](https://img.shields.io/badge/Database%20Master-Alexandre%20Cesari-green.svg?logo=stackoverflow&longCache=true&style=popout&colorB=fc6d26&link=https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2&link=mailto:alexandre.cesari@telecomnancy.eu
 )]()
-
+[![](https://img.shields.io/badge/Git%20Master-Pierre%20Bouillon-green.svg?logo=gitlab&longCache=true&style=popout&colorB=fc6d26&link=https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2&link=mailto:pierre.bouillon@telecomnancy.eu
+)]()
 
 ## Chargement des données CSV en base
 
