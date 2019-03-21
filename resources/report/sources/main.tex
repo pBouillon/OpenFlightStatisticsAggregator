@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 \title{Projet Pluridisciplinaire d'Informatique Intégrative (PPII)}
 \author{
@@ -28,15 +29,11 @@
 % --- /Table of contents
 
 
-% --- Remerciments
-\part*{Remerciments}
-
-\newpage
-% --- /Remerciments
-
-
 % --- Introduction
-\section{Introduction}
+\part*{Introduction}
+
+Dans ce document, nous aborderons la construction et l'évolution du projet pluridisciplinaire d'informatique Intégrative (PPII).
+% TODO
 
 \newpage
 % --- /Introduction
@@ -45,12 +42,53 @@
 % --- Etat de l'art
 \section{Etat de l'art}
 
+% TODO
+
 \newpage
 % --- /Etat de l'art
 
 
 % --- Problématique
 \section{Problématique}
+
+\subsection{Cadre}
+% TODO
+
+\subsection{Ressources}
+Comme principale ressource sur ce projet, nous avons accès au site d'\href{https://openflights.org/data.html}{OpenFlights}.
+\newline
+Nous avons donc à disposition une liste des aéroports, des avions, des routes aériennes et des compagnies aériennes dans des fichiers .dat (qui ne sont donc pas normalisés). 
+\newline
+Ces fichiers contiennent un certain nombre de données utiles pour ce projet, même si des données supplémentaires peuvent être ajouté (par exemple, on peut ajouter la consommation des avions et leur vitesse...).
+\newline
+Les codes IATA \textit{(International Air Transport Association)} et les codes ICAO \textit{(International Civil Aviation Organization)} en lien avec les aéroports, les compagnies aériennes et les avions ne sont pas décrient sur le site. Nous avons donc fait des recherches supplémentaires pour comprendre de quoi il s'agit.
+\begin{itemize}
+    \item Pour les aéroports :
+    \newline
+    Dans le cas des aéroports, ces deux codes sont utilisés pour la localisation.
+    \begin{itemize}
+        \item code IATA : C'est un code de 3 caractères sans logique particulière.
+        \item code ICAO : Composés de 4 caractères avec une structure géographique. Ce code à une structure géographique : La première lettre désigne un regroupement d'états ou de provinces. La seconde désigne le pays dans le continent, ou un regroupement d'aéroports. Enfin les deux dernières permettent d'identifier chaque aéroport.
+    \end{itemize}
+        \item Pour les compagnies :
+    \begin{itemize}
+        \item code IATA : Code de 2 lettres, il est utilisé pour identifier les compagnies, qui y ont souscrit, lors des transactions commerciales. Ce code peut être de 3 types :
+        \begin{itemize}
+            \item unique (deux lettres)
+            \item alphanumérique (un chiffre, une lettre)
+            \item double contrôlé (indiqué par un astérisque -*-, après le code) et donné à deux compagnies différentes qui ne peuvent être confondues — parce que, par exemple, elles n'opèrent pas dans la même région du monde
+        \end{itemize}
+        \item code ICAO :
+    \end{itemize}
+        \item Pour les avions :
+    \begin{itemize}
+        \item code IATA :
+        \item code ICAO :
+    \end{itemize}
+\end{itemize}
+ 
+
+% TODO
 
 \newpage
 % --- /Problématique
@@ -59,8 +97,93 @@
 % --- Choix des technologies
 \section{Choix des technologies}
 
+\subsection{Langages}
+
+\subsubsection{Python}
+% TODO
+
+\subsection{Outils tiers}
+% TODO
+
+\subsubsection{Librairies}
+
+\paragraph{Pathlib2}
+% TODO
+
+\subsubsection{Frameworks}
+
+\paragraph{unittest}
+% TODO
+
 \newpage
 % --- /Choix des technologies
+
+
+% --- Developpment
+\section{Développment et Conception}
+
+\subsection{Versionning}
+
+\subsubsection{GitLab}
+% TODO
+
+\subsubsection{Git}
+% TODO
+
+\subsection{Les projets}
+
+\subsubsection{DatabaseNormalizer}
+% TODO
+
+\subsubsection{Base de données}
+% TODO
+
+\subsubsection{Echanges RESTful}
+% TODO (définir le REST)
+
+\paragraph{Client}
+% TODO
+
+\paragraph{Serveur}
+% TODO
+
+\subsubsection{Logique et calculs}
+
+\paragraph{Dijkstra}
+% TODO
+
+\paragraph{A-star (A*)}
+% TODO
+
+\newpage
+% --- /Developpment
+
+
+% --- Organisation
+\section{Gestion de projet}
+
+\subsection{Méthode de travail}
+
+\subsubsection{Agilité}
+% TODO
+
+\subsubsection{Milestones}
+% TODO
+
+\subsubsection{Tableaux}
+% TODO
+
+\subsubsection{Réunions et comptes rendus}
+% TODO
+
+\subsection{Communication et partage des informations}
+% TODO
+
+\subsection{Difficultés}
+% TODO
+
+\newpage
+% --- /Organisation
 
 
 % --- Bilan
@@ -75,6 +198,14 @@
 
 \newpage
 % --- /Evolutions
+
+
+% --- Sources
+\part*{Sources}
+
+\newpage
+% --- /Sources
+
 
 % --- Annexes
 \part*{Annexes}
