@@ -90,7 +90,6 @@ table(AIRWAY) {
     {field} +id_airline : NUMBER
     {field} +id_airport_dest : NUMBER
     {field} +id_airport_src : NUMBER
-    {field} +id_equipment : NUMBER
     {field} +id_plane_type : NUMBER
     {field} stops : NUMBER
 }
