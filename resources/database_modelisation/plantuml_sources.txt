@@ -19,16 +19,6 @@ table(DST) {
     {field} name : VARCHAR(15)
 }
 
-table(IATA) {
-    {field} #id : NUMBER 
-    {field} code : VARCHAR(3)
-}
-
-table(ICAO) {
-    {field} #id : NUMBER
-    {field} code : VARCHAR(4)
-}
-
 table(PLANE_TYPE) {
     {field} #id : NUMBER
     {field} type : VARCHAR(50)
@@ -51,6 +41,8 @@ table(AIRLINE) {
     {field} alias : VARCHAR(50)
     {field} callsing : VARCHAR(50)
     {field} name : VARCHAR(100)
+    {field} iata_code : VARCHAR(2)
+    {field} icao_code : VARCHAR(3)
 }
 
 table(CITY) {
@@ -69,20 +61,21 @@ table(FLY_ON) {
 table(AIRPORT) {
     {field} #id : NUMBER
     {field} +id_city : NUMBER
-    {field} +id_iata : NUMBER
-    {field} +id_icao : NUMBER
     {field} altitude : BINARY_FLOAT
     {field} latitude : BINARY_FLOAT
     {field} longitude : BINARY_FLOAT
     {field} name : VARCHAR(150)
+    {field} iata_code : VARCHAR(3)
+    {field} icao_code : VARCHAR(4)
+    
 }
 
 table(PLANE) {
     {field} #id : NUMBER
     {field} +id_airline : NUMBER
     {field} +id_plane_type : NUMBER
-    {field} +id_iata : NUMBER
-    {field} +id_icao : NUMBER
+    {field} iata_code : VARCHAR(3)
+    {field} icao_code : VARCHAR(4)
 }
 
 table(AIRWAY) {
@@ -109,14 +102,6 @@ DST "1,n" --{ "1,1" COUNTRY
 
 FLY_ON "0,n" ---{ "1,1" AIRWAY
 FLY_ON "0,n" ---{ "1,1" PLANE
-
-IATA "1,n" --{ "1,1" AIRLINE
-IATA "1,n" ---{ "1,1" AIRPORT
-IATA "1,n" --{ "1,1" PLANE
-
-ICAO "1,n" --{ "1,1" AIRLINE
-ICAO "1,n" --{ "1,1" AIRPORT
-ICAO "1,1" -- "1,1" PLANE
 
 PLANE_TYPE "0,n" --{ "1,1" AIRWAY
 PLANE_TYPE "0,n" --{ "1,1" PLANE
