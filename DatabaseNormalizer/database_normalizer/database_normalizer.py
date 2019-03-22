@@ -13,7 +13,7 @@ from csv_utils.normalizer import Normalizer
 from csv_utils.reader import Reader
 from csv_utils.utils import Dat
 
-__version__ = '0.3.0'
+__version__ = '1.0.0'
 
 
 def show_header() -> None:
