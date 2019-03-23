@@ -6,6 +6,8 @@ CREATE TABLE AIRLINE
     alias       VARCHAR(50),
     callsing    VARCHAR(50)     NOT NULL,
     name        VARCHAR(100)    NOT NULL,
+    id_iata     VARCHAR(2),
+    id_icao     VARCHAR(3),
 
     CONSTRAINT PK_AIRLINE PRIMARY KEY (id),
 

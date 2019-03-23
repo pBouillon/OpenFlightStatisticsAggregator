@@ -1,7 +1,6 @@
 @startuml
 
 !define table(x) class x << (T,#FFAAAA) >>
-!define primary_key(x) <u>x</u>
 
 hide methods
 hide stereotypes
@@ -22,10 +21,12 @@ table(DST) {
 table(PLANE_TYPE) {
     {field} #id : NUMBER
     {field} type : VARCHAR(50)
-    {field} consumption(L/100 km) : NUMBER
-    {field} freight(Kg) : NUMBER
+    {field} consumption : NUMBER
+    {field} freight : NUMBER
+    {field} iata_code : VARCHAR(3)
+    {field} icao_code : VARCHAR(4)
     {field} passengers : NUMBER
-    {field} speed(km/h) : NUMBER
+    {field} speed : NUMBER
 }
 
 table(TIMEZONE) {
@@ -45,19 +46,6 @@ table(AIRLINE) {
     {field} icao_code : VARCHAR(3)
 }
 
-table(CITY) {
-    {field} #id : NUMBER
-    {field} +id_country : NUMBER
-    {field} +id_timezone : NUMBER
-    {field} name :VARCHAR(100)
-}
-
-table(FLY_ON) {
-    {field} #id : NUMBER
-    {field} +id_airway : NUMBER
-    {field} +id_plane : NUMBER
-}
-
 table(AIRPORT) {
     {field} #id : NUMBER
     {field} +id_city : NUMBER
@@ -70,12 +58,17 @@ table(AIRPORT) {
     
 }
 
-table(PLANE) {
+table(CITY) {
     {field} #id : NUMBER
-    {field} +id_airline : NUMBER
+    {field} +id_country : NUMBER
+    {field} +id_timezone : NUMBER
+    {field} name :VARCHAR(100)
+}
+
+table(PLANE_AIRWAY) {
+    {field} #id : NUMBER
+    {field} +id_airway : NUMBER
     {field} +id_plane_type : NUMBER
-    {field} iata_code : VARCHAR(3)
-    {field} icao_code : VARCHAR(4)
 }
 
 table(AIRWAY) {
@@ -83,28 +76,21 @@ table(AIRWAY) {
     {field} +id_airline : NUMBER
     {field} +id_airport_dest : NUMBER
     {field} +id_airport_src : NUMBER
-    {field} +id_plane_type : NUMBER
     {field} stops : NUMBER
 }
 
-AIRLINE "1,n" -{ "1,1" PLANE
+AIRPORT "1,n" --{ "1,1" AIRWAY
 
-AIRPORT "1,n" ---{ "1,1" AIRWAY
+AIRWAY "1,n" --{ "1,1" PLANE_AIRWAY
 
-AIRWAY "0,n" ---{ "0,1" PLANE
+CITY "1,n" --{ "1,1" AIRPORT
 
-CITY "1,n" ---{ "1,1" AIRPORT
-
-COUNTRY "0,n" ---{ "1,1" AIRLINE
+COUNTRY "0,n" --{ "1,1" AIRLINE
 COUNTRY "1,n" --{ "1,1" CITY
 
 DST "1,n" --{ "1,1" COUNTRY
 
-FLY_ON "0,n" ---{ "1,1" AIRWAY
-FLY_ON "0,n" ---{ "1,1" PLANE
-
-PLANE_TYPE "0,n" --{ "1,1" AIRWAY
-PLANE_TYPE "0,n" --{ "1,1" PLANE
+PLANE_TYPE "1,n" --{ "1,1" PLANE_AIRWAY
 
 TIMEZONE "1,n" --{ "1,1" CITY
 

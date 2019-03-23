@@ -1,7 +1,0 @@
-CREATE TABLE IATA
-(
-    id      NUMBER      NOT NULL,
-    code    VARCHAR(3)  NOT NULL,
-
-    CONSTRAINT PK_IATA PRIMARY KEY (id)
-)

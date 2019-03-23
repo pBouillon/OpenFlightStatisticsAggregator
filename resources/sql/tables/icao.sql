@@ -1,7 +1,0 @@
-CREATE TABLE ICAO
-(
-    id      NUMBER      NOT NULL,
-    code    VARCHAR(4)  NOT NULL,
-
-    CONSTRAINT PK_ICAO PRIMARY KEY (id)
-)
