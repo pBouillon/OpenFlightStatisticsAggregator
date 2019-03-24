@@ -1,0 +1,86 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\title{Etat de l'art}
+\author{
+    Alexandre \sc{Cesari}
+    \and
+    Pierre \sc{Bouillon}
+}
+\date{Mars 2019 - Mai 2019}
+
+% change table of contents name
+\renewcommand{\contentsname}{Table des matières}
+
+\begin{document}
+
+% --- Document header
+\maketitle
+
+\newpage
+% --- /Document header
+
+
+% --- Table of contents
+\tableofcontents{}
+
+\newpage
+% --- /Table of contents
+
+
+% --- Langages informatiques
+\section{Langages informatiques}
+
+% TODO
+% --- /Langages informatiques
+
+
+% --- ORM
+\section{ORM}
+
+Un mapping objet-relationnel (en anglais object-relational mapping ou ORM) est un programme qui permet la liaison entre une base de données à modèle relationnel et un programme applicatif. L’ORM permet de simuler une base de données orientée objet, plus facile à gérer. Dans notre cas, ce programme nous permettrait de faciliter l’insertion des fichiers .dat dans la base de données. Il existe un grand nombre d’ORM pour une variété de langages informatiques.  Dans le cas de Python, nous avons le choix avec les programmes SQLAlchemy, Peewee, SQLObject et Django.
+% TODO
+% --- /ORM
+
+
+% --- API
+\section{API}
+
+Pour la liaison entre la base de données et les programmes d’exploitation de la base (Dijkstra, A* et l’interface graphique). Une API programmée en C nous est imposée. Une interface de programmation applicative (en anglais API pour application programming interface) est un ensemble normalisé de classes, de méthodes ou de fonctions qui sert de façade pour un autre programme informatique. Cette API nous permettra de mettre en place des sockets et ainsi gérer la communication avec le serveur.
+% TODO
+% --- /API
+
+
+% --- Database
+\section{Database}
+
+
+La base de données permet de stocker un ensemble de données de façon très structuré, ce qui permet de faciliter et d’accélérer la gestion de ces données, que ce soit pour la lecture ou l’écriture. Cette base de données à un modèle de données relationnel, elle se trouve sur le serveur de télécom Nancy et le système de gestion qui nous est imposé est Oracle Database.
+% TODO
+% --- /Database
+
+
+% --- A*
+\section{A*}
+
+A* est un algorithme de recherche de chemin entre une position de départ et une position d’arrivée dans un graphe. Cet algorithme suit la direction du nœud d’arrivée, ce qui permet d’éviter les calculs inutiles sur les chemins qui y sont opposés. A* est très efficace pour trouver le chemin le plus court, mais il n’est pas fait pour faire de la recherche sur des graphes ou les liaisons n’ont pas toutes le même poids.  
+% TODO
+% --- /A*
+
+
+% --- Dijkstra
+\section{Dijkstra}
+
+Dijkstra est un algorithme de recherche de chemin entre une position de départ et une position d’arrivée dans un graphe. Cet algorithme a pour but de tester tous les nœuds d’un graphe afin de s’assurer qu’il n’est pas loupé le chemin optimal. L’avantagez de Dijkstra est qu’il calcule le chemin par rapport au poids des liaisons, mais sur des graphes de grande taille, cet algorithme n’est pas très performant et peut prendre beaucoup de temps pour trouver le chemin optimal.
+% TODO
+% --- /Dijkstra
+
+
+% --- Interface graphique
+\section{Interface graphique}
+
+% TODO
+% --- /Interface graphique
+
+\end{document}
