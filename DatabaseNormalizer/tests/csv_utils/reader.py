@@ -14,8 +14,8 @@ from unittest import TestCase
 from pathlib2 import Path
 
 from DatabaseNormalizer.tests.csv_utils.utils import FileUtils
-from csv_utils.reader import Reader
-from csv_utils.utils import Csv
+from DatabaseNormalizer.database_normalizer.csv_utils.utils import Csv
+from DatabaseNormalizer.database_normalizer.csv_utils.reader import Reader
 
 
 class TestReader(TestCase):

@@ -14,9 +14,11 @@ from unittest import TestCase
 from pathlib2 import Path
 
 from DatabaseNormalizer.tests.csv_utils.utils import FileUtils
-from csv_utils.normalizer import Normalizer
-from csv_utils.utils import Dat
-from exceptions.csv_exceptions import BadFileFormatException
+from DatabaseNormalizer.database_normalizer.\
+    csv_utils.normalizer import Normalizer
+from DatabaseNormalizer.database_normalizer.csv_utils.utils import Dat
+from DatabaseNormalizer.database_normalizer.\
+    exceptions.csv_exceptions import BadFileFormatException
 
 
 class TestNormalizer(TestCase):
