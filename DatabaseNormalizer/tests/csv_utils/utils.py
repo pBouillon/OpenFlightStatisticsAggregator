@@ -14,16 +14,34 @@ class FileUtils:
     """References files data toolbox
     """
 
-    """Dummy csv name for tests purpose"""
-    DUMMY_CSV = 'dummy_csv.csv'
+    class Csv:
+        """References Csv
+        """
 
-    """Dummy csv content for tests purpose"""
-    DUMMY_CSV_CONTENT = \
-        '"Some","Body","I"\n' \
-        '"Used","To","Know"'
+        """Dummy csv name for tests purpose"""
+        CSV_NAME = 'dummy_csv.csv'
 
-    """Dummy dat name for tests purpose"""
-    DUMMY_DAT = 'dummy_dat.dat'
+        """Dummy csv content for tests purpose"""
+        CSV_CONTENT = \
+            '"Some","Body","I"\n' \
+            '"Used","To","Know"'
 
-    """Dummy placeholder for a non-existing resource"""
-    NON_EXISTING_NAME = 'this_does_not_exists/'
+        """Dummy dat name for tests purpose"""
+        DAT_NAME = 'dummy_dat.dat'
+
+        """Dummy placeholder for a non-existing resource"""
+        NON_EXISTING_NAME = 'this_does_not_exists/'
+
+        class ComplexCsv:
+            """References ComplexCsv
+            """
+
+            """Dummy csv name for tests purpose"""
+            CSV_NAME = 'dummy_complex_csv.csv'
+
+            """Tricky csv fields to parse"""
+            COMPLEX_FIELDS = [
+                'some body',
+                '"I, used"',
+                '"to" know"'
+            ]

@@ -72,7 +72,7 @@ class Reader:
             values = [field for field, _ in re.findall(
                 Parsing.parse_regex,
                 line
-            )]
+            )][:-1]
 
             yield list(map(
                     lambda field: field.rstrip(),
