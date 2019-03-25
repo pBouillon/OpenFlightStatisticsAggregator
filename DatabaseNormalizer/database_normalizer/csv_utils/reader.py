@@ -8,12 +8,12 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-
+import re
 from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from csv_utils.utils import Csv
+from DatabaseNormalizer.database_normalizer.csv_utils.utils import Csv, Dat, Parsing
 
 
 class Reader:
@@ -69,9 +69,14 @@ class Reader:
                 continue
 
             # from a row, removing trailing \n in all fields
+            values = [field for field, _ in re.findall(
+                Parsing.parse_regex,
+                line
+            )]
+
             yield list(map(
                     lambda field: field.rstrip(),
-                    line.split(Csv.separator)
+                    values
                 ))
 
     @property
