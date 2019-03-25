@@ -38,7 +38,7 @@ class TestReader(TestCase):
         # dummy complex csv for tests purpose
         self.dummy_complex_csv = Path(FileUtils.Csv.ComplexCsv.CSV_NAME)
         self.dummy_complex_csv.touch()
-        self.dummy_complex_csv.write_test(
+        self.dummy_complex_csv.write_text(
             Csv.separator.join(
                 FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS
             )
@@ -91,4 +91,29 @@ class TestReader(TestCase):
         self.assertEqual(
             expected,
             reader.rows
+        )
+
+    def test_valid_read_content(self):
+        """The reader should correctly gather the fields
+        """
+        # arrange
+        expected_len = len(FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS)
+        reader = Reader(str(self.dummy_complex_csv))
+
+        # act
+        # read the content of the file
+        content = list(reader.read_content())
+        # only stores the first line
+        content = content[0]
+
+        # assert
+        # the length of the content read should be the same as specified
+        self.assertEqual(
+            expected_len,
+            len(content)
+        )
+        # the files writen and loaded should be the same
+        self.assertListEqual(
+            FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS,
+            content
         )
