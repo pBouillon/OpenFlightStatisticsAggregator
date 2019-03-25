@@ -12,6 +12,12 @@ Planification du sprint n°3
 
 ## Contenu
 
+### WBS
+
+![WBS](artifacts/WBS.png)
+
+### Répartition
+
 -   Alexandre
 
     -   Rapport: état de l'art
