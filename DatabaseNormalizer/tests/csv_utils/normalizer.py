@@ -37,10 +37,10 @@ class TestNormalizer(TestCase):
             to_normalize_ext=Dat.ext,
             separator=Dat.separator
         )
-        self.dummy_csv = Path(FileUtils.DUMMY_CSV)
+        self.dummy_csv = Path(FileUtils.Csv.CSV_NAME)
         self.dummy_csv.touch()
 
-        self.dummy_dat = Path(FileUtils.DUMMY_DAT)
+        self.dummy_dat = Path(FileUtils.Csv.DAT_NAME)
         self.dummy_dat.touch()
 
     def tearDown(self) -> None:
@@ -82,12 +82,14 @@ class TestNormalizer(TestCase):
         """
         # with an incorrect extension too
         with self.assertRaises(FileNotFoundError):
-            self.normalizer.convert_to_csv(dat_path=FileUtils.NON_EXISTING_NAME)
+            self.normalizer.convert_to_csv(
+                dat_path=FileUtils.Csv.NON_EXISTING_NAME
+            )
 
         # with the appropriate extension
         with self.assertRaises(FileNotFoundError):
             self.normalizer.convert_to_csv(
-                dat_path=FileUtils.NON_EXISTING_NAME + Dat.ext
+                dat_path=FileUtils.Csv.NON_EXISTING_NAME + Dat.ext
             )
 
     def test_invalid_convert_to_csv_bad_file_dat_ext(self):
@@ -110,7 +112,7 @@ class TestNormalizer(TestCase):
         """
         with self.assertRaises(BadFileFormatException):
             self.normalizer.convert_to_csv_from_folder(
-                dat_folder=FileUtils.NON_EXISTING_NAME
+                dat_folder=FileUtils.Csv.NON_EXISTING_NAME
             )
 
     def test_invalid_convert_to_csv_from_folder_not_folder(self):

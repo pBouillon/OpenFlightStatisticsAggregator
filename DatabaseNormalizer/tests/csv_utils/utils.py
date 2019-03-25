@@ -19,15 +19,15 @@ class FileUtils:
         """
 
         """Dummy csv name for tests purpose"""
-        DUMMY_CSV = 'dummy_csv.csv'
+        CSV_NAME = 'dummy_csv.csv'
 
         """Dummy csv content for tests purpose"""
-        DUMMY_CSV_CONTENT = \
+        CSV_CONTENT = \
             '"Some","Body","I"\n' \
             '"Used","To","Know"'
 
         """Dummy dat name for tests purpose"""
-        DUMMY_DAT = 'dummy_dat.dat'
+        DAT_NAME = 'dummy_dat.dat'
 
         """Dummy placeholder for a non-existing resource"""
         NON_EXISTING_NAME = 'this_does_not_exists/'
@@ -37,7 +37,7 @@ class FileUtils:
             """
 
             """Dummy csv name for tests purpose"""
-            DUMMY_CSV = 'dummy_complex_csv.csv'
+            CSV_NAME = 'dummy_complex_csv.csv'
 
             """Tricky csv fields to parse"""
             COMPLEX_FIELDS = [
