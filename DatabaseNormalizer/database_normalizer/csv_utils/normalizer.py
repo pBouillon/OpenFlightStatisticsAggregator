@@ -8,13 +8,15 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-
+import re
 from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from exceptions.csv_exceptions import BadFileFormatException
-from csv_utils.utils import Csv, Dat
+from DatabaseNormalizer.database_normalizer \
+    .csv_utils.utils import Dat, Csv, Parsing
+from DatabaseNormalizer.database_normalizer\
+    .exceptions.csv_exceptions import BadFileFormatException
 
 
 class Normalizer:
@@ -63,7 +65,10 @@ class Normalizer:
             formatted_line: List[str] = []
 
             # for each field in the row
-            for field in line.split(self._separator):
+            for field, _ in re.findall(
+                Parsing.parse_regex,
+                line
+            )[:-1]:
                 # removing trailing '\n'
                 field = field.rstrip()
 
