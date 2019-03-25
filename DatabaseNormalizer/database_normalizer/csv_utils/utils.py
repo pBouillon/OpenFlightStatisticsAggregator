@@ -42,3 +42,19 @@ class Dat:
 
     """DAT separator"""
     separator = ','
+
+
+class Parsing:
+    """Regex to parse the dat file
+
+        (?:^||,)        starting at the beginning of the file or with a comma
+        \s*             followed by no or many spaces
+        (
+            ("[^"]*")   capturing fields surrounded by double quotes
+            |           or
+            [^,]*       capturing fields with no quotes containing no commas
+        )
+        \s*             followed by no or many spaces
+        (?:,\s*|$)      ending with a comma and spaces or the end of the line
+        """
+    parse_regex = r'(?:^||,)\s*(("[^"]*")|[^,]*)\s*(?:,\s*|$)'
