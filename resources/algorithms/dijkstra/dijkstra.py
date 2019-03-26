@@ -42,6 +42,29 @@ class Graph:
         return list(self._graph.keys())
 
 
+def get_default_graph() -> Graph:
+    """Generate a basic graph to work with
+
+    Representation:
+
+              ____ A ___
+          3 /      |     \ 3
+           /       |      \
+       s =         | 1      = t
+           \       |      /
+          6 \ ____ B ___ / 2
+
+
+    :return: the generated graph
+    """
+    graph = Graph()
+    graph.set_distance('s', {'A': 3, 'B': 6})
+    graph.set_distance('A', {'B': 1, 't': 3})
+    graph.set_distance('B', {'t': 2})
+    graph.set_distance('t', {})
+    return graph
+
+
 def main():
     pass
 
