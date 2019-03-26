@@ -18,13 +18,19 @@ class Graph:
     Minimal implementation of a graph
     """
 
-    DISPLAY_INDENT = 2
-
     def __init__(self):
         self._graph = dict()
 
     def __str__(self):
-        return json.dumps(self._graph, indent=self.DISPLAY_INDENT)
+        return json.dumps(self._graph)
+
+    def get_children(self, edge: str) -> List[str]:
+        """Get the children of a node
+
+        :param edge: parent node
+        :return: a list of the children
+        """
+        return list(self._graph[edge].keys())
 
     def get_distance(self, source: str, target: str) -> int:
         """Get the distance from `source` to `target`
@@ -60,7 +66,7 @@ def get_default_graph() -> Graph:
     Representation:
 
               ____ A ___
-          3 /      |     \ 3
+          3 /      |     \ 4
            /       |      \
        s =         | 1      = t
            \       |      /
@@ -71,19 +77,61 @@ def get_default_graph() -> Graph:
     """
     graph = Graph()
     graph.set_distance('s', {'A': 3, 'B': 6})
-    graph.set_distance('A', {'B': 1, 't': 3})
+    graph.set_distance('A', {'B': 1, 't': 4})
     graph.set_distance('B', {'t': 2})
     graph.set_distance('t', {})
     return graph
 
 
+def dijkstra(graph: Graph, source: str, target: str) -> List[str]:
+    """
+
+    :param graph:
+    :param source:
+    :param target:
+    :return:
+    """
+    if source == target:
+        return [source]
+
+    distance = {edge: float('inf') for edge in graph.edges}
+    distance[source] = 0
+
+    ancestor = {edge: edge for edge in graph.edges}
+
+    open_nodes = graph.edges[:]
+
+    while open_nodes:
+        current_node = min(open_nodes, key=distance.get)
+
+        open_nodes.remove(current_node)
+
+        for child in graph.get_children(current_node):
+            new_distance = distance[current_node] + graph.get_distance(
+                current_node,
+                child
+            )
+
+            if new_distance < distance[child]:
+                distance[child] = new_distance
+                ancestor[child] = current_node
+
+    path = []
+    current_node = target
+
+    while current_node != source:
+        path.append(current_node)
+        current_node = ancestor[current_node]
+
+    return [*path, source][::-1]
+
+
 def main():
     graph = get_default_graph()
-    print(graph)
-    print(
-        f'distance from `s` to `A`: '
-        f'{graph.get_distance(source="s", target="A")}'
-    )
+    shortest_path = dijkstra(graph, 's', 't')
+
+    print(f'working with the graph:\n\t{graph}')
+    print(f'shortest path:\n\t{shortest_path}')
 
 
 if __name__ == '__main__':
