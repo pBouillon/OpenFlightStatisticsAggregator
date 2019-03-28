@@ -48,7 +48,7 @@ Les données du projet repose en majeure partie (mais pas seulement) sur les don
 
 **Date de communication** : 28 Mars 2019
 
-**Date de rendu** : [TBC]
+**Date de rendu** : 23 avril 2019
 
 ### Objectifs généraux
 
@@ -109,12 +109,12 @@ L'identifiant de votre groupe correspond au suffixe du nom de votre projet GitLa
 
 ## Étape 2 : Mini système d'information [Java]
 
-**Date de communication** : [TBC]
+**Date de communication** : [TBA]
 
-**Date de rendu** : [TBC]
+**Date de rendu** : [TBA]
 
 ## Étape 3 : Recherche de chemins [C]
 
-**Date de communication** : [TBC]
+**Date de communication** : [TBA]
 
-**Date de rendu** : [TBC]
+**Date de rendu** : [TBA]
