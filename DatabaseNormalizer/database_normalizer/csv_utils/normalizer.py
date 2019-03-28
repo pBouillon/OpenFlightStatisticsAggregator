@@ -13,10 +13,8 @@ from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from DatabaseNormalizer.database_normalizer \
-    .csv_utils.utils import Dat, Csv, Parsing
-from DatabaseNormalizer.database_normalizer\
-    .exceptions.csv_exceptions import BadFileFormatException
+from database_normalizer.csv_utils.utils import Dat, Csv, Parsing
+from database_normalizer.exceptions.csv_exceptions import BadFileFormatException
 
 
 class Normalizer:

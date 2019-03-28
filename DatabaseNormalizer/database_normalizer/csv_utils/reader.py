@@ -13,7 +13,7 @@ from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from DatabaseNormalizer.database_normalizer.csv_utils.utils import Csv, Dat, Parsing
+from database_normalizer.csv_utils.utils import Csv, Parsing
 
 
 class Reader:

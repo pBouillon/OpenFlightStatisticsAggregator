@@ -8,10 +8,9 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-
-from csv_utils.normalizer import Normalizer
-from csv_utils.reader import Reader
-from csv_utils.utils import Dat
+from database_normalizer.csv_utils.normalizer import Normalizer
+from database_normalizer.csv_utils.reader import Reader
+from database_normalizer.csv_utils.utils import Dat
 
 __version__ = '1.0.1'
 
