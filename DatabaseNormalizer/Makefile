@@ -2,7 +2,7 @@ SOURCE_FOLDER=db_normalizer
 TESTS_FOLDER=tests
 
 install:
-	apt install python-pip
+	apt install python3-pip
 	pip3 install -r requirements.txt
 
 run:
