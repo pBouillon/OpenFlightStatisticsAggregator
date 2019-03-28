@@ -3,7 +3,7 @@
     tests.csv_utils.normalizer
     --------------------------
 
-    Test suite for `database_normalizer.csv_utils.normalizer`.
+    Test suite for `db_normalizer.csv_utils.normalizer`.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.

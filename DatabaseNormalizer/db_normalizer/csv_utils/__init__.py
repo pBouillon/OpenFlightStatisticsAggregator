@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    database_normalizer.csv_utils
+    db_normalizer.csv_utils
     -----------------------------
 
     Folder for the CSV toolbox.
