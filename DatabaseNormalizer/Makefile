@@ -1,4 +1,4 @@
-SOURCE_FOLDER=database_normalizer
+SOURCE_FOLDER=db_normalizer
 TESTS_FOLDER=tests
 
 install:
