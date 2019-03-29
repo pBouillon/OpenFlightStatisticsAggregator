@@ -5,61 +5,28 @@
 [![](https://img.shields.io/badge/Git%20Master-Pierre%20Bouillon-green.svg?logo=gitlab&longCache=true&style=popout&colorB=fc6d26&link=https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2&link=mailto:pierre.bouillon@telecomnancy.eu
 )]()
 
-## Chargement des données CSV en base
+## Partie I: normalisateur et injecteur de données
 
-[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+### Installation
 
-### Conception
+Se rendre dans le dossier du projet, et installer les dépendances:
 
-Le projet est en **Python 3.6+** et sa structure basée sur celle du très célèbre micro framework [Flask](https://github.com/pallets/flask).
-
-
-### Outils
-
-Le projet présente deux outils majeurs:
-
--   Convertisseur `.dat` - -> `.csv`
-
--   Lecteur de `.csv`
-
-
-### Conversion de fichiers `dat`
-
-Lire un fichier unique:
-
-```python
-    # Creating the normalizer object for .dat files
-    normalizer = Normalizer(
-        to_normalize_ext=Dat.ext,
-        separator=Dat.separator
-    )
-
-    # Normalizing the given .dat file
-    normalizer.convert_to_csv(
-        dat_path='../static/data/dat_files/airports.dat',
-    )
+```bash
+~ $ cd DatabaseNormalizer
+~/DatabaseNormalizer $ sudo make install
 ```
 
-Lire un dossier contenant les `.dat`:
+_Note_: permission `sudo` indispensables pour le téléchargement de la librairie
+`pathlib2` depuis `pip3`.
 
-```python
-    # Creating the normalizer object for .dat files
-    normalizer = Normalizer(
-        to_normalize_ext=Dat.ext,
-        separator=Dat.separator,
-    )
+### Tester le projet
 
-    # Normalizing each .dat files in the data folder
-    normalizer.convert_to_csv_from_folder(
-        dat_folder='../static/data/dat_files'
-    )
+Se rendre dans le dossier du projet, et lancer la directive de test:
+
+```bash
+~ $ cd DatabaseNormalizer
+~/DatabaseNormalizer $ make test
 ```
 
-### Lire le contenu d'un fichier `.csv`
-
-```python
-    reader = Reader('../static/data/csv_files/airlines.csv')
-    content = reader.read_content(skip_header=True)
-
-    print(f'The file contains {reader.rows} rows and {reader.columns} columns')
-```
+_Note_: la directive de test va automatiquement explorer tous les sous dossiers
+et fichiers de tests existants et les lancer à la suite.
