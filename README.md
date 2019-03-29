@@ -12,8 +12,8 @@
 Se rendre dans le dossier du projet, et installer les dépendances:
 
 ```bash
-~ $ cd DatabaseNormalizer
-~/DatabaseNormalizer $ sudo make install
+~$ cd DatabaseNormalizer
+~/DatabaseNormalizer$ sudo make install
 ```
 
 _Note_: permission `sudo` indispensables pour le téléchargement de la librairie
@@ -24,8 +24,8 @@ _Note_: permission `sudo` indispensables pour le téléchargement de la librairi
 Se rendre dans le dossier du projet, et lancer la directive de test:
 
 ```bash
-~ $ cd DatabaseNormalizer
-~/DatabaseNormalizer $ make test
+~$ cd DatabaseNormalizer
+~/DatabaseNormalizer$ make test
 ```
 
 _Note_: la directive de test va automatiquement explorer tous les sous dossiers
