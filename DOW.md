@@ -109,6 +109,6 @@ L'identifiant de votre groupe correspond au suffixe du nom de votre projet GitLa
 
 ## Étape 2 : Recherche de chemins [C]
 
-**Date de communication** : [TBC]
+**Date de communication** : [TBA]
 
-**Date de rendu** : [TBC]
+**Date de rendu** : [TBA]
