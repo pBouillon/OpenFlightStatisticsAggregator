@@ -48,7 +48,7 @@ Les données du projet repose en majeure partie (mais pas seulement) sur les don
 
 **Date de communication** : 28 Mars 2019
 
-**Date de rendu** : [TBC]
+**Date de rendu** : 6 Avril 2019
 
 ### Objectifs généraux
 
@@ -107,13 +107,7 @@ Les informations de connexion à cette base sont :
 L'identifiant de votre groupe correspond au suffixe du nom de votre projet GitLab. Par exemple, le projet GitLab `project-grp47` a pour identifiant `grp47`. À noter que pour les élèves en formation sous statut apprentis, l'identifiant est en minuscule, ainsi le projet `project-grpA7` a pour identifiant `grpa7`.
 
 
-## Étape 2 : Mini système d'information [Java]
-
-**Date de communication** : [TBC]
-
-**Date de rendu** : [TBC]
-
-## Étape 3 : Recherche de chemins [C]
+## Étape 2 : Recherche de chemins [C]
 
 **Date de communication** : [TBC]
 
