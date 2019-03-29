@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    database_normalizer.exceptions
+    db_normalizer.exceptions
     ------------------------------
 
     Custom exceptions.

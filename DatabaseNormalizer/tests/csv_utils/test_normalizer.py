@@ -3,7 +3,7 @@
     tests.csv_utils.normalizer
     --------------------------
 
-    Test suite for `database_normalizer.csv_utils.normalizer`.
+    Test suite for `db_normalizer.csv_utils.normalizer`.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -13,12 +13,10 @@ from unittest import TestCase
 
 from pathlib2 import Path
 
-from DatabaseNormalizer.tests.csv_utils.utils import FileUtils
-from DatabaseNormalizer.database_normalizer.\
-    csv_utils.normalizer import Normalizer
-from DatabaseNormalizer.database_normalizer.csv_utils.utils import Dat
-from DatabaseNormalizer.database_normalizer.\
-    exceptions.csv_exceptions import BadFileFormatException
+from db_normalizer.csv_utils.normalizer import Normalizer
+from db_normalizer.csv_utils.utils import Dat
+from db_normalizer.exceptions.csv_exceptions import BadFileFormatException
+from tests.csv_utils.utils import FileUtils
 
 
 class TestNormalizer(TestCase):

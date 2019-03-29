@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    database_normalizer.exception.csv_exceptions
+    db_normalizer.exception.csv_exceptions
     --------------------------------------------
 
     Custom exceptions for CSV operations.

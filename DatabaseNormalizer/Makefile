@@ -1,8 +1,14 @@
-SOURCE_FOLDER=database_normalizer
+SOURCE_FOLDER=db_normalizer
 TESTS_FOLDER=tests
 
-run:
-    python $(SOURCE_FOLDER)/database_normalizer.py
+install:
+	apt install -y python3-pip
+	pip3 install -r requirements.txt
 
-test:
-    python -m unittest $(TESTS_FOLDER)/csv_utils/normalizer.py
+test: clean
+	python3 -m unittest discover --start-directory $(TESTS_FOLDER)
+
+clean:
+	find . -name '*.pyc' -exec rm -fv {} +
+	find . -name '*.pyo' -exec rm -fv {} +
+	find . -name '__pycache__' -exec rm -frv {} +

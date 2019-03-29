@@ -3,7 +3,7 @@
     tests.csv_utils.reader
     ----------------------
 
-    Test suite for `database_normalizer.csv_utils.reader`.
+    Test suite for `db_normalizer.csv_utils.reader`.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -13,9 +13,9 @@ from unittest import TestCase
 
 from pathlib2 import Path
 
-from DatabaseNormalizer.tests.csv_utils.utils import FileUtils
-from DatabaseNormalizer.database_normalizer.csv_utils.utils import Csv
-from DatabaseNormalizer.database_normalizer.csv_utils.reader import Reader
+from db_normalizer.csv_utils.reader import Reader
+from db_normalizer.csv_utils.utils import Csv
+from tests.csv_utils.utils import FileUtils
 
 
 class TestReader(TestCase):
