@@ -16,7 +16,7 @@ Se rendre dans le dossier du projet, et installer les dépendances:
 ~/DatabaseNormalizer$ sudo make install
 ```
 
-_Note_: permission `sudo` indispensables pour le téléchargement de la librairie
+_Note_: permission `sudo` indispensable pour le téléchargement de la librairie
 `pathlib2` depuis `pip3`.
 
 ### Tester le projet

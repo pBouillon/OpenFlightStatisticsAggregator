@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage{hyperref}
 
 \title{Projet Pluridisciplinaire d'Informatique Intégrative (PPII)}
 \author{
@@ -54,6 +55,39 @@ Dans ce document, nous aborderons la construction et l'évolution du projet plur
 % TODO
 
 \subsection{Ressources}
+Comme principale ressource sur ce projet, nous avons accès au site d'\href{https://openflights.org/data.html}{OpenFlights}.
+\newline
+Nous avons donc à disposition une liste des aéroports, des avions, des routes aériennes et des compagnies aériennes dans des fichiers .dat (qui ne sont donc pas normalisés).
+\newline
+Ces fichiers contiennent un certain nombre de données utiles pour ce projet, même si des données supplémentaires peuvent être ajouté (par exemple, on peut ajouter la consommation des avions et leur vitesse...).
+\newline
+Les codes IATA \textit{(International Air Transport Association)} et les codes ICAO \textit{(International Civil Aviation Organization)} en lien avec les aéroports, les compagnies aériennes et les avions ne sont pas décrient sur le site. Nous avons donc fait des recherches supplémentaires pour comprendre de quoi il s'agit.
+\begin{itemize}
+    \item Pour les aéroports :
+    \newline
+    Dans le cas des aéroports, ces deux codes sont utilisés pour la localisation.
+    \begin{itemize}
+        \item code IATA : C'est un code de 3 caractères sans logique particulière.
+        \item code ICAO : Composés de 4 caractères avec une structure géographique. Ce code à une structure géographique : La première lettre désigne un regroupement d'états ou de provinces. La seconde désigne le pays dans le continent, ou un regroupement d'aéroports. Enfin les deux dernières permettent d'identifier chaque aéroport.
+    \end{itemize}
+        \item Pour les compagnies :
+    \begin{itemize}
+        \item code IATA : Code de 2 lettres, il est utilisé pour identifier les compagnies, qui y ont souscrit, lors des transactions commerciales. Ce code peut être de 3 types :
+        \begin{itemize}
+            \item unique (deux lettres)
+            \item alphanumérique (un chiffre, une lettre)
+            \item double contrôlé (indiqué par un astérisque -*-, après le code) et donné à deux compagnies différentes qui ne peuvent être confondues — parce que, par exemple, elles n'opèrent pas dans la même région du monde
+        \end{itemize}
+        \item code ICAO :
+    \end{itemize}
+        \item Pour les avions :
+    \begin{itemize}
+        \item code IATA :
+        \item code ICAO :
+    \end{itemize}
+\end{itemize}
+
+
 % TODO
 
 \newpage
@@ -66,20 +100,39 @@ Dans ce document, nous aborderons la construction et l'évolution du projet plur
 \subsection{Langages}
 
 \subsubsection{Python}
-% TODO
+
+La première phase concernant de l'analyse de données et de l'extraction d'informations, le langage Python nous a semblé tout désigné.
+En effet, Python a l'avantage d'être un langage de haut niveau facilement accessible et doté d'une syntaxe à la fois lisible, puissante et concise.
+
+Considéré comme beaucoup comme un langage très facile à commencer à prendre en main, il est aussi grandement utilisé dans le domaine de l'extraction de données, mais aussi pour le prototypage rapide d'algorithmes ou de solutions logicielles.
+
+Pour ces raisons, dû à la nature du sujet, aux délais cours imposés par les différentes contraintes survenues et à la disparité des technologies maîtrisées au sein de notre groupe, c'est vers ce langage que nous nous sommes naturellement tourné
 
 \subsection{Outils tiers}
-% TODO
+
+Un projet n'étant pas destiné à se réaliser \textit{from scratch} (depuis zéro) systématiquement, il est d'usage d'évaluer la pertinence et l'existence des outils à notre disposition pour améliorer la qualité et la performance de notre code.
 
 \subsubsection{Librairies}
 
 \paragraph{Pathlib2}
-% TODO
+
+Pahtlib2 est une librairie Python permettant de gérer les chemins système comme des objets.
+
+Issu de Pathlib, Pathlib2 est sa version améliorée.
+L'utilité de cette librairie est de gérer facilement et de manière intuitive à travers la programmation objet les ressources à certains endroits de notre projet.
+La gestion des \textit{csv} par exemple en est grandement simplifiée, et nous évite la gestion interne de leur traitement selon le système d'exploitation hôte.
 
 \subsubsection{Frameworks}
 
 \paragraph{unittest}
-% TODO
+
+Pour tout projet de toute taille, les tests unitaires sont une étape inévitable et garante du minimum de rigueur et de robustesse attendu lors de chaque développement.
+
+Python, à l'instar de très nombreux autres langages, dispose également de nombreux frameworks de tests.
+Les plus pratiques et propices à la rédaction de tests unitaires clairs et concis étant doctest et unittest selon nous;
+de part la complexité du projet, nous avons finalement opté pour unittest.
+
+Unittest nous permet en effet une plus grande fragmentation et robustesse dans la structure de nos tests, ce qui est plus difficilement réalisatble  avec doctest.
 
 \newpage
 % --- /Choix des technologies
