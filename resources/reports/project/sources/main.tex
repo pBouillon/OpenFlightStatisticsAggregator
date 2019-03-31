@@ -1,225 +1,228 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-\usepackage{hyperref}
+    \documentclass{article}
+    \usepackage[utf8]{inputenc}
+    \usepackage{hyperref}
+
+    \title{Projet Pluridisciplinaire d'Informatique Intégrative (PPII)}
+    \author{
+        Alexandre \sc{Cesari}
+        \and
+        Pierre \sc{Bouillon}
+    }
+    \date{Mars 2019 - Mai 2019}
+
+    % change table of contents name
+    \renewcommand{\contentsname}{Table des matières}
+
+    \begin{document}
+
+    % --- Document header
+    \maketitle
+
+    \newpage
+    % --- /Document header
 
 
-\title{Projet Pluridisciplinaire d'Informatique Intégrative (PPII)}
-\author{
-    Alexandre \textsc{\and}{Cesari}
+    % --- Table of contents
+    \tableofcontents{}
 
-    Pierre \textsc{}}{Bouillon}
-
-\date{Mars 2019 - Mai 2019}
-
-% change table of contents name
-\renewcommand{\contentsname}{Table des matières}
-
-\begin{document}
-
-% --- Document header
-\maketitle
-
-\newpage
-% --- /Document header
+    \newpage
+    % --- /Table of contents
 
 
-% --- Table of contents
-\tableofcontents{}
+    % --- Introduction
+    \part*{Introduction}
 
-\newpage
-% --- /Table of contents
+    Dans ce document, nous aborderons la construction et l'évolution du projet pluridisciplinaire d'informatique Intégrative (PPII).
+    % TODO
 
-
-% --- Introduction
-\part*{Introduction}
-
-Dans ce document, nous aborderons la construction et l'évolution du projet pluridisciplinaire d'informatique Intégrative (PPII).
-% TODO
-
-\newpage
-% --- /Introduction
+    \newpage
+    % --- /Introduction
 
 
-% --- Etat de l'art
-\section{Etat de l'art}\label{sec:etat-de-l'art}
+    % --- Etat de l'art
+    \section{Etat de l'art}
 
-% TODO
+    % TODO
 
-\newpage
-% --- /Etat de l'art
+    \newpage
+    % --- /Etat de l'art
 
 
-% --- Problématique
-\section{Problématique}\label{sec:problématique}
+    % --- Problématique
+    \section{Problématique}
 
-\subsection{Cadre}\label{subsec:cadre}
-% TODO
+    \subsection{Cadre}
+    % TODO
 
-\subsection{Ressources}\label{subsec:ressources}
-Comme principale ressource sur ce projet, nous avons accès au site d'\href{https://openflights.org/data.html}{OpenFlights}.
-\newline
-Nous avons donc à disposition une liste des aéroports, des avions, des routes aériennes et des compagnies aériennes dans des fichiers .dat (qui ne sont donc pas normalisés).
-\newline
-Ces fichiers contiennent un certain nombre de données utiles pour ce projet, même si des données supplémentaires peuvent être ajouté (par exemple, on peut ajouter la consommation des avions et leur vitesse...).
-\newline
-Les codes IATA \textit{(International Air Transport Association)} et les codes ICAO \textit{(International Civil Aviation Organization)} en lien avec les aéroports, les compagnies aériennes et les avions ne sont pas décrient sur le site. Nous avons donc fait des recherches supplémentaires pour comprendre de quoi il s'agit.
-\begin{itemize}
-    \item Pour les aéroports :
+    \subsection{Ressources}
+    Comme principale ressource sur ce projet, nous avons accès au site d'\href{https://openflights.org/data.html}{OpenFlights}.
     \newline
-    Dans le cas des aéroports, ces deux codes sont utilisés pour la localisation.
+    Nous avons donc à disposition une liste des aéroports, des avions, des routes aériennes et des compagnies aériennes dans des fichiers .dat (qui ne sont donc pas normalisés).
+    \newline
+    Ces fichiers contiennent un certain nombre de données utiles pour ce projet, même si des données supplémentaires peuvent être ajouté (par exemple, on peut ajouter la consommation des avions et leur vitesse...).
+    \newline
+    Les codes IATA \textit{(International Air Transport Association)} et les codes ICAO \textit{(International Civil Aviation Organization)} en lien avec les aéroports, les compagnies aériennes et les avions ne sont pas décrient sur le site. Nous avons donc fait des recherches supplémentaires pour comprendre de quoi il s'agit.
     \begin{itemize}
-        \item code IATA : C'est un code de 3 caractères sans logique particulière.
-        \item code ICAO : Composés de 4 caractères avec une structure géographique. Ce code à une structure géographique : La première lettre désigne un regroupement d'états ou de provinces. La seconde désigne le pays dans le continent, ou un regroupement d'aéroports. Enfin les deux dernières permettent d'identifier chaque aéroport.
-    \end{itemize}
-        \item Pour les compagnies :
-    \begin{itemize}
-        \item code IATA : Code de 2 lettres, il est utilisé pour identifier les compagnies, qui y ont souscrit, lors des transactions commerciales. Ce code peut être de 3 types :
+        \item Pour les aéroports :
+        \newline
+        Dans le cas des aéroports, ces deux codes sont utilisés pour la localisation.
         \begin{itemize}
-            \item unique (deux lettres)
-            \item alphanumérique (un chiffre, une lettre)
-            \item double contrôlé (indiqué par un astérisque -*-, après le code) et donné à deux compagnies différentes qui ne peuvent être confondues — parce que, par exemple, elles n'opèrent pas dans la même région du monde
+            \item code IATA : C'est un code de 3 caractères sans logique particulière.
+            \item code ICAO : Composés de 4 caractères avec une structure géographique. Ce code à une structure géographique : La première lettre désigne un regroupement d'états ou de provinces. La seconde désigne le pays dans le continent, ou un regroupement d'aéroports. Enfin les deux dernières permettent d'identifier chaque aéroport.
         \end{itemize}
-        \item code ICAO :
+            \item Pour les compagnies :
+        \begin{itemize}
+            \item code IATA : Code de 2 lettres, il est utilisé pour identifier les compagnies, qui y ont souscrit, lors des transactions commerciales. Ce code peut être de 3 types :
+            \begin{itemize}
+                \item unique (deux lettres)
+                \item alphanumérique (un chiffre, une lettre)
+                \item double contrôlé (indiqué par un astérisque -*-, après le code) et donné à deux compagnies différentes qui ne peuvent être confondues — parce que, par exemple, elles n'opèrent pas dans la même région du monde
+            \end{itemize}
+            \item code ICAO :
+        \end{itemize}
+            \item Pour les avions :
+        \begin{itemize}
+            \item code IATA :
+            \item code ICAO :
+        \end{itemize}
     \end{itemize}
-        \item Pour les avions :
-    \begin{itemize}
-        \item code IATA :
-        \item code ICAO :
-    \end{itemize}
-\end{itemize}
 
 
-% TODO
+    % TODO
 
-\newpage
-% --- /Problématique
-
-
-% --- Choix des technologies
-\section{Choix des technologies}\label{sec:choix-des-technologies}
-
-\subsection{Langages}\label{subsec:langages}
-
-\subsubsection{Python}
-
-La première phase concernant de l'analyse de données et de l'extraction d'informations, le langage Python nous a semblé tout désigné.
-En effet, Python a l'avantage d'être un langage de haut niveau facilement accessible et doté d'une syntaxe à la fois lisible, puissante et concise.
-
-Considéré comme beaucoup comme un langage très facile à commencer à prendre en main, il est aussi grandement utilisé dans le domaine de l'extraction de données, mais aussi pour le prototypage rapide d'algorithmes ou de solutions logicielles.
-
-Pour ces raisons, dû à la nature du sujet, aux délais cours imposés par les différentes contraintes survenues et à la disparité des technologies maîtrisées au sein de notre groupe, c'est vers ce langage que nous nous sommes naturellement tourné.
-
-\subsection{Outils tiers}\label{subsec:outils-tiers}
-% TODO
-
-\subsubsection{Librairies}
-
-\paragraph{Pathlib2}
-% TODO
-
-\subsubsection{Frameworks}
-
-\paragraph{unittest}
-% TODO
-
-\newpage
-% --- /Choix des technologies
+    \newpage
+    % --- /Problématique
 
 
-% --- Developpment
-\section{Développment et Conception}\label{sec:développment-et-conception}
+    % --- Choix des technologies
+    \section{Choix des technologies}
 
-\subsection{Versionning}\label{subsec:versionning}
+    \subsection{Langages}
 
-\subsubsection{GitLab}
-% TODO
+    \subsubsection{Python}
 
-\subsubsection{Git}
-% TODO
+    La première phase concernant de l'analyse de données et de l'extraction d'informations, le langage Python nous a semblé tout désigné.
+    En effet, Python a l'avantage d'être un langage de haut niveau facilement accessible et doté d'une syntaxe à la fois lisible, puissante et concise.
 
-\subsection{Les projets}\label{subsec:les-projets}
+    Considéré comme beaucoup comme un langage très facile à commencer à prendre en main, il est aussi grandement utilisé dans le domaine de l'extraction de données, mais aussi pour le prototypage rapide d'algorithmes ou de solutions logicielles.
 
-\subsubsection{DatabaseNormalizer}
-% TODO
+    Pour ces raisons, dû à la nature du sujet, aux délais cours imposés par les différentes contraintes survenues et à la disparité des technologies maîtrisées au sein de notre groupe, c'est vers ce langage que nous nous sommes naturellement tourné
 
-\subsubsection{Base de données}
-% TODO
+    \subsection{Outils tiers}
+    % TODO
 
-\subsubsection{Echanges RESTful}
-% TODO (définir le REST)
+    \subsubsection{Librairies}
 
-\paragraph{Client}
-% TODO
+    \paragraph{Pathlib2}
 
-\paragraph{Serveur}
-% TODO
+    Pahtlib2 est une librairie Python permettant de gérer les chemins système comme des objets.
 
-\subsubsection{Logique et calculs}
+    Issu de Pathlib, Pathlib2 est sa version améliorée.
+    L'utilité de cette librairie est de gérer facilement et de manière intuitive à travers la programmation object les ressources à certains endroits de notre projet.
+    La gestion des \textit{csv} par exemple en est grandement simplifiée, et nous évite la gestion interne de leur traitement selon l'OS hôte.
 
-\paragraph{Dijkstra}
-% TODO
+    \subsubsection{Frameworks}
 
-\paragraph{A-star (A*)}
-% TODO
+    \paragraph{unittest}
+    % TODO
 
-\newpage
-% --- /Developpment
+    \newpage
+    % --- /Choix des technologies
 
 
-% --- Organisation
-\section{Gestion de projet}\label{sec:gestion-de-projet}
+    % --- Developpment
+    \section{Développment et Conception}
 
-\subsection{Méthode de travail}\label{subsec:méthode-de-travail}
+    \subsection{Versionning}
 
-\subsubsection{Agilité}
+    \subsubsection{GitLab}
+    % TODO
 
-% TODO
+    \subsubsection{Git}
+    % TODO
 
-\subsubsection{Milestones}
-% TODO
+    \subsection{Les projets}
 
-\subsubsection{Tableaux}
-% TODO
+    \subsubsection{DatabaseNormalizer}
+    % TODO
 
-\subsubsection{Réunions et comptes rendus}
-% TODO
+    \subsubsection{Base de données}
+    % TODO
 
-\subsection{Communication et partage des informations}\label{subsec:communication-et-partage-des-informations}
-% TODO
+    \subsubsection{Echanges RESTful}
+    % TODO (définir le REST)
 
-\subsection{Difficultés}\label{subsec:difficultés}
-% TODO
+    \paragraph{Client}
+    % TODO
 
-\newpage
-% --- /Organisation
+    \paragraph{Serveur}
+    % TODO
 
+    \subsubsection{Logique et calculs}
 
-% --- Bilan
-\section{Bilan}\label{sec:bilan}
+    \paragraph{Dijkstra}
+    % TODO
 
-\newpage
-% --- /Bilan
+    \paragraph{A-star (A*)}
+    % TODO
 
-
-% --- Evolutions
-\section{Evolutions}
-
-\newpage
-% --- /Evolutions
+    \newpage
+    % --- /Developpment
 
 
-% --- Sources
-\part*{Sources}
+    % --- Organisation
+    \section{Gestion de projet}
 
-\newpage
-% --- /Sources
+    \subsection{Méthode de travail}
+
+    \subsubsection{Agilité}
+    % TODO
+
+    \subsubsection{Milestones}
+    % TODO
+
+    \subsubsection{Tableaux}
+    % TODO
+
+    \subsubsection{Réunions et comptes rendus}
+    % TODO
+
+    \subsection{Communication et partage des informations}
+    % TODO
+
+    \subsection{Difficultés}
+    % TODO
+
+    \newpage
+    % --- /Organisation
 
 
-% --- Annexes
-\part*{Annexes}
+    % --- Bilan
+    \section{Bilan}
 
-\newpage
-% --- /Annexes
+    \newpage
+    % --- /Bilan
 
 
-\end{document}
+    % --- Evolutions
+    \section{Evolutions}
+
+    \newpage
+    % --- /Evolutions
+
+
+    % --- Sources
+    \part*{Sources}
+
+    \newpage
+    % --- /Sources
+
+
+    % --- Annexes
+    \part*{Annexes}
+
+    \newpage
+    % --- /Annexes
+
+
+    \end{document}
