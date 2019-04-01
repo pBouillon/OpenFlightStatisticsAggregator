@@ -3,6 +3,7 @@ TESTS_FOLDER=tests
 
 install:
 	apt install -y python3-pip
+	pip install cx_Oracle --upgrade
 	pip3 install -r requirements.txt
 
 test: clean
