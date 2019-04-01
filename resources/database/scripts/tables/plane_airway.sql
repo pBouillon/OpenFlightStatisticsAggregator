@@ -2,7 +2,7 @@ CREATE TABLE PLANE_AIRWAY
 (
     id              NUMBER  NOT NULL,
     id_airway       NUMBER  NOT NULL,
-    id_plane 		NUMBER,
+    id_plane 	    NUMBER,
     id_plane_type   NUMBER,
 
     CONSTRAINT PK_PLANE_AIRWAY PRIMARY KEY (id),
