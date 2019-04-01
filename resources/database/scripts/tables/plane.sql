@@ -1,7 +1,7 @@
 CREATE TABLE PLANE
 (
     id          	NUMBER  	NOT NULL,
-    id_plane_type   NUMBER,
+    id_plane_type       NUMBER,
     name        	VARCHAR(50)	NOT NULL,
     consumption 	NUMBER,
     freight     	NUMBER,
