@@ -1,13 +1,28 @@
 import cx_Oracle
+import pandas as pd
+from sqlalchemy import create_engine
 
 from db_normalizer.sql_utils.utils import ConnectionData
 
-
 if __name__ == '__main__':
-    connection = cx_Oracle.connect(
-        user=ConnectionData.login,
-        password=ConnectionData.password,
-
+    oracle_connection_string = (
+            'oracle+cx_oracle://{username}:{password}@' +
+            cx_Oracle.makedsn(
+                '{hostname}',
+                '{port}',
+                service_name='{service_name}'
+            )
     )
 
-    cursor = connection.cursor()
+    engine = create_engine(
+        oracle_connection_string.format(
+            username=ConnectionData.username,
+            password=ConnectionData.password,
+            hostname=ConnectionData.hostname,
+            port=ConnectionData.port,
+            service_name=ConnectionData.service_name,
+        )
+    )
+
+    data = pd.read_sql("SELECT * FROM TEST", engine)
+    print(data)
