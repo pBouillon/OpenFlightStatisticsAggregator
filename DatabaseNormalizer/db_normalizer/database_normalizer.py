@@ -10,13 +10,11 @@
 """
 import time
 
-from dataclasses import asdict
-
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
 
-__version__ = '1.3.0'
+__version__ = '1.4.0'
 
 
 def show_header() -> None:
@@ -69,8 +67,6 @@ if __name__ == '__main__':
     print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
 
     #
-    # Show data sample
-    print('DST recorded:')
-    for dst in loader.dst_records:
-        print(f'\t{asdict(dst)}')
-
+    # Show loaded data info
+    print(f'{len(loader.dst_records)} DSTs recorded')
+    print(f'{len(loader.airway_records)} airways recorded')
