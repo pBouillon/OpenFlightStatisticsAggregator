@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    tests.csv_utils.reader
+    tests.csv_handler.reader
     ----------------------
 
-    Test suite for `db_normalizer.csv_utils.reader`.
+    Test suite for `db_normalizer.csv_handler.reader`.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -13,8 +13,8 @@ from unittest import TestCase
 
 from pathlib2 import Path
 
-from db_normalizer.csv_utils.reader import Reader
-from db_normalizer.csv_utils.utils import Csv
+from db_normalizer.csv_handler.reader import Reader
+from db_normalizer.csv_handler.utils import Csv
 from tests.csv_utils.utils import FileUtils
 
 

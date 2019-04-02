@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    tests.csv_utils.utils
+    tests.csv_handler.utils
     ---------------------
 
     Dummy data for unit tests.

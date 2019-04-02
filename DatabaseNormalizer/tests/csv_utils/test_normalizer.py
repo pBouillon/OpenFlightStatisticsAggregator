@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    tests.csv_utils.normalizer
+    tests.csv_handler.normalizer
     --------------------------
 
-    Test suite for `db_normalizer.csv_utils.normalizer`.
+    Test suite for `db_normalizer.csv_handler.normalizer`.
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -13,8 +13,8 @@ from unittest import TestCase
 
 from pathlib2 import Path
 
-from db_normalizer.csv_utils.normalizer import Normalizer
-from db_normalizer.csv_utils.utils import Dat
+from db_normalizer.csv_handler.normalizer import Normalizer
+from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.exceptions.csv_exceptions import BadFileFormatException
 from tests.csv_utils.utils import FileUtils
 
