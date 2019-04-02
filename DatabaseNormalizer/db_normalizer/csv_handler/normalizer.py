@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.csv_utils.normalizer
+    db_normalizer.csv_handler.normalizer
     ----------------------------------------
 
     Allow the user to convert .dat files to .csv.
@@ -13,7 +13,7 @@ from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from db_normalizer.csv_utils.utils import Dat, Csv, Parsing
+from db_normalizer.csv_handler.utils import Dat, Csv, Parsing
 from db_normalizer.exceptions.csv_exceptions import BadFileFormatException
 
 

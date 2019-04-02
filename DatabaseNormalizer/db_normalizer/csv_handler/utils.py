@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.csv_utils.utils
+    db_normalizer.csv_handler.utils
     ----------------------------------------
 
     Store useful data to operate on CSV files.

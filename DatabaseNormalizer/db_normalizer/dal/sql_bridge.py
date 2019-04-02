@@ -2,7 +2,7 @@ import cx_Oracle
 import pandas as pd
 from sqlalchemy import create_engine
 
-from db_normalizer.sql_utils.utils import ConnectionData
+from db_normalizer.dal.utils import ConnectionData
 
 if __name__ == '__main__':
     oracle_connection_string = (

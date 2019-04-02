@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.csv_utils.reader
+    db_normalizer.csv_handler.reader
     ----------------------------------------
 
     Reading toolbox for .csv files.
@@ -13,7 +13,7 @@ from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from db_normalizer.csv_utils.utils import Csv, Parsing
+from db_normalizer.csv_handler.utils import Csv, Parsing
 
 
 class Reader:
