@@ -10,6 +10,8 @@
 """
 import time
 
+from dataclasses import asdict
+
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
@@ -70,5 +72,5 @@ if __name__ == '__main__':
     # Show data sample
     print('DST recorded:')
     for dst in loader.dst_records:
-        print(f'\t{dst}')
+        print(f'\t{asdict(dst)}')
 
