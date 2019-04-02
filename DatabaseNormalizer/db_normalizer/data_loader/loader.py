@@ -74,8 +74,9 @@ class Loader:
         """TODO
         """
         # first, load table with no references to others
-        self.load_dst()
         self.load_airway()
+        self.load_dst()
+        self.load_timezone()
 
     def load_airway(self):
         """TODO
@@ -134,7 +135,24 @@ class Loader:
     def load_timezone(self):
         """TODO
         """
-        pass
+        timezones = dict()
+
+        for _, _, _, _, _, \
+                _, _, _, _, padding, \
+                _, name, *_ in self._content['airports']:
+            if name not in timezones:
+                timezones[name] = padding
+
+        for name, padding in timezones.items():
+            self.timezone_records.append(
+                Timezone(
+                    id=self.timezone_records[-1].id + 1
+                    if len(self.timezone_records) > 0
+                    else 1,
+                    name=name,
+                    padding=float(padding)
+                )
+            )
 
     @property
     def airline_records(self) -> List[Airline]:
