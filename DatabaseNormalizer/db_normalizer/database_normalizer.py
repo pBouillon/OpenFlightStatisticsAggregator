@@ -14,7 +14,7 @@ from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
 
-__version__ = '1.4.0'
+__version__ = '1.4.2'
 
 
 def show_header() -> None:
@@ -68,5 +68,7 @@ if __name__ == '__main__':
 
     #
     # Show loaded data info
-    print(f'{len(loader.dst_records)} DSTs recorded')
-    print(f'{len(loader.airway_records)} airways recorded')
+    print('Recorded:')
+    print(f'\t{len(loader.airway_records):6}{"":4}Airways')
+    print(f'\t{len(loader.dst_records):6}{"":4}DSTs')
+    print(f'\t{len(loader.timezone_records):6}{"":4}Timezones')
