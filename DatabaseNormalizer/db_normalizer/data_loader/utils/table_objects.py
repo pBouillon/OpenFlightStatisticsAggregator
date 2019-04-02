@@ -17,13 +17,12 @@ class Airline:
     name: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class Airway:
     """TODO
     """
     codeshare: str
     id: int
-    stops: int
 
 
 @dataclass
@@ -48,7 +47,7 @@ class Country:
     population: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class Dst:
     """TODO
     """
