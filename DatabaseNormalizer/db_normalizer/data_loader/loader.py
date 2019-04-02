@@ -30,7 +30,11 @@ class Loader:
         }
         
         self._content = dict()
+        self._preload_content()
 
+    def _preload_content(self):
+        """TODO
+        """
         reader = Reader(Sources.airlines)
         self._content['airlines'] = reader.read_content(skip_header=True)
 
