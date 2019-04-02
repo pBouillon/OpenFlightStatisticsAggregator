@@ -96,13 +96,13 @@ class StepIn:
     rank: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class Timezone:
     """TODO
     """
     id: int
     name: str
-    padding: int
+    padding: float
 
 
 @dataclass
