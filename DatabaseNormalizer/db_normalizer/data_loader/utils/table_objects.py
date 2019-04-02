@@ -1,8 +1,12 @@
+"""TODO
+"""
 from dataclasses import dataclass
 
 
 @dataclass
 class Airline:
+    """TODO
+    """
     alias: str
     callsign: str
     iata: str
@@ -15,6 +19,8 @@ class Airline:
 
 @dataclass
 class Airway:
+    """TODO
+    """
     codeshare: str
     id: int
     stops: int
@@ -22,6 +28,8 @@ class Airway:
 
 @dataclass
 class City:
+    """TODO
+    """
     id: int
     id_country: int
     id_timezone: int
@@ -31,6 +39,8 @@ class City:
 
 @dataclass
 class Country:
+    """TODO
+    """
     area: float
     id: int
     id_dst: int
@@ -40,18 +50,24 @@ class Country:
 
 @dataclass
 class Dst:
+    """TODO
+    """
     id: int
     name: str
 
 
 @dataclass
 class FlyOn:
+    """TODO
+    """
     id_airway: int
     id_plane: int
 
 
 @dataclass
 class Plane:
+    """TODO
+    """
     capacity: int
     consumption: float
     fret: float
@@ -65,6 +81,8 @@ class Plane:
 
 @dataclass
 class PlaneType:
+    """TODO
+    """
     id: int
     type: str
     iata: str
@@ -72,6 +90,8 @@ class PlaneType:
 
 @dataclass
 class StepIn:
+    """TODO
+    """
     id_airway: int
     id_airport: int
     rank: int
@@ -79,6 +99,8 @@ class StepIn:
 
 @dataclass
 class Timezone:
+    """TODO
+    """
     id: int
     name: str
     padding: int
@@ -86,5 +108,7 @@ class Timezone:
 
 @dataclass
 class Use:
+    """TODO
+    """
     id_airline: int
     id_airway: int
