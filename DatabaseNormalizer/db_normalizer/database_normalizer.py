@@ -8,12 +8,12 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-from db_normalizer.csv_utils.normalizer import Normalizer
-from db_normalizer.csv_utils.reader import Reader
-from db_normalizer.csv_utils.utils import Dat
+from db_normalizer.csv_handler.normalizer import Normalizer
+from db_normalizer.csv_handler.reader import Reader
+from db_normalizer.csv_handler.utils import Dat
+from db_normalizer.data_loader.loader import Loader
 
-
-__version__ = '1.0.1'
+__version__ = '1.2.1'
 
 
 def show_header() -> None:
@@ -26,9 +26,9 @@ def show_header() -> None:
         '**',
         '**  Auteurs: ',
         '**     BOUILLON Pierre, CESARI Alexandre',
+        '**',
         '**  Url: ',
         '**     https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2',
-        '**',
         '*****\n',
     ]))
 
@@ -51,3 +51,8 @@ if __name__ == '__main__':
     # Read one of them
     reader = Reader('../static/data/csv_files/airlines.csv')
     print(f'The file contains {reader.rows} rows and {reader.columns} columns')
+
+    # Load data in data classes
+    loader = Loader()
+    loader.load_all()
+
