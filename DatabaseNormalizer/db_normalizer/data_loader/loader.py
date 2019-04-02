@@ -73,7 +73,23 @@ class Loader:
     def load_all(self):
         """TODO
         """
+        # first, load table with no references to others
         self.load_dst()
+        self.load_airway()
+
+    def load_airway(self):
+        """TODO
+        """
+        for _, _, _, _, _, \
+                _, codeshare, *_ in self._content['routes']:
+            self.airway_records.append(
+                Airway(
+                    id=self.airway_records[-1].id + 1
+                    if len(self.airway_records) > 0
+                    else 1,
+                    codeshare=codeshare
+                )
+            )
 
     def load_dst(self):
         """TODO
@@ -82,7 +98,7 @@ class Loader:
 
         for _, _, _, _, _, \
                 _, _, _, _, _, \
-                dst_name, _, _, _ in self._content['airports']:
+                dst_name, *_ in self._content['airports']:
             dst_names.add(dst_name)
 
         for dst_name in dst_names:
