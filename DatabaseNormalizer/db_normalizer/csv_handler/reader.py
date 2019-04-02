@@ -75,7 +75,7 @@ class Reader:
             )][:-1]
 
             yield list(map(
-                    lambda field: field.rstrip(),
+                    lambda field: field.rstrip()[1:-1],
                     values
                 ))
 
