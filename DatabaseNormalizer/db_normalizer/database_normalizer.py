@@ -8,12 +8,13 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+import time
+
 from db_normalizer.csv_handler.normalizer import Normalizer
-from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
 
-__version__ = '1.2.1'
+__version__ = '1.3.0'
 
 
 def show_header() -> None:
@@ -37,7 +38,10 @@ if __name__ == '__main__':
     # Displays program's startup
     show_header()
 
+    #
     # Creating the normalizer object for .dat files
+    print('[INFO] normalizing .dat files ...')
+    begin = time.time()
     normalizer = Normalizer(
         to_normalize_ext=Dat.ext,
         separator=Dat.separator
@@ -47,12 +51,24 @@ if __name__ == '__main__':
     normalizer.convert_to_csv_from_folder(
         dat_folder='../static/data/dat_files'
     )
+    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
 
-    # Read one of them
-    reader = Reader('../static/data/csv_files/airlines.csv')
-    print(f'The file contains {reader.rows} rows and {reader.columns} columns')
-
-    # Load data in data classes
+    #
+    # Load data in the loader
+    print('[INFO] initializing loader ...')
+    begin = time.time()
     loader = Loader()
+    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
+
+    # Extracting data
+    print('[INFO] extracting data ...')
+    begin = time.time()
     loader.load_all()
+    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
+
+    #
+    # Show data sample
+    print('DST recorded:')
+    for dst in loader.dst_records:
+        print(f'\t{dst}')
 
