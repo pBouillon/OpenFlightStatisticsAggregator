@@ -1,7 +1,7 @@
 CREATE TABLE AIRPORT
 (
-    id          NUMBER			NOT NULL,
-    id_city     NUMBER			NOT NULL,
+    id          NUMBER          NOT NULL,
+    id_city     NUMBER          NOT NULL,
     altitude    BINARY_FLOAT	NOT NULL,
     id_iata     VARCHAR2(3),
     id_icao     VARCHAR2(4),
