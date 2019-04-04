@@ -1,6 +1,6 @@
 CREATE TABLE AIRWAY
 (
-    id			NUMBER	    NOT NULL,
+    id          NUMBER	    NOT NULL,
     codeshare	VARCHAR2(1),
 
     CONSTRAINT PK_AIRWAY PRIMARY KEY (id)
