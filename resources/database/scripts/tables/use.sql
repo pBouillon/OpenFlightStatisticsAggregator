@@ -7,7 +7,7 @@ CREATE TABLE USE
 
     CONSTRAINT FK_AIRLINE
         FOREIGN KEY (id_airline)
-        REFERENCES  AIRPORT(id),
+        REFERENCES  AIRLINE(id),
 
     CONSTRAINT FK_AIRWAY
         FOREIGN KEY (id_airway)
