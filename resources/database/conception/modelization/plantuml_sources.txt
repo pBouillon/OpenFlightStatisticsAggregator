@@ -5,31 +5,16 @@
 hide methods
 hide stereotypes
 
-table(COUNTRY) {
+
+table(AIRWAY) {
     {field} #id : NUMBER
-    {field} +id_dst : NUMBER
-    {field} inhabitants : NUMBER
-    {field} name : VARCHAR2(50)
-    {field} superficy : BINARY_FLOAT
+    {field} codeshare : VARCHAR2(1)
 }
 
 table(DST) {
     {field} #id : NUMBER
     {field} name : VARCHAR2(15)
 }
-
-table(PLANE) {
-    {field} #id : NUMBER
-    {field} +id_plane_type : NUMBER
-    {field} consumption : NUMBER
-    {field} freight : NUMBER
-    {field} iata_code : VARCHAR2(3)
-    {field} icao_code : VARCHAR2(4)
-    {field} model : VARCHAR2(30)
-    {field} passengers : NUMBER
-    {field} speed : NUMBER
-}
-
 
 table(PLANE_TYPE) {
     {field} #id : NUMBER
@@ -59,12 +44,31 @@ table(AIRPORT) {
     {field} #id : NUMBER
     {field} +id_city : NUMBER
     {field} altitude : BINARY_FLOAT
+    {field} iata_code : VARCHAR2(3)
+    {field} icao_code : VARCHAR2(4)
     {field} latitude : BINARY_FLOAT
     {field} longitude : BINARY_FLOAT
     {field} name : VARCHAR2(150)
+}
+
+table(COUNTRY) {
+    {field} #id : NUMBER
+    {field} +id_dst : NUMBER
+    {field} inhabitants : NUMBER
+    {field} name : VARCHAR2(50)
+    {field} superficy : BINARY_FLOAT
+}
+
+table(PLANE) {
+    {field} #id : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} consumption : NUMBER
+    {field} freight : NUMBER
     {field} iata_code : VARCHAR2(3)
     {field} icao_code : VARCHAR2(4)
-    
+    {field} model : VARCHAR2(30)
+    {field} passengers : NUMBER
+    {field} speed : NUMBER
 }
 
 table(CITY) {
@@ -75,14 +79,9 @@ table(CITY) {
     {field} name : VARCHAR2(100)
 }
 
-table(AIRWAY) {
-    {field} #id : NUMBER
-    {field} codeshare : VARCHAR2(5)
-}
-
-table(USE) {
-    {field} +id_airline : NUMBER
+table(FLY_ON) {
     {field} +id_airway : NUMBER
+    {field} +id_plane : NUMBER
 }
 
 table(STEP_IN) {
@@ -91,10 +90,11 @@ table(STEP_IN) {
     {field} rank : NUMBER
 }
 
-table(FLY_ON) {
+table(USE) {
+    {field} +id_airline : NUMBER
     {field} +id_airway : NUMBER
-    {field} +id_plane : NUMBER
 }
+
 
 AIRPORT "1,n" --{ "1,1" STEP_IN
 

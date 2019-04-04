@@ -1,9 +1,9 @@
 CREATE TABLE COUNTRY 
 (
-	id		NUMBER,
-	id_dst		NUMBER,
+	id			NUMBER			NOT NULL,
+	id_dst		NUMBER			NOT NULL,
 	inhabitants	NUMBER,
-	name		VARCHAR(50),
+	name		VARCHAR2(50)	NOT NULL,
 	superficy	BINARY_FLOAT,
 
 	CONSTRAINT PK_COUNTRY PRIMARY KEY (id)

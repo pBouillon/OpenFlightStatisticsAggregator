@@ -1,13 +1,13 @@
 CREATE TABLE AIRPORT
 (
-    id          NUMBER          NOT NULL,
-    id_city     NUMBER          NOT NULL,
-    altitude    BINARY_FLOAT    NOT NULL,
-    id_iata     VARCHAR(3),
-    id_icao     VARCHAR(4),
-    latitude    BINARY_FLOAT    NOT NULL,
-    longitude   BINARY_FLOAT    NOT NULL,
-    name        VARCHAR(150)    NOT NULL,
+    id          NUMBER			NOT NULL,
+    id_city     NUMBER			NOT NULL,
+    altitude    BINARY_FLOAT	NOT NULL,
+    id_iata     VARCHAR2(3),
+    id_icao     VARCHAR2(4),
+    latitude    BINARY_FLOAT	NOT NULL,
+    longitude   BINARY_FLOAT	NOT NULL,
+    name        VARCHAR2(150)	NOT NULL,
 
     CONSTRAINT PK_AIRPORT PRIMARY KEY (id),
 
