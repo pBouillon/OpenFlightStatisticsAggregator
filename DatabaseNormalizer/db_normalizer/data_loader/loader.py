@@ -264,6 +264,10 @@ class Loader:
 
     @property
     def records(self) -> int:
+        """TODO
+
+        :return:
+        """
         return sum(len(records) for _, records in self._tables.items())
 
     @property
