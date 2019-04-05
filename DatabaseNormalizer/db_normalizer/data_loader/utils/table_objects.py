@@ -21,6 +21,20 @@ class Airline:
     name: str
 
 
+@dataclass
+class Airport:
+    """TODO
+    """
+    altitude: float
+    iata: str
+    icao: str
+    id: int
+    id_city: int
+    latitude: float
+    longitude: float
+    name: str
+
+
 @dataclass(frozen=True)
 class Airway:
     """TODO
