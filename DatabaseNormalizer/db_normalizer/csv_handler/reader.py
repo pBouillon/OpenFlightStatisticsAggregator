@@ -79,21 +79,6 @@ class Reader:
                     values
                 ))
 
-    def reload_from(self, file_path: str):
-        """
-        TODO
-
-        :param file_path:
-        :return:
-        """
-        self._file_path = file_path
-        self._file = Path(file_path)
-
-        if not self._file.exists():
-            raise FileNotFoundError
-
-        self._load_stats()
-
     @property
     def columns(self) -> int:
         """Getter for `_columns`

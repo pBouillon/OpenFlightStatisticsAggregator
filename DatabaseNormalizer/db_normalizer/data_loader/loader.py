@@ -29,41 +29,13 @@ class Loader:
             'use': []
         }
 
-        self._content = dict()
-        self._preload_content()
-
-    def _preload_content(self):
-        """TODO
-
-        FIXME: use generator and not lists (generator copy or altervative)
-        """
-        reader = Reader(Sources.airlines)
-
-        def extract_content_from(source: str, skip: bool = False):
-            reader.reload_from(source)
-            return list(reader.read_content(skip))
-
-        self._content['airlines'] = extract_content_from(
-            source=Sources.airlines,
-            skip=True
-        )
-
-        self._content['airports'] = extract_content_from(
-            source=Sources.airports
-        )
-
-        self._content['flight_numbers'] = extract_content_from(
-            source=Sources.flight_numbers,
-            skip=True
-        )
-
-        self._content['planes'] = extract_content_from(
-            source=Sources.planes
-        )
-
-        self._content['routes'] = extract_content_from(
-            source=Sources.routes
-        )
+        self._reader = {
+            'airlines': Reader(Sources.airlines),
+            'airports': Reader(Sources.airports),
+            'flight_numbers': Reader(Sources.flight_numbers),
+            'planes': Reader(Sources.planes),
+            'routes': Reader(Sources.routes),
+        }
 
     def load_airport(self):
         """TODO
@@ -82,7 +54,8 @@ class Loader:
         """TODO
         """
         for _, _, _, _, _, \
-                _, codeshare, *_ in self._content['routes']:
+                _, codeshare, *_ \
+                in self._reader['routes'].read_content():
             self.airway_records.append(
                 Airway(
                     id=self.airway_records[-1].id + 1
@@ -99,7 +72,8 @@ class Loader:
 
         for _, _, _, _, _, \
                 _, _, _, _, _, \
-                dst_name, *_ in self._content['airports']:
+                dst_name, *_ \
+                in self._reader['airports'].read_content():
             dst_names.add(dst_name)
 
         for dst_name in dst_names:
@@ -139,7 +113,8 @@ class Loader:
 
         for _, _, _, _, _, \
                 _, _, _, _, padding, \
-                _, name, *_ in self._content['airports']:
+                _, name, *_ \
+                in self._reader['airports'].read_content():
             if name not in timezones:
                 timezones[name] = padding
 
