@@ -49,12 +49,12 @@ class Loader:
         # standalone tables
         self.load_airway()
         self.load_dst()
-        self.load_timezone()
+
+        # group loading
+        self.load_geographical_data()
 
         # table with references to others
         self.load_airline()
-        self.load_city()
-        self.load_country()
         self.load_plane_data()
 
     def load_airline(self):
@@ -114,43 +114,60 @@ class Loader:
                 )
             )
 
-    def load_city(self):
+    def load_geographical_data(self):
         """TODO
         """
-        for _, _, name, *_ \
+        timezones = dict()
+        countries = dict()
+        step = 1
+
+        for _, _, city_name, country_name, _, \
+                _, _, _, _, padding, \
+                _, timezone_name, *_ \
                 in self._reader['airports'].read_content():
+            # extract country data
+            if country_name not in countries.keys():
+                countries[country_name] = step
+                step += 1
+
+            # extract timezone data
+            if timezone_name not in timezones:
+                timezones[timezone_name] = padding
+
+            # extract city data
             self.city_records.append(
                 City(
                     id=self.city_records[-1].id + 1
                     if len(self.city_records) > 0
                     else 1,
-                    id_country=NOT_SET,
-                    id_timezone=NOT_SET,
-                    name=name,
+                    id_country=countries[country_name],
+                    id_timezone=timezones[timezone_name],
+                    name=city_name,
                     population=NOT_SET
                 )
             )
 
-    def load_country(self):
-        """TODO
-        """
-
-        country_names = set()
-
-        for _, _, _, country_name, *_ \
-                in self._reader['airports'].read_content():
-            country_names.add(country_name)
-
-        for name in country_names:
+        # store country records
+        for name, step in countries.items():
             self.country_records.append(
                 Country(
-                    id=self.country_records[-1].id + 1
-                    if len(self.country_records) > 0
-                    else 1,
+                    id=step,
                     id_dst=NOT_SET,
                     name=name,
                     population=NOT_SET,
                     area=NOT_SET
+                )
+            )
+
+        # store timezone records
+        for name, padding in timezones.items():
+            self.timezone_records.append(
+                Timezone(
+                    id=self.timezone_records[-1].id + 1
+                    if len(self.timezone_records) > 0
+                    else 1,
+                    name=name,
+                    padding=float(padding)
                 )
             )
 
@@ -186,29 +203,6 @@ class Loader:
                         iata=iata
                     )
                 )
-
-    def load_timezone(self):
-        """TODO
-        """
-        timezones = dict()
-
-        for _, _, _, _, _, \
-                _, _, _, _, padding, \
-                _, name, *_ \
-                in self._reader['airports'].read_content():
-            if name not in timezones:
-                timezones[name] = padding
-
-        for name, padding in timezones.items():
-            self.timezone_records.append(
-                Timezone(
-                    id=self.timezone_records[-1].id + 1
-                    if len(self.timezone_records) > 0
-                    else 1,
-                    name=name,
-                    padding=float(padding)
-                )
-            )
 
     @property
     def airline_records(self) -> List[Airline]:
