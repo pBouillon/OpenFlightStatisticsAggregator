@@ -21,12 +21,7 @@ table(DST) {
 table(PLANE_TYPE) {
     {field} #id : NUMBER
     {field} type : VARCHAR(50)
-    {field} consumption : NUMBER
-    {field} freight : NUMBER
     {field} iata_code : VARCHAR(3)
-    {field} icao_code : VARCHAR(4)
-    {field} passengers : NUMBER
-    {field} speed : NUMBER
 }
 
 table(TIMEZONE) {
@@ -58,17 +53,23 @@ table(AIRPORT) {
     
 }
 
+table(PLANE) {
+    {field} #id : NUMBER
+    {field} +id_plane_type : NUMBER
+    {field} name : VARCHAR(50)
+    {field} consumption : NUMBER
+    {field} freight : NUMBER
+    {field} iata_code : VARCHAR(3)
+    {field} icao_code : VARCHAR(4)
+    {field} passengers : NUMBER
+    {field} speed : NUMBER
+}
+
 table(CITY) {
     {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} +id_timezone : NUMBER
     {field} name :VARCHAR(100)
-}
-
-table(PLANE_AIRWAY) {
-    {field} #id : NUMBER
-    {field} +id_airway : NUMBER
-    {field} +id_plane_type : NUMBER
 }
 
 table(AIRWAY) {
@@ -78,6 +79,14 @@ table(AIRWAY) {
     {field} +id_airport_src : NUMBER
     {field} stops : NUMBER
 }
+
+table(PLANE_AIRWAY) {
+    {field} #id : NUMBER
+    {field} +id_airway : NUMBER
+    {field} +id_plane : NUMBER
+    {field} +id_plane_type : NUMBER
+}
+
 
 AIRPORT "1,n" --{ "1,1" AIRWAY
 
@@ -90,7 +99,10 @@ COUNTRY "1,n" --{ "1,1" CITY
 
 DST "1,n" --{ "1,1" COUNTRY
 
+PLANE "1,n" --{ "1,1" PLANE_AIRWAY
+
 PLANE_TYPE "1,n" --{ "1,1" PLANE_AIRWAY
+PLANE_TYPE "1,n" --{ "1,1" PLANE
 
 TIMEZONE "1,n" --{ "1,1" CITY
 

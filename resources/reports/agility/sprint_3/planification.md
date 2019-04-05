@@ -22,7 +22,7 @@ Planification du sprint n°3
 
     -   Rapport: état de l'art
 
-    -   Rédation du `setup.py`
+    -   Rédaction du `setup.py`
 
     -   Etablir la connexion VPN à la base Oracle de Telecom Nancy
 
