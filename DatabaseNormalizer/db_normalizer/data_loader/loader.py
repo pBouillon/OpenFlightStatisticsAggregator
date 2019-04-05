@@ -5,7 +5,7 @@ from typing import List
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
 from db_normalizer.data_loader.utils.table_objects import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
-    Plane, PlaneType, StepIn, NOT_SET
+    Plane, PlaneType, StepIn, NOT_SET, Airport
 from db_normalizer.data_loader.utils.utils import Sources
 
 
@@ -18,6 +18,7 @@ class Loader:
         """
         self._tables = {
             'airlines': [],
+            'airports': [],
             'airways': [],
             'cities': [],
             'countries': [],
@@ -38,24 +39,18 @@ class Loader:
             'routes': Reader(Sources.routes),
         }
 
-    def load_airport(self):
-        """TODO
-        """
-        pass
-
     def load_all(self):
         """TODO
         """
         # standalone tables
         self.load_airway()
-        self.load_dst()
 
         # group loading
         self.load_geographical_data()
+        self.load_plane_data()
 
         # table with references to others
         self.load_airline()
-        self.load_plane_data()
 
     def load_airline(self):
         """TODO
@@ -93,42 +88,28 @@ class Loader:
                 )
             )
 
-    def load_dst(self):
-        """TODO
-        """
-        dst_names = set()
-
-        for _, _, _, _, _, \
-                _, _, _, _, _, \
-                dst_name, *_ \
-                in self._reader['airports'].read_content():
-            dst_names.add(dst_name)
-
-        for dst_name in dst_names:
-            self.dst_records.append(
-                Dst(
-                    id=self.dst_records[-1].id + 1
-                    if len(self.dst_records) > 0
-                    else 1,
-                    name=dst_name
-                )
-            )
-
     def load_geographical_data(self):
         """TODO
         """
-        timezones = dict()
         countries = dict()
-        step = 1
+        dst = dict()
+        timezones = dict()
 
-        for _, _, city_name, country_name, _, \
-                _, _, _, _, padding, \
-                _, timezone_name, *_ \
+        country_id = 1
+        dst_id = 1
+        for _, airport_name, city_name, country_name, airport_iata, \
+                airport_icao, airport_long, airport_lat, airport_alt, padding, \
+                dst_name, timezone_name, *_ \
                 in self._reader['airports'].read_content():
+            # extract dst data
+            if dst_name not in dst.keys():
+                dst[dst_name] = dst_id
+                dst_id += 1
+
             # extract country data
             if country_name not in countries.keys():
-                countries[country_name] = step
-                step += 1
+                countries[country_name] = [country_id, dst_id]
+                country_id += 1
 
             # extract timezone data
             if timezone_name not in timezones:
@@ -140,19 +121,36 @@ class Loader:
                     id=self.city_records[-1].id + 1
                     if len(self.city_records) > 0
                     else 1,
-                    id_country=countries[country_name],
+                    id_country=countries[country_name][0],
                     id_timezone=timezones[timezone_name],
                     name=city_name,
                     population=NOT_SET
                 )
             )
 
+            # extract airport data
+            self.airport_records.append(
+                Airport(
+                    id=self.airport_records[-1].id + 1
+                    if len(self.airport_records) > 0
+                    else 1,
+                    id_city=self.city_records[-1].id,
+                    name=airport_name,
+                    iata=airport_iata,
+                    icao=airport_icao,
+                    longitude=airport_long,
+                    latitude=airport_lat,
+                    altitude=airport_alt
+                )
+            )
+
         # store country records
-        for name, step in countries.items():
+        for name, data in countries.items():
+            country_id, dst_id = data
             self.country_records.append(
                 Country(
-                    id=step,
-                    id_dst=NOT_SET,
+                    id=country_id,
+                    id_dst=dst_id,
                     name=name,
                     population=NOT_SET,
                     area=NOT_SET
@@ -169,6 +167,12 @@ class Loader:
                     name=name,
                     padding=float(padding)
                 )
+            )
+
+        # store dst records
+        for name, dst_id in dst.items():
+            self.dst_records.append(
+                Dst(id=dst_id, name=name)
             )
 
     def load_plane_data(self):
@@ -209,6 +213,12 @@ class Loader:
         """TODO
         """
         return self._tables['airlines']
+
+    @property
+    def airport_records(self) -> List[Airport]:
+        """TODO
+        """
+        return self._tables['airports']
 
     @property
     def airway_records(self) -> List[Airway]:
