@@ -72,14 +72,6 @@ class Loader:
                     is_active=active,
                     name=name
                 )
-                #     alias: str
-                #     callsign: str
-                #     iata: str
-                #     icao: str
-                #     id: int
-                #     id_country: int
-                #     is_active: bool
-                #     name: str
             )
 
     def load_airway(self):
