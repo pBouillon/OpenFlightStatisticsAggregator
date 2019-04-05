@@ -67,7 +67,7 @@ class FlyOn:
 class Plane:
     """TODO
     """
-    capacity: int
+    passenger: int
     consumption: float
     fret: float
     iata: str
