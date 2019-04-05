@@ -3,6 +3,10 @@
 from dataclasses import dataclass
 
 
+"""TODO"""
+NOT_SET = -1
+
+
 @dataclass
 class Airline:
     """TODO

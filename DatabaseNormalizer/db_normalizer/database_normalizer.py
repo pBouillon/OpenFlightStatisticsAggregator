@@ -72,3 +72,4 @@ if __name__ == '__main__':
     print(f'\t{len(loader.airway_records):6}{"":4}Airways')
     print(f'\t{len(loader.dst_records):6}{"":4}DSTs')
     print(f'\t{len(loader.timezone_records):6}{"":4}Timezones')
+    print(f'\t{len(loader.airline_records):6}{"":4}Airlines')

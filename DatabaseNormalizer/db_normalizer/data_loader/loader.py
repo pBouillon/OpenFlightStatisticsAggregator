@@ -4,7 +4,7 @@ from typing import List
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.data_loader.utils.table_objects import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
-    Plane, PlaneType, StepIn
+    Plane, PlaneType, StepIn, NOT_SET
 from db_normalizer.data_loader.utils.utils import Sources
 
 
@@ -45,10 +45,42 @@ class Loader:
     def load_all(self):
         """TODO
         """
-        # first, load table with no references to others
+        # standalone tables
         self.load_airway()
         self.load_dst()
         self.load_timezone()
+
+        # table with references to others
+        self.load_airline()
+
+    def load_airline(self):
+        """TODO
+        """
+        for _, name, alias, iata, icao,\
+            callsign, _, active, *_ \
+                in self._reader['airlines'].read_content(skip_header=True):
+            self.airline_records.append(
+                Airline(
+                    id=self.airline_records[-1].id + 1
+                    if len(self.airline_records) > 0
+                    else 1,
+                    alias=alias,
+                    callsign=callsign,
+                    iata=iata,
+                    icao=icao,
+                    id_country=NOT_SET,
+                    is_active=active,
+                    name=name
+                )
+                #     alias: str
+                #     callsign: str
+                #     iata: str
+                #     icao: str
+                #     id: int
+                #     id_country: int
+                #     is_active: bool
+                #     name: str
+            )
 
     def load_airway(self):
         """TODO
