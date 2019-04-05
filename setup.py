@@ -12,13 +12,16 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
+with io.open('flask/__init__.py', 'rt', encoding='utf8') as f:
+    version = re.search(r'__version__ = \'(.*?)\'', f.read()).group(1)
+
 # Package meta-data.
 NAME = 'ppii-2k19'
-DESCRIPTION = 'My short description for my project.'
+DESCRIPTION = 'Projet Pluridisciplinaire d’Informatique Intégrative (PPII)'
 URL = 'https://gitlab.telecomnancy.univ-lorraine.fr/ppii-2k19/project-grpa2'
 AUTHOR = 'BOUILLON Pierre, CESARI Alexandre'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = None
+VERSION = version
 
 # What packages are required for this module to be executed?
 REQUIRED = [
