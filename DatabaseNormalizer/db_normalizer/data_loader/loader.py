@@ -53,6 +53,8 @@ class Loader:
 
         # table with references to others
         self.load_airline()
+        self.load_city()
+        self.load_country()
         self.load_plane_data()
 
     def load_airline(self):
@@ -115,12 +117,42 @@ class Loader:
     def load_city(self):
         """TODO
         """
-        pass
+        for _, _, name, *_ \
+                in self._reader['airports'].read_content():
+            self.city_records.append(
+                City(
+                    id=self.city_records[-1].id + 1
+                    if len(self.city_records) > 0
+                    else 1,
+                    id_country=NOT_SET,
+                    id_timezone=NOT_SET,
+                    name=name,
+                    population=NOT_SET
+                )
+            )
 
     def load_country(self):
         """TODO
         """
-        pass
+
+        country_names = set()
+
+        for _, _, _, country_name, *_ \
+                in self._reader['airports'].read_content():
+            country_names.add(country_name)
+
+        for name in country_names:
+            self.country_records.append(
+                Country(
+                    id=self.country_records[-1].id + 1
+                    if len(self.country_records) > 0
+                    else 1,
+                    id_dst=NOT_SET,
+                    name=name,
+                    population=NOT_SET,
+                    area=NOT_SET
+                )
+            )
 
     def load_plane_data(self):
         """TODO
