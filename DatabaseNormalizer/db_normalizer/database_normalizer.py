@@ -64,7 +64,11 @@ if __name__ == '__main__':
     print('[INFO] extracting data ...')
     begin = time.time()
     loader.load_all()
-    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
+    load_time = time.time() - begin
+    print(
+        f'[INFO] {loader.records} records loaded in '
+        f'{(time.time() - begin):1.5f} second.s\n'
+    )
 
     #
     # Show loaded data info

@@ -263,6 +263,10 @@ class Loader:
         return self._tables['plane_types']
 
     @property
+    def records(self) -> int:
+        return sum(len(records) for _, records in self._tables.items())
+
+    @property
     def step_in_records(self) -> List[StepIn]:
         """TODO
         """
