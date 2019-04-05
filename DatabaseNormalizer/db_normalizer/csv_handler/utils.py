@@ -26,6 +26,9 @@ class Csv:
     """Csv line ending"""
     line_end = '\n'
 
+    """TODO"""
+    null_value = '\\N'
+
     """CSV separator"""
     separator = ','
 

@@ -69,7 +69,9 @@ if __name__ == '__main__':
     #
     # Show loaded data info
     print('Recorded:')
+    print(f'\t{len(loader.airline_records):6}{"":4}Airlines')
     print(f'\t{len(loader.airway_records):6}{"":4}Airways')
     print(f'\t{len(loader.dst_records):6}{"":4}DSTs')
+    print(f'\t{len(loader.plane_records):6}{"":4}Planes')
+    print(f'\t{len(loader.plane_type_records):6}{"":4}Plane types')
     print(f'\t{len(loader.timezone_records):6}{"":4}Timezones')
-    print(f'\t{len(loader.airline_records):6}{"":4}Airlines')
