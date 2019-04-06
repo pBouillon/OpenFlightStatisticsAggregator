@@ -9,7 +9,6 @@
     :licence: MIT, see LICENSE for more details.
 """
 import time
-from dataclasses import asdict
 
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
@@ -83,5 +82,3 @@ if __name__ == '__main__':
     print(f'\t{len(loader.plane_records):6}{"":4}Planes')
     print(f'\t{len(loader.plane_type_records):6}{"":4}Plane types')
     print(f'\t{len(loader.timezone_records):6}{"":4}Timezones')
-    for a in loader.airport_records:
-        print(asdict(a))
