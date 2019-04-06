@@ -88,7 +88,7 @@ class Loader:
                     iata=iata,
                     icao=icao,
                     id_country=NOT_SET,
-                    is_active=active,
+                    is_active=True if active == 'Y' else False,
                     name=name
                 )
             )
