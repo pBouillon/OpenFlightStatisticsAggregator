@@ -8,12 +8,12 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-
 from typing import List, Dict
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
-from db_normalizer.data_loader.utils.table_objects import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
+from db_normalizer.data_loader.utils.table_objects \
+    import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
 from db_normalizer.data_loader.utils.utils import Sources
 

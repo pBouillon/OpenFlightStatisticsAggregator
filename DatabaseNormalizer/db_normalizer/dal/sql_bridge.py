@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+"""
+    db_normalizer.dal.sql_bridge
+    ----------------------------
+
+    Bridge between the application and the Oracle database.
+
+    /!\\ WiP /!\\
+
+    :authors: Bouillon Pierre, Cesari Alexandre.
+    :licence: MIT, see LICENSE for more details.
+"""
 import cx_Oracle
 import pandas as pd
 from sqlalchemy import create_engine

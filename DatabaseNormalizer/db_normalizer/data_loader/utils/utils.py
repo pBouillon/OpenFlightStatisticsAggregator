@@ -8,7 +8,6 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-
 from db_normalizer.csv_handler.utils import Csv
 
 
