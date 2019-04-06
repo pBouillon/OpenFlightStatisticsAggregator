@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.data_loader_utils
+    db_normalizer.data_loader.utils
     -------------------------------
 
     Folder for the data loading toolbox.

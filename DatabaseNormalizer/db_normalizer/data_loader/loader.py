@@ -1,6 +1,15 @@
-"""TODO
+# -*- coding: utf-8 -*-
 """
-from typing import List
+    db_normalizer.data_loader.loader
+    -------------------------------
+
+    Extract and store data contained in the .csv files.
+
+    :authors: Bouillon Pierre, Cesari Alexandre.
+    :licence: MIT, see LICENSE for more details.
+"""
+
+from typing import List, Dict
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
@@ -10,12 +19,15 @@ from db_normalizer.data_loader.utils.utils import Sources
 
 
 class Loader:
-    """TODO
+    """References Loader
+
+    Load and extract data from .csv files.
     """
 
     def __init__(self):
-        """TODO
+        """Constructor
         """
+        # records of each table
         self._tables = {
             'airlines': [],
             'airports': [],
@@ -31,6 +43,7 @@ class Loader:
             'use': []
         }
 
+        # reader for each source file
         self._reader = {
             'airlines': Reader(Sources.airlines),
             'airports': Reader(Sources.airports),
@@ -40,7 +53,11 @@ class Loader:
         }
 
     def load_all(self):
-        """TODO
+        """Load all data
+
+        First load airways data
+        Then all geographical and plane data
+        Finally tables with references to others (foreign keys)
         """
         # standalone tables
         self.load_airway()
@@ -53,11 +70,14 @@ class Loader:
         self.load_airline()
 
     def load_airline(self):
-        """TODO
+        """Load airlines data
         """
-        for _, name, alias, iata, icao,\
+        # unwrapping relevant data from the source file
+        for _, name, alias, iata, icao, \
             callsign, _, active, *_ \
                 in self._reader['airlines'].read_content(skip_header=True):
+            # create an airline from the extracted data and add it to
+            # the stored records
             self.airline_records.append(
                 Airline(
                     id=self.airline_records[-1].id + 1
@@ -74,11 +94,14 @@ class Loader:
             )
 
     def load_airway(self):
-        """TODO
+        """Load airway data
         """
+        # unwrapping relevant data from the source file
         for _, _, _, _, _, \
-                _, codeshare, *_ \
+            _, codeshare, *_ \
                 in self._reader['routes'].read_content():
+            # create an airway from the extracted data and add it to
+            # the stored records
             self.airway_records.append(
                 Airway(
                     id=self.airway_records[-1].id + 1
@@ -89,29 +112,37 @@ class Loader:
             )
 
     def load_geographical_data(self):
-        """TODO
-        """
-        countries = dict()
-        dst = dict()
-        timezones = dict()
+        """Load geographical data
 
+        Creates airport, city, country, dst, timezone records
+        """
+        # countries['name'] = [country_id, dst_id]
+        countries: Dict[str, List[int]] = dict()
         country_id = 1
+
+        # dst['name'] = id
+        dst: Dict[str, int] = dict()
         dst_id = 1
+
+        # timezones['name'] = padding
+        timezones: Dict[str, int] = dict()
+
+        # unwrapping relevant data from the source file
         for _, airport_name, city_name, country_name, airport_iata, \
-                airport_icao, airport_long, airport_lat, airport_alt, padding, \
-                dst_name, timezone_name, *_ \
+            airport_icao, airport_long, airport_lat, airport_alt, padding, \
+            dst_name, timezone_name, *_ \
                 in self._reader['airports'].read_content():
             # extract dst data
             if dst_name not in dst.keys():
                 dst[dst_name] = dst_id
                 dst_id += 1
 
-            # extract country data
+            # extract country data if it's not a duplicate
             if country_name not in countries.keys():
                 countries[country_name] = [country_id, dst_id]
                 country_id += 1
 
-            # extract timezone data
+            # extract timezone data if it's not a duplicate
             if timezone_name not in timezones:
                 timezones[timezone_name] = padding
 
@@ -176,10 +207,14 @@ class Loader:
             )
 
     def load_plane_data(self):
-        """TODO
+        """Load load plane data
+
+        Depending on the provided data, create a Plane or a Plane
         """
+        # unwrapping relevant data from the source file
         for model, iata, icao, *_ \
                 in self._reader['planes'].read_content():
+            # records with no ico are a PlaneType
             if icao != Csv.null_value:
                 self.plane_records.append(
                     Plane(
@@ -194,9 +229,7 @@ class Loader:
                         fret=NOT_SET,
                         speed=NOT_SET,
                         consumption=NOT_SET
-                    )
-                )
-
+                    ))
             else:
                 self.plane_type_records.append(
                     PlaneType(
@@ -205,85 +238,95 @@ class Loader:
                         else 1,
                         type=model,
                         iata=iata
-                    )
-                )
+                    ))
 
     @property
     def airline_records(self) -> List[Airline]:
-        """TODO
+        """Getter for `_tables['airlines']`
+        :return: the airline records
         """
         return self._tables['airlines']
 
     @property
     def airport_records(self) -> List[Airport]:
-        """TODO
+        """Getter for `_tables['airports']`
+        :return: the airports records
         """
         return self._tables['airports']
 
     @property
     def airway_records(self) -> List[Airway]:
-        """TODO
+        """Getter for `_tables['airways']`
+        :return: the airways records
         """
         return self._tables['airways']
 
     @property
     def city_records(self) -> List[City]:
-        """TODO
+        """Getter for `_tables['cities']`
+        :return: the cities records
         """
         return self._tables['cities']
 
     @property
     def country_records(self) -> List[Country]:
-        """TODO
+        """Getter for `_tables['countries']`
+        :return: the countries records
         """
         return self._tables['countries']
 
     @property
     def dst_records(self) -> List[Dst]:
-        """TODO
+        """Getter for `_tables['dst']`
+        :return: the dst records
         """
         return self._tables['dst']
 
     @property
     def fly_on_records(self) -> List[FlyOn]:
-        """TODO
+        """Getter for `_tables['fly_on']`
+        :return: the fly_on records
         """
         return self._tables['fly_on']
 
     @property
     def plane_records(self) -> List[Plane]:
-        """TODO
+        """Getter for `_tables['planes']`
+        :return: the planes records
         """
         return self._tables['planes']
 
     @property
     def plane_type_records(self) -> List[PlaneType]:
-        """TODO
+        """Getter for `_tables['plane_types']`
+        :return: the plane_types records
         """
         return self._tables['plane_types']
 
     @property
     def records(self) -> int:
-        """TODO
-
-        :return:
+        """Getter for the number of stored records
+        :return: the total of the stored records
         """
         return sum(len(records) for _, records in self._tables.items())
 
     @property
     def step_in_records(self) -> List[StepIn]:
-        """TODO
+        """Getter for `_tables['step_in']`
+        :return: the step_in records
         """
         return self._tables['step_in']
 
     @property
     def timezone_records(self) -> List[Timezone]:
-        """TODO
+        """Getter for `_tables['timezones']`
+        :return: the timezones records
         """
         return self._tables['timezones']
 
     @property
     def use_records(self) -> List[Use]:
-        """TODO
+        """Getter for `_tables['use']`
+        :return: the use records
         """
         return self._tables['use']
