@@ -169,9 +169,9 @@ class Loader:
                     name=airport_name,
                     iata=airport_iata,
                     icao=airport_icao,
-                    longitude=airport_long,
-                    latitude=airport_lat,
-                    altitude=airport_alt
+                    longitude=float(airport_long),
+                    latitude=float(airport_lat),
+                    altitude=float(airport_alt)
                 )
             )
 
