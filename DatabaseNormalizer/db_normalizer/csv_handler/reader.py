@@ -74,10 +74,14 @@ class Reader:
                 line
             )][:-1]
 
+            # if the data is surrounded by '"', remove them
             yield list(map(
-                    lambda field: field.rstrip()[1:-1],
-                    values
-                ))
+                lambda field: field[1:-1]
+                if field.startswith(Csv.delimiter)
+                and field.endswith(Csv.delimiter)
+                else field,
+                values
+            ))
 
     @property
     def columns(self) -> int:

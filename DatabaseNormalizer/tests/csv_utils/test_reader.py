@@ -35,20 +35,10 @@ class TestReader(TestCase):
         self.dummy_csv.touch()
         self.dummy_csv.write_text(FileUtils.Csv.CSV_CONTENT)
 
-        # dummy complex csv for tests purpose
-        self.dummy_complex_csv = Path(FileUtils.Csv.ComplexCsv.CSV_NAME)
-        self.dummy_complex_csv.touch()
-        self.dummy_complex_csv.write_text(
-            Csv.separator.join(
-                FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS
-            )
-        )
-
     def tearDown(self) -> None:
         """Reinitialize state after unit tests execution
         """
         self.dummy_csv.unlink()
-        self.dummy_complex_csv.unlink()
 
     def test_invalid_initialization_unknown_file(self):
         """A non-existing file should throw an exception
@@ -97,8 +87,17 @@ class TestReader(TestCase):
         """The reader should correctly gather the fields
         """
         # arrange
-        expected_len = len(FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS)
-        reader = Reader(str(self.dummy_complex_csv))
+        first_line = FileUtils.Csv.CSV_CONTENT \
+            .split(Csv.line_end)[0].split(Csv.separator)
+        # extract data from formatted string
+        first_line = [
+            field[1:-1]
+            if field.startswith(Csv.delimiter) and field.endswith(Csv.delimiter)
+            else field
+            for field in first_line
+        ]
+        expected_len = len(first_line)
+        reader = Reader(str(self.dummy_csv))
 
         # act
         # read the content of the file
@@ -112,8 +111,9 @@ class TestReader(TestCase):
             expected_len,
             len(content)
         )
+
         # the files writen and loaded should be the same
         self.assertListEqual(
-            FileUtils.Csv.ComplexCsv.COMPLEX_FIELDS,
+            first_line,
             content
         )
