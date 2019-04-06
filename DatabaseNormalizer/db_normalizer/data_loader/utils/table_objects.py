@@ -1,15 +1,23 @@
-"""TODO
+# -*- coding: utf-8 -*-
+"""
+    db_normalizer.data_loader.table_objects
+    ---------------------------------------
+
+    Data structures to store normalized data.
+
+    :authors: Bouillon Pierre, Cesari Alexandre.
+    :licence: MIT, see LICENSE for more details.
 """
 from dataclasses import dataclass
 
 
-"""TODO"""
+"""Default value for un-settable values"""
 NOT_SET = -1
 
 
 @dataclass
 class Airline:
-    """TODO
+    """Airline table scheme
     """
     alias: str
     callsign: str
@@ -23,7 +31,7 @@ class Airline:
 
 @dataclass
 class Airport:
-    """TODO
+    """Airport table scheme
     """
     altitude: float
     iata: str
@@ -37,7 +45,7 @@ class Airport:
 
 @dataclass(frozen=True)
 class Airway:
-    """TODO
+    """Airway table scheme
     """
     codeshare: str
     id: int
@@ -45,7 +53,7 @@ class Airway:
 
 @dataclass
 class City:
-    """TODO
+    """City table scheme
     """
     id: int
     id_country: int
@@ -56,7 +64,7 @@ class City:
 
 @dataclass
 class Country:
-    """TODO
+    """Country table scheme
     """
     area: float
     id: int
@@ -67,7 +75,7 @@ class Country:
 
 @dataclass(frozen=True)
 class Dst:
-    """TODO
+    """Dst table scheme
     """
     id: int
     name: str
@@ -75,7 +83,7 @@ class Dst:
 
 @dataclass
 class FlyOn:
-    """TODO
+    """FlyOn table scheme
     """
     id_airway: int
     id_plane: int
@@ -83,7 +91,7 @@ class FlyOn:
 
 @dataclass
 class Plane:
-    """TODO
+    """Plane table scheme
     """
     passenger: int
     consumption: float
@@ -96,9 +104,9 @@ class Plane:
     speed: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class PlaneType:
-    """TODO
+    """PlaneType table scheme
     """
     id: int
     type: str
@@ -107,7 +115,7 @@ class PlaneType:
 
 @dataclass
 class StepIn:
-    """TODO
+    """StepIn table scheme
     """
     id_airway: int
     id_airport: int
@@ -116,7 +124,7 @@ class StepIn:
 
 @dataclass(frozen=True)
 class Timezone:
-    """TODO
+    """Timezone table scheme
     """
     id: int
     name: str
@@ -125,7 +133,7 @@ class Timezone:
 
 @dataclass
 class Use:
-    """TODO
+    """Use table scheme
     """
     id_airline: int
     id_airway: int
