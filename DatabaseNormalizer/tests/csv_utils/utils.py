@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    tests.csv_utils.utils
+    tests.csv_handler.utils
     ---------------------
 
     Dummy data for unit tests.
@@ -31,17 +31,3 @@ class FileUtils:
 
         """Dummy placeholder for a non-existing resource"""
         NON_EXISTING_NAME = 'this_does_not_exists/'
-
-        class ComplexCsv:
-            """References ComplexCsv
-            """
-
-            """Dummy csv name for tests purpose"""
-            CSV_NAME = 'dummy_complex_csv.csv'
-
-            """Tricky csv fields to parse"""
-            COMPLEX_FIELDS = [
-                'some body',
-                '"I, used"',
-                '"to" know"'
-            ]

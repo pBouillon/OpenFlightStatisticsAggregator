@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.csv_utils.utils
+    db_normalizer.csv_handler.utils
     ----------------------------------------
 
     Store useful data to operate on CSV files.
@@ -25,6 +25,9 @@ class Csv:
 
     """Csv line ending"""
     line_end = '\n'
+
+    """Default null value in the files"""
+    null_value = '\\N'
 
     """CSV separator"""
     separator = ','

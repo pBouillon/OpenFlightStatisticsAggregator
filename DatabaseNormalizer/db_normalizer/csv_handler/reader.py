@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    db_normalizer.csv_utils.reader
+    db_normalizer.csv_handler.reader
     ----------------------------------------
 
     Reading toolbox for .csv files.
@@ -13,7 +13,7 @@ from typing import List, Iterator, Optional
 
 from pathlib2 import Path
 
-from db_normalizer.csv_utils.utils import Csv, Parsing
+from db_normalizer.csv_handler.utils import Csv, Parsing
 
 
 class Reader:
@@ -74,10 +74,14 @@ class Reader:
                 line
             )][:-1]
 
+            # if the data is surrounded by '"', remove them
             yield list(map(
-                    lambda field: field.rstrip(),
-                    values
-                ))
+                lambda field: field[1:-1]
+                if field.startswith(Csv.delimiter)
+                and field.endswith(Csv.delimiter)
+                else field,
+                values
+            ))
 
     @property
     def columns(self) -> int:
