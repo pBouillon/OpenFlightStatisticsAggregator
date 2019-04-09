@@ -94,10 +94,13 @@ class Normalizer:
                 # adding the field to the current row
                 formatted_line.append(field)
 
-            # fill missing fields by null values
-            formatted_line.extend(
-                [f'"{Csv.null_value}"'] * (target_length - len(formatted_line))
-            )
+            # evaluating if there is any missing value
+            diff = target_length - len(formatted_line)
+            if diff != 0:
+                # fill missing fields by null values
+                formatted_line.extend(
+                    [f'"{Csv.null_value}"'] * diff
+                )
 
             # add the line to the generator
             yield Csv.separator.join(formatted_line) + Csv.line_end
