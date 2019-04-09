@@ -40,6 +40,19 @@ class Normalizer:
         self._separator = separator
 
     @staticmethod
+    def get_csv_longest_row(content: Iterator[str]) -> int:
+        """Get the maximum of csv fields that can be found in one line
+
+        :param content: a csv file as string, read line per line
+        :return: the number of the maximum fields found in a line
+        """
+        return max(len(re.findall(
+                Parsing.parse_regex,
+                row
+            )[:-1])
+            for row in content)
+
+    @staticmethod
     def is_valid_csv_field(field: str) -> bool:
         """Check whether a field is a valid csv field or not
 
@@ -59,6 +72,8 @@ class Normalizer:
         :param content: the non-csv content
         :return: a generator with lines formatted
         """
+        target_length = self.get_csv_longest_row(content)
+
         for line in content:
             formatted_line: List[str] = []
 
@@ -78,6 +93,14 @@ class Normalizer:
 
                 # adding the field to the current row
                 formatted_line.append(field)
+
+            # evaluating if there is any missing value
+            diff = target_length - len(formatted_line)
+            if diff != 0:
+                # fill missing fields by null values
+                formatted_line.extend(
+                    [f'"{Csv.null_value}"'] * diff
+                )
 
             # add the line to the generator
             yield Csv.separator.join(formatted_line) + Csv.line_end
