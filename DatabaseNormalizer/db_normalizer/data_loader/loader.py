@@ -59,9 +59,6 @@ class Loader:
         Then all geographical and plane data
         Finally tables with references to others (foreign keys)
         """
-        # standalone tables
-        self.load_airway()
-
         # group loading
         self.load_geographical_data()
         self.load_plane_data()
@@ -70,132 +67,150 @@ class Loader:
         self.load_airline()
 
         # linking table
-        self.load_step_in_use()
+        self.load_step_in_use_airway()
         self.load_fly_on()
 
     def load_step_in_use(self):
         """Link airway and airport table
         """
-        airwayID = 0
+        airway_id = 0
         # Création d'une liste temporaire pour sauvegarder les chemins créent (step1-step2...)
         path = []
         # Création d'une liste temporaire pour sauvegarder les chemins associer au airline (airline, step1-step2...)
-        airlinePath = []
+        airline_path = []
         # Remplissage depuis le fichier flight_numbers
-        for airline, _, airportIcao \
+        for airline, _, airport_icao \
                 in self._reader['flight_numbers'].read_content(skip_header=True):
-
             # On retrouve l'id de l'airline
-            for airl in self.airline_records:
-                if airline == airl.icao:
-                    airlineID = airl.id
-            airlinePath.append(airlineID, airportIcao)
+            for airline_liste in self.airline_records:
+                if airline == airline_liste.icao:
+                    airline_id = airline_liste.id
+            airline_path.append(airline_id, airport_icao)
             self.use_records(
                 Use(
-                    id_airline=airlineID,
-                    id_airway=airwayID
+                    id_airline=airline_id,
+                    id_airway=airway_id
                 )
             )
 
             # Si le chemin n'est pas connue
-            if airportIcao not in path:
-                path.append(airportIcao)
+            if airport_icao not in path:
+                path.append(airport_icao)
                 # initialisation du rang
-                r = 0
-                # Pour chaque icao d'aeroport
-                for icao in airportIcao.split('-'):
+                rank = 0
+                self.airway_records.append(
+                    Airway(
+                        id=airway_id,
+                        codeshare=NOT_SET
+                    )
+                )                                      # Pour chaque icao d'aeroport
+                for icao in airport_icao.split('-'):
                     for airport in self.airport_records:
                         # On match l'icao du fichier avec celui de airport pour retrouver l'id
                         if airport.icao == icao:
                             self.step_in_records(
                                 StepIn(
                                     id_airport=airport.id,
-                                    id_airway=airwayID,
-                                    rank=r
+                                    id_airway=airway_id,
+                                    rank=rank
                                 )
                             )
-                    r = r + 1
-                airwayID = airwayID + 1
+                    rank += 1
+                airway_id += 1
 
         # Remplissage depuis le fichier routes
-        for airline, _, airportSrc, _, airportDest, _, _, stops, *_ \
+        for airline, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
                 in self._reader['routes'].read_content(skip_header=False):
-
             # On retrouve l'id de l'airline
-            for airl in self.airline_records:
-                if airline == airl.icao or airline == airl.iata:
-                    airlineID = airl.id
+            for airline_liste in self.airline_records:
+                if airline == airline_liste.icao \
+                        or airline == airline_liste.iata:
+                    airline_id = airline_liste.id
 
             # On retrouve l'id de l'aeroport source et destination
             for airport in self.airport_records:
-                if airportSrc == airport.iata or airportSrc == airport.icao:
-                    airpS = airport.id
-                    airpSIcao = airport.icao
-                if airportDest == airport.iata or airportDest == airport.icao:
-                    airpD = airport.id
-                    airpDIcao = airport.icao
+                if airport_src == airport.iata \
+                        or airport_src == airport.icao:
+                    airp_src = airport.id
+                    airp_src_icao = airport.icao
+                if airport_dest == airport.iata \
+                        or airport_dest == airport.icao:
+                    airp_dest = airport.id
+                    airp_dest_icao = airport.icao
 
             # On cherche si l'utilisation du chemin par cette airline est déjà connue
             # (possibilité d'utiliser un not in ?)
-            notExist = True
-            for airlID, path in airlinePath:
+            exist = False
+            for airl_id, path in airline_path:
                 step = path.split('-')
-                if airlineID == airlID and step[0] == airpSIcao and step(len(step) - 1) == airpDIcao \
-                    and len(step) == stops + 2:
-                    notExist = False
+                if airline_id == airl_id \
+                        and step[0] == airp_src_icao \
+                        and step(-1) == airp_dest_icao \
+                        and len(step) == stops + 2:
+                    exist = True
 
-            if notExist:
+            if not exist:
                 self.use_records(
                     Use(
-                        id_airline=airlineID,
-                        id_airway=airwayID
+                        id_airline=airline_id,
+                        id_airway=airway_id
                     )
                 )
 
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
-            notExist = True
+            exist = False
             for path in path:
                 step = path.split('-')
-                if step[0] == airpSIcao and step[len(step) - 1] == airpDIcao and len(step) == stops + 2:
-                    notExist = False
+                if step[0] == airp_src_icao \
+                        and step[-1] == airp_dest_icao \
+                        and len(step) == stops + 2:
+                    exist = True
 
-            if notExist:
+            if not exist:
+                # create an airway from the extracted data and add it to
+                # the stored records
+                self.airway_records.append(
+                    Airway(
+                        id=airway_id,
+                        codeshare=codeshare
+                    )
+                )
                 self.step_in_records(
                     StepIn(
-                        id_airport=airpS,
-                        id_airway=airwayID,
+                        id_airport=airp_src,
+                        id_airway=airway_id,
                         rank=0
                     )
                 )
                 self.step_in_records(
                     StepIn(
-                        id_airport=airpD,
-                        id_airway=airwayID,
+                        id_airport=airp_dest,
+                        id_airway=airway_id,
                         rank=1
                     )
                 )
-                airwayID = airwayID + 1
+                airway_id += 1
 
     def load_fly_on(self):
         """Link airway and plane table
         """
-        for _, _, airportSrc, _, airportDest, _, _, stops, equipement \
+        for _, _, airport_src, _, airport_dest, _, _, stops, equipement \
                 in self._reader['routes'].read_content(skip_header=False):
 
             # On retrouve l'id de l'aeroport source et destination
             for airport in self.airport_records:
-                if airportSrc == airport.iata or airportSrc == airport.icao:
-                    airpS = airport.id
-                if airportDest == airport.iata or airportDest == airport.icao:
-                    airpD = airport.id
+                if airport_src == airport.iata or airport_src == airport.icao:
+                    airp_src = airport.id
+                if airport_dest == airport.iata or airport_dest == airport.icao:
+                    airp_dest = airport.id
 
             for airway in self.airway_records:
                 for step0 in self.step_in_records:
                     if airway.id == step0.id_airway:
-                        if step0.id_airport == airpS and step0.rank == 0:
+                        if step0.id_airport == airp_src and step0.rank == 0:
                             for stepEnd in self.step_in_records:
                                 if airway.id == stepEnd.id_airway:
-                                    if stepEnd.id_airport == airpD and stepEnd.rank == stops + 1:
+                                    if stepEnd.id_airport == airp_dest and stepEnd.rank == stops + 1:
                                         for plane in equipement.split(' '):
                                             self.fly_on_records(
                                                 FlyOn(
@@ -214,9 +229,9 @@ class Loader:
             # create an airline from the extracted data and add it to
             # research id country
             idCountry = NOT_SET
-            for C in self.country_records:
-                if country == C.name:
-                    idCountry = C.id
+            for country_list in self.country_records:
+                if country == country_list.name:
+                    idCountry = country_list.id
 
             # the stored records
             self.airline_records.append(
@@ -231,24 +246,6 @@ class Loader:
                     id_country=idCountry,
                     is_active=True if active == 'Y' else False,
                     name=name
-                )
-            )
-
-    def load_airway(self):
-        """Load airway data
-        """
-        # unwrapping relevant data from the source file
-        for _, _, _, _, _, \
-            _, codeshare, *_ \
-                in self._reader['routes'].read_content():
-            # create an airway from the extracted data and add it to
-            # the stored records
-            self.airway_records.append(
-                Airway(
-                    id=self.airway_records[-1].id + 1
-                    if len(self.airway_records) > 0
-                    else 1,
-                    codeshare=codeshare
                 )
             )
 
