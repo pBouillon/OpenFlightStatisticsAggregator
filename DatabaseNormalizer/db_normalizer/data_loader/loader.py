@@ -228,10 +228,10 @@ class Loader:
                 in self._reader['airlines'].read_content(skip_header=True):
             # create an airline from the extracted data and add it to
             # research id country
-            idCountry = NOT_SET
+            id_country = NOT_SET
             for country_list in self.country_records:
                 if country == country_list.name:
-                    idCountry = country_list.id
+                    id_country = country_list.id
 
             # the stored records
             self.airline_records.append(
@@ -243,7 +243,7 @@ class Loader:
                     callsign=callsign,
                     iata=iata,
                     icao=icao,
-                    id_country=idCountry,
+                    id_country=id_country,
                     is_active=True if active == 'Y' else False,
                     name=name
                 )
