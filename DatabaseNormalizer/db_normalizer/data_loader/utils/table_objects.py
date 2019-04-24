@@ -14,6 +14,9 @@ from dataclasses import dataclass
 """Default value for un-settable values"""
 NOT_SET = -1
 
+"""Default value for external data"""
+EXTERNAL_DATA = -2
+
 
 @dataclass
 class Airline:
