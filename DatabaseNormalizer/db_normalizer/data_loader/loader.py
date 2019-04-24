@@ -154,8 +154,7 @@ class Loader:
                     else 1,
                     id_country=countries[country_name][0],
                     id_timezone=timezones[timezone_name],
-                    name=city_name,
-                    population=NOT_SET
+                    name=city_name
                 )
             )
 
@@ -182,9 +181,7 @@ class Loader:
                 Country(
                     id=country_id,
                     id_dst=dst_id,
-                    name=name,
-                    population=NOT_SET,
-                    area=NOT_SET
+                    name=name
                 )
             )
 
@@ -225,10 +222,6 @@ class Loader:
                         icao=icao,
                         iata=iata,
                         model=model,
-                        passenger=NOT_SET,
-                        fret=NOT_SET,
-                        speed=NOT_SET,
-                        consumption=NOT_SET
                     ))
             else:
                 self.plane_type_records.append(
