@@ -62,18 +62,18 @@ class City:
     id_country: int
     id_timezone: int
     name: str
-    population: int
+    population: int = EXTERNAL_DATA
 
 
 @dataclass
 class Country:
     """Country table scheme
     """
-    area: float
     id: int
     id_dst: int
     name: str
-    population: int
+    area: float = EXTERNAL_DATA
+    population: int = EXTERNAL_DATA
 
 
 @dataclass(frozen=True)
@@ -96,15 +96,15 @@ class FlyOn:
 class Plane:
     """Plane table scheme
     """
-    passenger: int
-    consumption: float
-    fret: float
     iata: str
     icao: str
     id: int
     id_plane_type: int
     model: str
-    speed: int
+    passenger: int = EXTERNAL_DATA
+    consumption: float = EXTERNAL_DATA
+    fret: float = EXTERNAL_DATA
+    speed: int = EXTERNAL_DATA
 
 
 @dataclass(frozen=True)

@@ -14,7 +14,7 @@ from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
-    Plane, PlaneType, StepIn, NOT_SET, Airport, EXTERNAL_DATA
+    Plane, PlaneType, StepIn, NOT_SET, Airport
 from db_normalizer.data_loader.utils.utils import Sources
 
 
@@ -154,8 +154,7 @@ class Loader:
                     else 1,
                     id_country=countries[country_name][0],
                     id_timezone=timezones[timezone_name],
-                    name=city_name,
-                    population=EXTERNAL_DATA
+                    name=city_name
                 )
             )
 
@@ -182,9 +181,7 @@ class Loader:
                 Country(
                     id=country_id,
                     id_dst=dst_id,
-                    name=name,
-                    population=EXTERNAL_DATA,
-                    area=EXTERNAL_DATA
+                    name=name
                 )
             )
 
@@ -225,10 +222,6 @@ class Loader:
                         icao=icao,
                         iata=iata,
                         model=model,
-                        passenger=EXTERNAL_DATA,
-                        fret=EXTERNAL_DATA,
-                        speed=EXTERNAL_DATA,
-                        consumption=EXTERNAL_DATA
                     ))
             else:
                 self.plane_type_records.append(
