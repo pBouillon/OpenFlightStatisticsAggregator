@@ -55,7 +55,7 @@ class Loader:
             'routes': Reader(LocalSources.routes),
         }
 
-    def load_all(self):
+    def load_all_raw(self):
         """Load all data
 
         First load airways data
@@ -71,12 +71,6 @@ class Loader:
 
         # table with references to others
         self.load_airline()
-
-        # TODO: move to another method (for benchmark + tests)
-        # load third parties
-        self.load_external_country()
-        self.load_external_city()
-        self.load_external_plane()
 
     def load_airline(self):
         """Load airlines data
@@ -119,6 +113,15 @@ class Loader:
                     codeshare=codeshare
                 )
             )
+
+    def load_external(self) -> None:
+        """TODO
+
+        :return:
+        """
+        self.load_external_country()
+        self.load_external_city()
+        self.load_external_plane()
 
     def load_external_country(self) -> None:
         """TODO

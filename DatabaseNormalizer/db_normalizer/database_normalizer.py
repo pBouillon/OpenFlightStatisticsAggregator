@@ -63,10 +63,18 @@ if __name__ == '__main__':
     # Extracting data
     print('[INFO] extracting data ...')
     begin = time.time()
-    loader.load_all()
-    load_time = time.time() - begin
+    loader.load_all_raw()
     print(
         f'[INFO] {loader.records} records loaded in '
+        f'{(time.time() - begin):1.5f} second.s\n'
+    )
+
+    # Fetching additional data
+    print('[INFO] extracting data ...')
+    begin = time.time()
+    loader.load_external()
+    print(
+        f'[INFO] external data loaded in '
         f'{(time.time() - begin):1.5f} second.s\n'
     )
 
