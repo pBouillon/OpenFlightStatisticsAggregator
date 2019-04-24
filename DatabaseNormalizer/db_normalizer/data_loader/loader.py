@@ -8,14 +8,17 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+from sys import stderr
 from typing import List, Dict
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
+from db_normalizer.data_loader.api_external import fill_country
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
-from db_normalizer.data_loader.utils.utils import Sources
+from db_normalizer.data_loader.utils.utils import LocalSources
+from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException
 
 
 class Loader:
@@ -45,11 +48,11 @@ class Loader:
 
         # reader for each source file
         self._reader = {
-            'airlines': Reader(Sources.airlines),
-            'airports': Reader(Sources.airports),
-            'flight_numbers': Reader(Sources.flight_numbers),
-            'planes': Reader(Sources.planes),
-            'routes': Reader(Sources.routes),
+            'airlines': Reader(LocalSources.airlines),
+            'airports': Reader(LocalSources.airports),
+            'flight_numbers': Reader(LocalSources.flight_numbers),
+            'planes': Reader(LocalSources.planes),
+            'routes': Reader(LocalSources.routes),
         }
 
     def load_all(self):
@@ -68,6 +71,12 @@ class Loader:
 
         # table with references to others
         self.load_airline()
+
+        # TODO: move to another method (for benchmark + tests)
+        # load third parties
+        self.load_external_country()
+        self.load_external_city()
+        self.load_external_plane()
 
     def load_airline(self):
         """Load airlines data
@@ -110,6 +119,33 @@ class Loader:
                     codeshare=codeshare
                 )
             )
+
+    def load_external_country(self) -> None:
+        """TODO
+
+        :return:
+        """
+        failed = []
+        for i in range(len(self.country_records)):
+            try:
+                fill_country(self.country_records[i])
+            except UnableToReachCountryApiException:
+                failed.append(self.country_records[i].name)
+        print('failed:\n' + '\n\t- '.join(failed))
+
+    def load_external_city(self) -> None:
+        """TODO
+
+        :return:
+        """
+        pass
+
+    def load_external_plane(self) -> None:
+        """TODO
+
+        :return:
+        """
+        pass
 
     def load_geographical_data(self):
         """Load geographical data
