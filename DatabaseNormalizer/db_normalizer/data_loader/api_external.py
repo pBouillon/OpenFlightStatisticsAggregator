@@ -46,7 +46,7 @@ def fill_country(country: Country) -> None:
 
     # updating values if possible
     results = r.json()[0]
-    country.population = results['area'] if 'area' in results \
+    country.area = results['area'] if 'area' in results \
         else NOT_SET
     country.population = results['population'] if 'population' in results \
         else NOT_SET
