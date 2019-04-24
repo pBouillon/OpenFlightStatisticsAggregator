@@ -11,7 +11,13 @@
 from db_normalizer.csv_handler.utils import Csv
 
 
-class Sources:
+class ExternalSources:
+    """TODO
+    """
+    country_api = 'https://restcountries.eu/rest/v2/'
+
+
+class LocalSources:
     """References sources data
     """
 
