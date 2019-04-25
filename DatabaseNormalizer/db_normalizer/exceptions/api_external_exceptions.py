@@ -10,7 +10,13 @@
 """
 
 
+class ResourceNotFoundException(Exception):
+    """TODO doc
+    """
+    pass
+
+
 class UnableToReachCountryApiException(Exception):
-    """TODO
+    """TODO doc
     """
     pass
