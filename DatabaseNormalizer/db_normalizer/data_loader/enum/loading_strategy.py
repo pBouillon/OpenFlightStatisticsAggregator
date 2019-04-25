@@ -3,7 +3,7 @@
     db_normalizer.data_loader.enum.loading_strategy
     -----------------------------------------------
 
-    TODO doc
+    Define the loading strategy to be used for the external data loading
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -12,7 +12,7 @@ from enum import Enum
 
 
 class LoadingStrategy(Enum):
-    """TODO doc
+    """Loading strategy elements to be used for the external data loading
     """
     DEFAULT = 0
     LEAST_POPULATED = 1

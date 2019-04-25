@@ -13,10 +13,13 @@ from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 
 
 class ExternalSources:
-    """TODO
+    """External sources data
     """
+
+    """API to fetch countries data"""
     country_api = 'https://restcountries.eu/rest/v2/'
 
+    """special countries to fetch and their search name with their strategy"""
     ambiguous_countries = {
         'North Korea': (
             'Korea',

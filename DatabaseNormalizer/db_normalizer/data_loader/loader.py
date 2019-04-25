@@ -115,63 +115,67 @@ class Loader:
                 )
             )
 
-    def load_external(self) -> None:
-        """TODO
+    def load_external(self, smooth: bool = False) -> None:
+        """Load additional data for all records that need it
 
-        :return:
+        First load external data for the country records
+        Then load external data for the city records
+        Finally load external data for the plane records
         """
-        self.load_external_country()
-        self.load_external_city()
-        self.load_external_plane()
+        self.load_external_country(smooth)
+        self.load_external_city(smooth)
+        self.load_external_plane(smooth)
 
-    def load_external_country(self) -> None:
-        """TODO
+    def load_external_country(self, smooth: bool) -> None:
+        """Load additional data for each recorded country from external sources
 
-        :return:
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
         """
-        failed = []  # TODO: remove
-
         # some countries can lead to several results
         for i in range(len(self.country_records)):
-            try:
-                # if the country has a special name for the API
-                if self.country_records[i].name \
-                        in ExternalSources.ambiguous_countries:
-                    # fetching the parameters allowing the search
-                    search_name, strategy = ExternalSources.ambiguous_countries[
-                                            self.country_records[i].name
-                                          ]
-                    original_name = self.country_records[i].name
+            # if the country has a special name for the API
+            if self.country_records[i].name \
+                    in ExternalSources.ambiguous_countries:
+                # fetching the parameters allowing the search
+                search_name, strategy = ExternalSources.ambiguous_countries[
+                    self.country_records[i].name
+                ]
+                original_name = self.country_records[i].name
 
-                    # updating the country for the search
-                    self.country_records[i].name = search_name
+                # updating the country for the search
+                self.country_records[i].name = search_name
+                try:
                     fill_country(
                         self.country_records[i],
                         strategy
                     )
-                    # restore original value
-                    self.country_records[i].name = original_name
-                else:
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
+                # restore original value
+                self.country_records[i].name = original_name
+
+            else:
+                try:
                     fill_country(self.country_records[i])
-            except (
-                ResourceNotFoundException,
-                UnableToReachCountryApiException
-            ):
-                failed.append(self.country_records[i].name)  # TODO: remove
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
 
-        print('failed:\n\t- ' + '\n\t- '.join(failed))  # TODO: remove
+    def load_external_city(self, smooth: bool) -> None:
+        """Load additional data for each recorded city from external sources
 
-    def load_external_city(self) -> None:
-        """TODO
-
-        :return:
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
         """
         pass
 
-    def load_external_plane(self) -> None:
-        """TODO
+    def load_external_plane(self, smooth: bool) -> None:
+        """Load additional data for each recorded plane from external sources
 
-        :return:
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
         """
         pass
 

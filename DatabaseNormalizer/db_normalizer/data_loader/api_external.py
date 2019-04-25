@@ -3,17 +3,18 @@
     db_normalizer.data_loader.api_external
     --------------------------------------
 
-    TODO doc
+    Toolbox to load missing data from several table structures
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+import urllib.parse
 from http import HTTPStatus
 
 import requests
 
 from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
-from db_normalizer.data_loader.utils.table_objects import City, Country, Plane, NOT_SET
+from db_normalizer.data_loader.utils.table_objects import City, Country, Plane, NOT_SET, EXTERNAL_DATA
 from db_normalizer.data_loader.utils.utils import ExternalSources
 from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, ResourceNotFoundException
 
@@ -36,15 +37,23 @@ def fill_country(
         country: Country,
         strategy: LoadingStrategy = LoadingStrategy.DEFAULT
 ) -> None:
-    """TODO doc
+    """Fill the missing values of a country depending on its name
 
-    :param country:
-    :param strategy:
-    :return:
+    :param country: country object to complete
+    :param strategy: on several records fetched, adopt the specified strategy
+    :raise ConnectionError: on request timeout
+    :raise ResourceNotFoundException: on request failure
     """
-    target = f'{ExternalSources.country_api}name/{country.name}'
+    # don't query the API if not needed
+    if country.area != EXTERNAL_DATA \
+            and country.population != EXTERNAL_DATA:
+        return
+
+    # build the request
+    target = ExternalSources.country_api
+    target += 'name/'
+    target += urllib.parse.quote(country.name)  # encode special chars
     target += '?fields=population;area'
-    target = url_encode(target)
 
     # fetch the country's information
     try:
@@ -61,9 +70,9 @@ def fill_country(
     if strategy == LoadingStrategy.DEFAULT:
         results = results[0]
     elif strategy == LoadingStrategy.LEAST_POPULATED:
-        results = min(results, key=lambda row: row['population'])  # FIXME
+        results = min(results, key=lambda row: row['population'])
     elif strategy == LoadingStrategy.MOST_POPULATED:
-        results = max(results, key=lambda row: row['population'])  # FIXME
+        results = max(results, key=lambda row: row['population'])
 
     # updating values if possible
     country.area = results['area'] if 'area' in results \
