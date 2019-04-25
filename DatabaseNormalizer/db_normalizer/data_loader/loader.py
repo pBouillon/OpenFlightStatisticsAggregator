@@ -14,11 +14,12 @@ from typing import List, Dict
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
 from db_normalizer.data_loader.api_external import fill_country
+from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
-from db_normalizer.data_loader.utils.utils import LocalSources
-from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException
+from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources
+from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, ResourceNotFoundException
 
 
 class Loader:
@@ -128,13 +129,37 @@ class Loader:
 
         :return:
         """
-        failed = []
+        failed = []  # TODO: remove
+
+        # some countries can lead to several results
         for i in range(len(self.country_records)):
             try:
-                fill_country(self.country_records[i])
-            except UnableToReachCountryApiException:
-                failed.append(self.country_records[i].name)
-        print('failed:\n' + '\n\t- '.join(failed))
+                # if the country has a special name for the API
+                if self.country_records[i].name \
+                        in ExternalSources.ambiguous_countries:
+                    # fetching the parameters allowing the search
+                    search_name, strategy = ExternalSources.ambiguous_countries[
+                                            self.country_records[i].name
+                                          ]
+                    original_name = self.country_records[i].name
+
+                    # updating the country for the search
+                    self.country_records[i].name = search_name
+                    fill_country(
+                        self.country_records[i],
+                        strategy
+                    )
+                    # restore original value
+                    self.country_records[i].name = original_name
+                else:
+                    fill_country(self.country_records[i])
+            except (
+                ResourceNotFoundException,
+                UnableToReachCountryApiException
+            ):
+                failed.append(self.country_records[i].name)  # TODO: remove
+
+        print('failed:\n\t- ' + '\n\t- '.join(failed))  # TODO: remove
 
     def load_external_city(self) -> None:
         """TODO

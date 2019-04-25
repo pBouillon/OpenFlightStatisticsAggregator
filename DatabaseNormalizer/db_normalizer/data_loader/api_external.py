@@ -12,25 +12,34 @@ from http import HTTPStatus
 
 import requests
 
+from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 from db_normalizer.data_loader.utils.table_objects import City, Country, Plane, NOT_SET
 from db_normalizer.data_loader.utils.utils import ExternalSources
-from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException
+from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, ResourceNotFoundException
 
 
-def fill_city(city: City) -> None:
+def fill_city(
+        city: City,
+        strategy: LoadingStrategy = LoadingStrategy.DEFAULT
+) -> None:
     """TODO doc
 
     :param city:
+    :param strategy:
     :return:
     """
     # TODO method
     pass
 
 
-def fill_country(country: Country) -> None:
+def fill_country(
+        country: Country,
+        strategy: LoadingStrategy = LoadingStrategy.DEFAULT
+) -> None:
     """TODO doc
 
     :param country:
+    :param strategy:
     :return:
     """
     target = f'{ExternalSources.country_api}name/{country.name}'
@@ -38,24 +47,39 @@ def fill_country(country: Country) -> None:
     target = url_encode(target)
 
     # fetch the country's information
-    r = requests.get(target)
+    try:
+        r = requests.get(target)
+    except ConnectionError:
+        raise UnableToReachCountryApiException
 
     # test the API status
     if r.status_code != HTTPStatus.OK:
-        raise UnableToReachCountryApiException
+        raise ResourceNotFoundException
+
+    # selecting the appropriate result
+    results = r.json()
+    if strategy == LoadingStrategy.DEFAULT:
+        results = results[0]
+    elif strategy == LoadingStrategy.LEAST_POPULATED:
+        results = min(results, key=lambda row: row['population'])  # FIXME
+    elif strategy == LoadingStrategy.MOST_POPULATED:
+        results = max(results, key=lambda row: row['population'])  # FIXME
 
     # updating values if possible
-    results = r.json()[0]
     country.area = results['area'] if 'area' in results \
         else NOT_SET
     country.population = results['population'] if 'population' in results \
         else NOT_SET
 
 
-def fill_plane(plane: Plane) -> None:
+def fill_plane(
+        plane: Plane,
+        strategy: LoadingStrategy = LoadingStrategy.DEFAULT
+) -> None:
     """TODO doc
 
     :param plane:
+    :param strategy:
     :return:
     """
     # TODO: method
