@@ -70,9 +70,9 @@ if __name__ == '__main__':
     )
 
     # Fetching additional data
-    print('[INFO] extracting data ...')
+    print('[INFO] fetching external data...')
     begin = time.time()
-    loader.load_external()
+    loader.load_external(smooth=True)
     print(
         f'[INFO] external data loaded in '
         f'{(time.time() - begin):1.5f} second.s\n'
