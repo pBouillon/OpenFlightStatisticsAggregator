@@ -9,12 +9,40 @@
     :licence: MIT, see LICENSE for more details.
 """
 from db_normalizer.csv_handler.utils import Csv
+from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 
 
 class ExternalSources:
     """TODO
     """
     country_api = 'https://restcountries.eu/rest/v2/'
+
+    ambiguous_countries = {
+        'North Korea': (
+            'Korea',
+            LoadingStrategy.LEAST_POPULATED
+        ),
+        'South Korea': (
+            'Korea',
+            LoadingStrategy.MOST_POPULATED
+        ),
+        'Congo (Brazzaville)': (
+            'Congo',
+            LoadingStrategy.LEAST_POPULATED
+        ),
+        'Congo (Kinshasa)': (
+            'Congo',
+            LoadingStrategy.MOST_POPULATED
+        ),
+        'Cape Verde': (
+            'Cabo Verde',
+            LoadingStrategy.DEFAULT
+        ),
+        'British Virgin Islands': (
+            'Virgin Islands (British)',
+            LoadingStrategy.DEFAULT
+        )
+    }
 
 
 class LocalSources:
