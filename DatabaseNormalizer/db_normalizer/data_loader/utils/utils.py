@@ -56,7 +56,7 @@ class ExternalSources:
     }
 
     """"""
-    city_population_regex = r'.*?(?:population).*?(\d{1,3}(?:,\d{3})+?)+(?:\s|\<)'
+    city_population_regex = r'.*?(?:population).*?(\d{1,3}(?:,\d{3})+?)+(?:\s|<)'
 
     """"""
     wikipedia_api = 'https://en.wikipedia.org/w/api.php'
