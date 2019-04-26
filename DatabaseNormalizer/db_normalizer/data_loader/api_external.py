@@ -37,7 +37,7 @@ def fill_city(
 
     # build the request
     target = ExternalSources.wikipedia_api
-    target += f'?action=parse&page={city.name}&format=json'
+    target += f'?action=parse&page={urllib.parse.quote(city.name)}&format=json'
 
     # fetch the city's information
     try:
@@ -52,6 +52,7 @@ def fill_city(
     # selecting the appropriate result
     data = r.json()['parse']['text']['*']
     results = re.findall(ExternalSources.city_population_regex, data)
+    results = [int(result.replace(',', '')) for result in results]
 
     if len(results) == 0:
         raise ResourceNotFoundException
@@ -84,7 +85,7 @@ def fill_country(
     # build the request
     target = ExternalSources.country_api
     target += 'name/'
-    target += urllib.parse.quote(country.name)  # encode special chars
+    target += urllib.parse.quote(country.name)
     target += '?fields=population;area'
 
     # fetch the country's information
