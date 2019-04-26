@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+    wikipedia_city_big_numbers_extract.py
+    -------------------------------------
+    Extract huge numbers that may be the population (further treatment needed) from a wikipedia city's page.
+    :author: Bouillon Pierre
+"""
 import re
 import requests
 
@@ -5,9 +12,8 @@ from http import HTTPStatus
 
 
 API = 'https://en.wikipedia.org/w/api.php'
-LOOK_FOR = 'Toronto'
-# add selection escape on other symbols than `\d` or `,`
-POPULATION_REGEX = r'.*?(?:population).*?(\d+(?:,\d+)+).*?'
+LOOK_FOR = 'Montreal'
+POPULATION_REGEX = r'.*?((?:population).*?(\d{1,3}(?:,\d{3})+?))+\s'
 
 
 def main():
