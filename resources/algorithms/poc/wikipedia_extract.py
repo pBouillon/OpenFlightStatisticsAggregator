@@ -12,8 +12,8 @@ from http import HTTPStatus
 
 
 API = 'https://en.wikipedia.org/w/api.php'
-LOOK_FOR = 'Montreal'
-POPULATION_REGEX = r'.*?((?:population).*?(\d{1,3}(?:,\d{3})+?))+\s'
+LOOK_FOR = 'Goroka'
+POPULATION_REGEX = r'.*?(?:population).*?(\d{1,3}(?:,\d{3})+?)+(?:\s|\<)'
 
 
 def main():
@@ -24,7 +24,7 @@ def main():
         exit('Can\'t reach the API')
 
     data = r.json()['parse']['text']['*']
-    print(re.findall(POPULATION_REGEX, data))
+    print(re.findall(POPULATION_REGEX, data, flags=re.IGNORECASE))
 
 
 if __name__ == '__main__':

@@ -8,6 +8,7 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+import re
 import urllib.parse
 from http import HTTPStatus
 
@@ -16,7 +17,8 @@ import requests
 from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 from db_normalizer.data_loader.utils.table_objects import City, Country, Plane, NOT_SET, EXTERNAL_DATA
 from db_normalizer.data_loader.utils.utils import ExternalSources
-from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, ResourceNotFoundException
+from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, \
+    ResourceNotFoundException, UnableToReachCityApiException
 
 
 def fill_city(
@@ -29,8 +31,38 @@ def fill_city(
     :param strategy:
     :return:
     """
-    # TODO method
-    pass
+    # don't query the API if not needed
+    if city.population != EXTERNAL_DATA:
+        return
+
+    # build the request
+    target = ExternalSources.wikipedia_api
+    target += f'?action=parse&page={city.name}&format=json'
+
+    # fetch the city's information
+    try:
+        r = requests.get(target)
+    except ConnectionError:
+        raise UnableToReachCityApiException
+
+    # test the API status
+    if r.status_code != HTTPStatus.OK:
+        raise ResourceNotFoundException
+
+    # selecting the appropriate result
+    data = r.json()['parse']['text']['*']
+    results = re.findall(ExternalSources.city_population_regex, data)
+
+    if len(results) == 0:
+        raise ResourceNotFoundException
+
+    # updating value
+    if strategy == LoadingStrategy.DEFAULT:
+        city.population = results[0]
+    elif strategy == LoadingStrategy.LEAST_POPULATED:
+        city.population = min(results)
+    elif strategy == LoadingStrategy.MOST_POPULATED:
+        city.population = max(results)
 
 
 def fill_country(

@@ -20,6 +20,14 @@ class ExternalSources:
     country_api = 'https://restcountries.eu/rest/v2/'
 
     """special countries to fetch and their search name with their strategy"""
+    ambiguous_cities = {
+        'Narssarssuaq': (
+            'Narsarsuaq',
+            LoadingStrategy.DEFAULT
+        ),
+    }
+
+    """special countries to fetch and their search name with their strategy"""
     ambiguous_countries = {
         'North Korea': (
             'Korea',
@@ -46,6 +54,12 @@ class ExternalSources:
             LoadingStrategy.DEFAULT
         )
     }
+
+    """"""
+    city_population_regex = r'.*?(?:population).*?(\d{1,3}(?:,\d{3})+?)+(?:\s|\<)'
+
+    """"""
+    wikipedia_api = 'https://en.wikipedia.org/w/api.php'
 
 
 class LocalSources:

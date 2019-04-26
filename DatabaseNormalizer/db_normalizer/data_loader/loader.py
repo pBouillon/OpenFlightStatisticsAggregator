@@ -13,7 +13,7 @@ from typing import List, Dict
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
-from db_normalizer.data_loader.api_external import fill_country
+from db_normalizer.data_loader.api_external import fill_country, fill_city
 from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
@@ -132,6 +132,7 @@ class Loader:
         :param smooth: silence exception if True; otherwise, raise it
         :raise ResourceNotFoundException: on an unfetchable data queried
         """
+        return
         # some countries can lead to several results
         for i in range(len(self.country_records)):
             # if the country has a special name for the API
@@ -169,7 +170,12 @@ class Loader:
         :param smooth: silence exception if True; otherwise, raise it
         :raise ResourceNotFoundException: on an unfetchable data queried
         """
-        pass
+        for i in range(len(self.city_records)):
+            try:
+                fill_city(self.city_records[i])
+            except ResourceNotFoundException as rnfe:
+                if not smooth:
+                    raise rnfe
 
     def load_external_plane(self, smooth: bool) -> None:
         """Load additional data for each recorded plane from external sources

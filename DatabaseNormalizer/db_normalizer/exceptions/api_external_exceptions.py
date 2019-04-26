@@ -16,6 +16,12 @@ class ResourceNotFoundException(Exception):
     pass
 
 
+class UnableToReachCityApiException(Exception):
+    """TODO doc
+    """
+    pass
+
+
 class UnableToReachCountryApiException(Exception):
     """TODO doc
     """
