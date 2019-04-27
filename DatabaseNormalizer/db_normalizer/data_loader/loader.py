@@ -16,7 +16,7 @@ from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
 from db_normalizer.data_loader.utils.utils import Sources
-
+global path, airline_path
 
 class Loader:
     """References Loader
@@ -67,129 +67,169 @@ class Loader:
         self.load_airline()
 
         # linking table
-        self.load_step_in_use_airway()
+        self.load_airway_details()
         self.load_fly_on()
 
-    def load_step_in_use(self):
+    def load_airway_details(self):
         """Link airway and airport table
         """
-        airway_id = 0
         # Création d'une liste temporaire pour sauvegarder les chemins créent (step1-step2...)
         path = []
         # Création d'une liste temporaire pour sauvegarder les chemins associer au airline (airline, step1-step2...)
         airline_path = []
         # Remplissage depuis le fichier flight_numbers
-        for airline, _, airport_icao \
+        for airline_code, _, airport_icao \
                 in self._reader['flight_numbers'].read_content(skip_header=True):
-            # On retrouve l'id de l'airline
-            for airline_liste in self.airline_records:
-                if airline == airline_liste.icao:
-                    airline_id = airline_liste.id
-            airline_path.append(airline_id, airport_icao)
-            self.use_records(
-                Use(
-                    id_airline=airline_id,
-                    id_airway=airway_id
-                )
-            )
 
-            # Si le chemin n'est pas connue
-            if airport_icao not in path:
+            if airport_icao in path:
+                # On retrouve l'index du chemin dans path depuis lequel on peut facillment retourver l'id de l'airway
+                # (index + 1, car l'id commence à 1)
+                airway_id = path.index(airport_icao) + 1
+            else:
+                # On ajoute le nouveau chemin
                 path.append(airport_icao)
-                # initialisation du rang
-                rank = 0
+                if len(self.airway_records) > 0:
+                    airway_id = self.airway_records[-1].id + 1
+                else:
+                    airway_id = 1
+                # On crée une nouvelle airway correspondant à ce chemin
                 self.airway_records.append(
                     Airway(
                         id=airway_id,
                         codeshare=NOT_SET
                     )
-                )                                      # Pour chaque icao d'aeroport
-                for icao in airport_icao.split('-'):
+                )
+
+                # initialisation du rang
+                rank = 0
+                # Pour chaque icao d'aeroport, on récupère les aeroport séparé par "-" (step1-step2...)
+                for icao_stop in airport_icao.split('-'):
                     for airport in self.airport_records:
                         # On match l'icao du fichier avec celui de airport pour retrouver l'id
-                        if airport.icao == icao:
-                            self.step_in_records(
+                        if airport.icao == icao_stop:
+                            self.step_in_records.append(
                                 StepIn(
                                     id_airport=airport.id,
                                     id_airway=airway_id,
                                     rank=rank
                                 )
                             )
+                            # On arrete lorsque on trouve l'aeroport
+                            break
                     rank += 1
-                airway_id += 1
+
+            # On retrouve l'id de l'airline
+            for airline in self.airline_records:
+                if airline_code == airline.icao:
+                    # On enregistre le chemain associer à l'airline pour la recherche dans le second fichier
+                    airline_path.append([airline.id, airport_icao])
+                    self.use_records.append(
+                        Use(
+                            id_airline=airline.id,
+                            id_airway=airway_id
+                        )
+                    )
+                    # On arrete lorsque on trouve l'airline
+                    break
 
         # Remplissage depuis le fichier routes
-        for airline, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
+        for airline_code, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
                 in self._reader['routes'].read_content(skip_header=False):
-            # On retrouve l'id de l'airline
-            for airline_liste in self.airline_records:
-                if airline == airline_liste.icao \
-                        or airline == airline_liste.iata:
-                    airline_id = airline_liste.id
 
-            # On retrouve l'id de l'aeroport source et destination
+            airp_src_icao = "unknown"
+            airp_dest_icao = "unknown"
+            airp_src = 0
+            airp_dest = 0
+
+            airway_id = self.airway_records[-1].id + 1
+            # On retrouve l'id et l'icao des l'aeroports source et destination
             for airport in self.airport_records:
                 if airport_src == airport.iata \
                         or airport_src == airport.icao:
                     airp_src = airport.id
                     airp_src_icao = airport.icao
+                    # On arrete lorsque on trouve l'aeroport
+                    break
+
                 if airport_dest == airport.iata \
                         or airport_dest == airport.icao:
                     airp_dest = airport.id
                     airp_dest_icao = airport.icao
-
-            # On cherche si l'utilisation du chemin par cette airline est déjà connue
-            # (possibilité d'utiliser un not in ?)
-            exist = False
-            for airl_id, path in airline_path:
-                step = path.split('-')
-                if airline_id == airl_id \
-                        and step[0] == airp_src_icao \
-                        and step(-1) == airp_dest_icao \
-                        and len(step) == stops + 2:
-                    exist = True
-
-            if not exist:
-                self.use_records(
-                    Use(
-                        id_airline=airline_id,
-                        id_airway=airway_id
-                    )
-                )
+                    # On arrete lorsque on trouve l'aeroport
+                    break
 
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
             exist = False
-            for path in path:
-                step = path.split('-')
+            i = 1
+            for airway in path:
+                step = airway.split('-')
                 if step[0] == airp_src_icao \
                         and step[-1] == airp_dest_icao \
                         and len(step) == stops + 2:
                     exist = True
+                    # L'index + 1 du chemin dans path correspond à l'id de l'airway
+                    airway_id = i
+                    # On arrete si on trouve un chemin identique
+                    break
+                i += 1
 
             if not exist:
                 # create an airway from the extracted data and add it to
                 # the stored records
+
+                # On ajoute le nouveau chemin
+                path.append(airp_src_icao + "-" + airp_dest_icao)
+
                 self.airway_records.append(
                     Airway(
                         id=airway_id,
                         codeshare=codeshare
                     )
                 )
-                self.step_in_records(
+                self.step_in_records.append(
                     StepIn(
                         id_airport=airp_src,
                         id_airway=airway_id,
                         rank=0
                     )
                 )
-                self.step_in_records(
+                self.step_in_records.append(
                     StepIn(
                         id_airport=airp_dest,
                         id_airway=airway_id,
                         rank=1
                     )
                 )
-                airway_id += 1
+
+            # On retrouve l'id de l'airline
+            for airline in self.airline_records:
+                if airline_code == airline.icao \
+                        or airline_code == airline.iata:
+                    airline_id = airline.id
+                    # On arrete lorsque on trouve l'airline
+                    break
+
+            # On cherche si l'utilisation du chemin par cette airline est déjà connue
+            # (possibilité d'utiliser un not in ?)
+            exist = False
+            for airl_id, airway in airline_path:
+                step = airway.split('-')
+                if airline_id == airl_id \
+                        and step[0] == airp_src_icao \
+                        and step[-1] == airp_dest_icao \
+                        and len(step) == stops + 2:
+                    exist = True
+                    # On arrete si on trouve le chemin indentique associer à cette airline
+                    break
+
+            if not exist:
+                airline_path.append([airline_id, airp_src_icao + "-" + airp_dest_icao])
+                self.use_records.append(
+                    Use(
+                        id_airline=airline_id,
+                        id_airway=airway_id
+                    )
+                )
 
     def load_fly_on(self):
         """Link airway and plane table
@@ -212,7 +252,7 @@ class Loader:
                                 if airway.id == stepEnd.id_airway:
                                     if stepEnd.id_airport == airp_dest and stepEnd.rank == stops + 1:
                                         for plane in equipement.split(' '):
-                                            self.fly_on_records(
+                                            self.fly_on_records.append(
                                                 FlyOn(
                                                     id_airway=airway.id,
                                                     id_plane=plane
