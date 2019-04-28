@@ -25,6 +25,59 @@ class ExternalSources:
             'Narsarsuaq',
             LoadingStrategy.DEFAULT
         ),
+        'Iles De La Madeleine': (
+            'Magdalen_Islands',
+            LoadingStrategy.DEFAULT
+        ),
+        'Portage-la-prairie': (
+            'Portage la Prairie',
+            LoadingStrategy.DEFAULT
+        ),
+        'Red Deer Industrial': (
+            'Red Deer, Alberta',
+            LoadingStrategy.DEFAULT
+        ),
+        'Riviere Du Loup': (
+            'Rivière_du_Loup_(Bas-Saint-Laurent)',
+            LoadingStrategy.DEFAULT
+        ),
+        'Fort Mcpherson': (
+            'Fort McPherson',
+            LoadingStrategy.DEFAULT
+        ),
+        'Bejaja': (
+            'Béjaïa',
+            LoadingStrategy.DEFAULT
+        ),
+        'Algier': (
+            'Algiers',
+            LoadingStrategy.DEFAULT
+        ),
+        'Reggan': (
+            'Reggane',
+            LoadingStrategy.DEFAULT
+        ),
+        'Bou Sfer': (
+            'Bousfer',
+            LoadingStrategy.DEFAULT
+        ),
+        'Ech-cheliff': (
+            'Chlef',
+            LoadingStrategy.DEFAULT
+        ),
+        'Bobo-dioulasso': (
+            'Bobo-Dioulasso',
+            LoadingStrategy.DEFAULT
+        ),
+        'Port Hartcourt': (
+            'Port_Harcourt',
+            LoadingStrategy.DEFAULT
+        ),
+        'Niatougou': (
+            'Niamtougou',
+            LoadingStrategy.DEFAULT
+        ),
+        # FIXME: add more records
     }
 
     """special countries to fetch and their search name with their strategy"""
@@ -55,8 +108,16 @@ class ExternalSources:
         )
     }
 
-    """"""
-    city_population_regex = r'.*?(?:population).*?(\d{1,3}(?:,\d{3})+?)+(?:\s|<)'
+    """Regex to parse the Wikipedia page's content
+        population       when detecting the word `population`
+        .*?              ignoring all following characters in a non-greedy way
+        (
+            \d{1,3}      selecting the next 1 to 3 digits
+            (?:,\d{3})+? followed by at least one group as `,NNN`
+        )
+        (?:\s|<)         ending with a whitespace or a `<`
+    """
+    city_population_regex = r'population.*?(\d{1,3}(?:,\d{3})+?)(?:\s|<)'
 
     """"""
     wikipedia_api = 'https://en.wikipedia.org/w/api.php'
