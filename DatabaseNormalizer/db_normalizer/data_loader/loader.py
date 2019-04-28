@@ -136,6 +136,10 @@ class Loader:
                 in self._reader['routes'].read_content(skip_header=False):
 
             airway_id = self.airway_records[-1].id + 1
+
+            airp_src_icao = ""
+            airp_dest_icao = ""
+
             # On retrouve l'id et l'icao des l'aeroports source et destination
             for airport in self.airport_records:
                 if airport_src == airport.iata \
@@ -149,7 +153,7 @@ class Loader:
                     airp_dest_icao = airport.icao
 
                 # On arrete lorsque on trouve les deux aeroports
-                if airp_src and airp_dest:
+                if airp_src_icao != "" and airp_dest_icao != "":
                     break
 
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
@@ -159,7 +163,7 @@ class Loader:
                 step = airway.split('-')
                 if step[0] == airp_src_icao \
                         and step[-1] == airp_dest_icao \
-                        and len(step) == stops + 2:
+                        and len(step) == int(stops) + 2:
                     exist = True
                     # L'index + 1 du chemin dans path correspond à l'id de l'airway
                     airway_id = index
@@ -211,7 +215,7 @@ class Loader:
                 if airline_id == airl_id \
                         and step[0] == airp_src_icao \
                         and step[-1] == airp_dest_icao \
-                        and len(step) == stops + 2:
+                        and len(step) == int(stops) + 2:
                     exist = True
                     # On arrete si on trouve le chemin indentique associer à cette airline
                     break
