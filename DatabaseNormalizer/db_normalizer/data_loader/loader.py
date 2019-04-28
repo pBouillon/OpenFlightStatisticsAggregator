@@ -88,10 +88,7 @@ class Loader:
             else:
                 # On ajoute le nouveau chemin
                 path.append(airport_icao)
-                if len(self.airway_records) > 0:
-                    airway_id = self.airway_records[-1].id + 1
-                else:
-                    airway_id = 1
+                airway_id = self.airway_records[-1].id + 1 if len(self.airway_records) > 0 else 1
                 # On crée une nouvelle airway correspondant à ce chemin
                 self.airway_records.append(
                     Airway(
@@ -105,24 +102,24 @@ class Loader:
                 # Pour chaque icao d'aeroport, on récupère les aeroport séparé par "-" (step1-step2...)
                 for icao_stop in airport_icao.split('-'):
                     for airport in self.airport_records:
-                        # On match l'icao du fichier avec celui de airport pour retrouver l'id
-                        if airport.icao == icao_stop:
-                            self.step_in_records.append(
-                                StepIn(
-                                    id_airport=airport.id,
-                                    id_airway=airway_id,
-                                    rank=rank
-                                )
+                        if airport.icao != icao_stop:
+                            continue
+                        self.step_in_records.append(
+                            StepIn(
+                                id_airport=airport.id,
+                                id_airway=airway_id,
+                                rank=rank
                             )
-                            # On arrete lorsque on trouve l'aeroport
-                            break
+                        )
+                        # On arrete lorsque on trouve l'aeroport
+                        break
                     rank += 1
 
             # On retrouve l'id de l'airline
             for airline in self.airline_records:
                 if airline_code == airline.icao:
                     # On enregistre le chemain associer à l'airline pour la recherche dans le second fichier
-                    airline_path.append([airline.id, airport_icao])
+                    airline_path.append((airline.id, airport_icao))
                     self.use_records.append(
                         Use(
                             id_airline=airline.id,
@@ -158,7 +155,7 @@ class Loader:
 
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
             exist = False
-            i = 1
+            index = 1
             for airway in path:
                 step = airway.split('-')
                 if step[0] == airp_src_icao \
@@ -166,17 +163,17 @@ class Loader:
                         and len(step) == stops + 2:
                     exist = True
                     # L'index + 1 du chemin dans path correspond à l'id de l'airway
-                    airway_id = i
+                    airway_id = index
                     # On arrete si on trouve un chemin identique
                     break
-                i += 1
+                index += 1
 
             if not exist:
                 # create an airway from the extracted data and add it to
                 # the stored records
 
                 # On ajoute le nouveau chemin
-                path.append(airp_src_icao + "-" + airp_dest_icao)
+                path.append('-'.join((airp_src_icao, airp_dest_icao)))
 
                 self.airway_records.append(
                     Airway(
@@ -221,7 +218,7 @@ class Loader:
                     break
 
             if not exist:
-                airline_path.append([airline_id, airp_src_icao + "-" + airp_dest_icao])
+                airline_path.append((airline_id, '-'.join((airp_src_icao, airp_dest_icao))))
                 self.use_records.append(
                     Use(
                         id_airline=airline_id,
@@ -237,9 +234,11 @@ class Loader:
 
             # On retrouve l'id de l'aeroport source et destination
             for airport in self.airport_records:
-                if airport_src == airport.iata or airport_src == airport.icao:
+                if airport_src == airport.iata \
+                        or airport_src == airport.icao:
                     airp_src = airport.id
-                if airport_dest == airport.iata or airport_dest == airport.icao:
+                if airport_dest == airport.iata \
+                        or airport_dest == airport.icao:
                     airp_dest = airport.id
 
             for airway in self.airway_records:
@@ -267,9 +266,9 @@ class Loader:
             # create an airline from the extracted data and add it to
             # research id country
             id_country = NOT_SET
-            for country_list in self.country_records:
-                if country == country_list.name:
-                    id_country = country_list.id
+            for country_record in self.country_records:
+                if country == country_record.name:
+                    id_country = country_record.id
 
             # the stored records
             self.airline_records.append(
