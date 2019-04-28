@@ -15,21 +15,24 @@ from http import HTTPStatus
 import requests
 
 from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
-from db_normalizer.data_loader.utils.table_objects import City, Country, Plane, NOT_SET, EXTERNAL_DATA
+from db_normalizer.data_loader.utils.table_objects import City, Country, \
+    NOT_SET, EXTERNAL_DATA
 from db_normalizer.data_loader.utils.utils import ExternalSources
-from db_normalizer.exceptions.api_external_exceptions import UnableToReachCountryApiException, \
-    ResourceNotFoundException, UnableToReachCityApiException
+from db_normalizer.exceptions.api_external_exceptions import \
+    UnableToReachCountryApiException, ResourceNotFoundException, \
+    UnableToReachCityApiException
 
 
 def fill_city(
         city: City,
         strategy: LoadingStrategy = LoadingStrategy.DEFAULT
 ) -> None:
-    """TODO doc
+    """Fill the missing values of a city depending on its name
 
-    :param city:
-    :param strategy:
-    :return:
+    :param city: city object to complete
+    :param strategy: on several records fetched, adopt the specified strategy
+    :raise UnableToReachCityApiException: on request timeout
+    :raise ResourceNotFoundException: on request failure
     """
     # don't query the API if not needed
     if city.population != EXTERNAL_DATA:
@@ -50,8 +53,19 @@ def fill_city(
         raise ResourceNotFoundException
 
     # selecting the appropriate result
-    data = r.json()['parse']['text']['*']
-    results = re.findall(ExternalSources.city_population_regex, data)
+    data = r.json()
+
+    # try to fetch the data, raise an error if no data were found
+    try:
+        data = data['parse']['text']['*']
+    except KeyError:
+        raise ResourceNotFoundException
+
+    results = re.findall(
+        pattern=ExternalSources.city_population_regex,
+        string=data,
+        flags=re.IGNORECASE
+    )
     results = [int(result.replace(',', '')) for result in results]
 
     if len(results) == 0:
@@ -74,7 +88,7 @@ def fill_country(
 
     :param country: country object to complete
     :param strategy: on several records fetched, adopt the specified strategy
-    :raise ConnectionError: on request timeout
+    :raise UnableToReachCountryApiException: on request timeout
     :raise ResourceNotFoundException: on request failure
     """
     # don't query the API if not needed
@@ -114,24 +128,11 @@ def fill_country(
         else NOT_SET
 
 
-def fill_plane(
-        plane: Plane,
-        strategy: LoadingStrategy = LoadingStrategy.DEFAULT
-) -> None:
-    """TODO doc
-
-    :param plane:
-    :param strategy:
-    :return:
-    """
-    # TODO: method
-    pass
-
-
 def url_encode(to_sanitize: str) -> str:
-    """TODO doc
+    """format special chars met for URL purposes
+
+    :see: https://www.degraeve.com/reference/urlencoding.php
     """
-    # TODO: replace with dict as const (see: https://www.degraeve.com/reference/urlencoding.php)
     return to_sanitize.replace(
         ' ', '%20'
     ).replace(
