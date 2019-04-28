@@ -15,7 +15,7 @@ from pathlib2 import Path
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
-from tests.csv_utils.utils import FileUtils
+from tests.csv_handler.utils import FileUtils
 
 
 class TestReader(TestCase):

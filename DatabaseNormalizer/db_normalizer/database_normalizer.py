@@ -14,7 +14,7 @@ from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
 
-__version__ = '1.7.3'
+__version__ = '1.8.4'
 
 
 def show_header() -> None:
@@ -63,12 +63,25 @@ if __name__ == '__main__':
     # Extracting data
     print('[INFO] extracting data ...')
     begin = time.time()
-    loader.load_all()
-    load_time = time.time() - begin
+    loader.load_all_raw()
     print(
         f'[INFO] {loader.records} records loaded in '
         f'{(time.time() - begin):1.5f} second.s\n'
     )
+
+    # Fetching additional data
+    if input(
+        '[WARN] Do you want to load external data ?\n'
+        '[WARN] (fetching external resources take a huge amount of time)\n'
+        '[WARN] (y/N) -> \n'
+    ) == 'y':
+        print('[INFO] fetching external data...')
+        begin = time.time()
+        loader.load_external(smooth=True)
+        print(
+            f'[INFO] external data loaded in '
+            f'{(time.time() - begin):1.5f} second.s\n'
+        )
 
     #
     # Show loaded data info

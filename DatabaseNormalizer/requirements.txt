@@ -1,3 +1,4 @@
+requests
 cx-Oracle==7.1.2
 pandas==0.24.2
 pathlib2==2.3.3

@@ -16,7 +16,7 @@ from pathlib2 import Path
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.exceptions.csv_exceptions import BadFileFormatException
-from tests.csv_utils.utils import FileUtils
+from tests.csv_handler.utils import FileUtils
 
 
 class TestNormalizer(TestCase):

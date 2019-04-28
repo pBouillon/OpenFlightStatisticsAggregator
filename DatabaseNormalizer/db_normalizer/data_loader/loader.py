@@ -8,15 +8,16 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
+from db_normalizer.data_loader.api_external import fill_country, fill_city
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
-from db_normalizer.data_loader.utils.utils import Sources
-global path, airline_path
+from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources
+from db_normalizer.exceptions.api_external_exceptions import ResourceNotFoundException
 
 class Loader:
     """References Loader
@@ -45,14 +46,14 @@ class Loader:
 
         # reader for each source file
         self._reader = {
-            'airlines': Reader(Sources.airlines),
-            'airports': Reader(Sources.airports),
-            'flight_numbers': Reader(Sources.flight_numbers),
-            'planes': Reader(Sources.planes),
-            'routes': Reader(Sources.routes),
+            'airlines': Reader(LocalSources.airlines),
+            'airports': Reader(LocalSources.airports),
+            'flight_numbers': Reader(LocalSources.flight_numbers),
+            'planes': Reader(LocalSources.planes),
+            'routes': Reader(LocalSources.routes),
         }
 
-    def load_all(self):
+    def load_all_raw(self):
         """Load all data
 
         First load airways data
@@ -71,12 +72,13 @@ class Loader:
         self.load_fly_on()
 
     def load_airway_details(self):
-        """Link airway and airport table
+        """Link airway, airline and airport tables
         """
         # Création d'une liste temporaire pour sauvegarder les chemins créent (step1-step2...)
         path = []
         # Création d'une liste temporaire pour sauvegarder les chemins associer au airline (airline, step1-step2...)
         airline_path = []
+
         # Remplissage depuis le fichier flight_numbers
         for airline_code, _, airport_icao \
                 in self._reader['flight_numbers'].read_content(skip_header=True):
@@ -285,6 +287,106 @@ class Loader:
                     name=name
                 )
             )
+    def load_airway(self):
+        """Load airway data
+        """
+        # unwrapping relevant data from the source file
+        for _, _, _, _, _, \
+            _, codeshare, *_ \
+                in self._reader['routes'].read_content():
+            # create an airway from the extracted data and add it to
+            # the stored records
+            self.airway_records.append(
+                Airway(
+                    id=self.airway_records[-1].id + 1
+                    if len(self.airway_records) > 0
+                    else 1,
+                    codeshare=codeshare
+                )
+            )
+
+    def load_external(self, smooth: bool = False) -> None:
+        """Load additional data for all records that need it
+
+        First load external data for the country records
+        Then load external data for the city records
+        Finally load external data for the plane records
+        """
+        self.load_external_country(smooth)
+        self.load_external_city(smooth)
+
+    def load_external_city(self, smooth: bool) -> None:
+        """Load additional data for each recorded city from external sources
+
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
+        """
+        for i in range(len(self.city_records)):
+            # if the country has a special name for the API
+            if self.city_records[i].name \
+                    in ExternalSources.ambiguous_cities:
+                # fetching the parameters allowing the search
+                search_name, strategy = ExternalSources.ambiguous_cities[
+                    self.city_records[i].name
+                ]
+                original_name = self.city_records[i].name
+
+                # updating the country for the search
+                self.city_records[i].name = search_name
+                try:
+                    fill_city(
+                        self.city_records[i],
+                        strategy
+                    )
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
+                # restore original value
+                self.city_records[i].name = original_name
+
+            else:
+                try:
+                    fill_city(self.city_records[i])
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
+
+    def load_external_country(self, smooth: bool) -> None:
+        """Load additional data for each recorded country from external sources
+
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
+        """
+        # some countries can lead to several results
+        for i in range(len(self.country_records)):
+            # if the country has a special name for the API
+            if self.country_records[i].name \
+                    in ExternalSources.ambiguous_countries:
+                # fetching the parameters allowing the search
+                search_name, strategy = ExternalSources.ambiguous_countries[
+                    self.country_records[i].name
+                ]
+                original_name = self.country_records[i].name
+
+                # updating the country for the search
+                self.country_records[i].name = search_name
+                try:
+                    fill_country(
+                        self.country_records[i],
+                        strategy
+                    )
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
+                # restore original value
+                self.country_records[i].name = original_name
+
+            else:
+                try:
+                    fill_country(self.country_records[i])
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
 
     def load_geographical_data(self):
         """Load geographical data
@@ -299,8 +401,8 @@ class Loader:
         dst: Dict[str, int] = dict()
         dst_id = 1
 
-        # timezones['name'] = padding
-        timezones: Dict[str, int] = dict()
+        # timezones['name'] = (timezone_id, padding)
+        timezones: Dict[str, Tuple[int, int]] = dict()
 
         # unwrapping relevant data from the source file
         for _, airport_name, city_name, country_name, airport_iata, \
@@ -319,7 +421,7 @@ class Loader:
 
             # extract timezone data if it's not a duplicate
             if timezone_name not in timezones:
-                timezones[timezone_name] = padding
+                timezones[timezone_name] = (len(timezones), padding)
 
             # extract city data
             self.city_records.append(
@@ -328,7 +430,7 @@ class Loader:
                     if len(self.city_records) > 0
                     else 1,
                     id_country=countries[country_name][0],
-                    id_timezone=timezones[timezone_name],
+                    id_timezone=timezones[timezone_name][0],
                     name=city_name
                 )
             )
@@ -361,12 +463,11 @@ class Loader:
             )
 
         # store timezone records
-        for name, padding in timezones.items():
+        for name, data in timezones.items():
+            timezone_id, padding = data
             self.timezone_records.append(
                 Timezone(
-                    id=self.timezone_records[-1].id + 1
-                    if len(self.timezone_records) > 0
-                    else 1,
+                    id=timezone_id,
                     name=name,
                     padding=float(padding)
                 )

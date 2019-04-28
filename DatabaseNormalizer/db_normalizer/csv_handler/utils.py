@@ -59,5 +59,5 @@ class Parsing:
         )
         \s*             followed by no or many spaces
         (?:,\s*|$)      ending with a comma and spaces or the end of the line
-        """
+    """
     parse_regex = r'(?:^||,)\s*(("[^"]*")|[^,]*)\s*(?:,\s*|$)'
