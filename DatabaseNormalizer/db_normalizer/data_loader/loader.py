@@ -122,7 +122,42 @@ class Loader:
         """
         self.load_external_country(smooth)
         self.load_external_city(smooth)
-        self.load_external_plane(smooth)
+
+    def load_external_city(self, smooth: bool) -> None:
+        """Load additional data for each recorded city from external sources
+
+        :param smooth: silence exception if True; otherwise, raise it
+        :raise ResourceNotFoundException: on an unfetchable data queried
+        """
+        for i in range(len(self.city_records)):
+            # if the country has a special name for the API
+            if self.city_records[i].name \
+                    in ExternalSources.ambiguous_cities:
+                # fetching the parameters allowing the search
+                search_name, strategy = ExternalSources.ambiguous_cities[
+                    self.city_records[i].name
+                ]
+                original_name = self.city_records[i].name
+
+                # updating the country for the search
+                self.city_records[i].name = search_name
+                try:
+                    fill_city(
+                        self.city_records[i],
+                        strategy
+                    )
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
+                # restore original value
+                self.city_records[i].name = original_name
+
+            else:
+                try:
+                    fill_city(self.city_records[i])
+                except ResourceNotFoundException as rnfe:
+                    if not smooth:
+                        raise rnfe
 
     def load_external_country(self, smooth: bool) -> None:
         """Load additional data for each recorded country from external sources
@@ -160,50 +195,6 @@ class Loader:
                 except ResourceNotFoundException as rnfe:
                     if not smooth:
                         raise rnfe
-
-    def load_external_city(self, smooth: bool) -> None:
-        """Load additional data for each recorded city from external sources
-
-        :param smooth: silence exception if True; otherwise, raise it
-        :raise ResourceNotFoundException: on an unfetchable data queried
-        """
-        for i in range(len(self.city_records)):
-            # if the country has a special name for the API
-            if self.city_records[i].name \
-                    in ExternalSources.ambiguous_countries:
-                # fetching the parameters allowing the search
-                search_name, strategy = ExternalSources.ambiguous_cities[
-                    self.city_records[i].name
-                ]
-                original_name = self.city_records[i].name
-
-                # updating the country for the search
-                self.city_records[i].name = search_name
-                try:
-                    fill_city(
-                        self.city_records[i],
-                        strategy
-                    )
-                except ResourceNotFoundException as rnfe:
-                    if not smooth:
-                        raise rnfe
-                # restore original value
-                self.city_records[i].name = original_name
-
-            else:
-                try:
-                    fill_city(self.city_records[i])
-                except ResourceNotFoundException as rnfe:
-                    if not smooth:
-                        raise rnfe
-
-    def load_external_plane(self, smooth: bool) -> None:
-        """Load additional data for each recorded plane from external sources
-
-        :param smooth: silence exception if True; otherwise, raise it
-        :raise ResourceNotFoundException: on an unfetchable data queried
-        """
-        pass
 
     def load_geographical_data(self):
         """Load geographical data
