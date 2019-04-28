@@ -70,13 +70,18 @@ if __name__ == '__main__':
     )
 
     # Fetching additional data
-    print('[INFO] fetching external data...')
-    begin = time.time()
-    loader.load_external(smooth=True)
-    print(
-        f'[INFO] external data loaded in '
-        f'{(time.time() - begin):1.5f} second.s\n'
-    )
+    if input(
+        '[WARN] Do you want to load external data ?\n'
+        '[WARN] (fetching external resources take a huge amount of time)\n'
+        '[WARN] (y/N) -> \n'
+    ) == 'y':
+        print('[INFO] fetching external data...')
+        begin = time.time()
+        loader.load_external(smooth=True)
+        print(
+            f'[INFO] external data loaded in '
+            f'{(time.time() - begin):1.5f} second.s\n'
+        )
 
     #
     # Show loaded data info
