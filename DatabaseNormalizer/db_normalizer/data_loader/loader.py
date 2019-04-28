@@ -136,10 +136,8 @@ class Loader:
         for airline_code, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
                 in self._reader['routes'].read_content(skip_header=False):
 
-            airp_src_icao = "unknown"
-            airp_dest_icao = "unknown"
-            airp_src = 0
-            airp_dest = 0
+            if airport_src == "/N" or airport_dest == "/N":
+                continue
 
             airway_id = self.airway_records[-1].id + 1
             # On retrouve l'id et l'icao des l'aeroports source et destination
