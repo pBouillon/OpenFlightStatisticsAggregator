@@ -135,9 +135,6 @@ class Loader:
         for airline_code, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
                 in self._reader['routes'].read_content(skip_header=False):
 
-            if airport_src == "/N" or airport_dest == "/N":
-                continue
-
             airway_id = self.airway_records[-1].id + 1
             # On retrouve l'id et l'icao des l'aeroports source et destination
             for airport in self.airport_records:
@@ -145,14 +142,14 @@ class Loader:
                         or airport_src == airport.icao:
                     airp_src = airport.id
                     airp_src_icao = airport.icao
-                    # On arrete lorsque on trouve l'aeroport
-                    break
 
                 if airport_dest == airport.iata \
                         or airport_dest == airport.icao:
                     airp_dest = airport.id
                     airp_dest_icao = airport.icao
-                    # On arrete lorsque on trouve l'aeroport
+
+                # On arrete lorsque on trouve les deux aeroports
+                if airp_src and airp_dest:
                     break
 
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
