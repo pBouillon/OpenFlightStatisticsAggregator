@@ -69,7 +69,6 @@ class Loader:
 
         # linking table
         self.load_airway_details()
-        self.load_fly_on()
 
     def load_airway_details(self):
         """Link airway, airline and airport tables
@@ -132,7 +131,7 @@ class Loader:
                     break
 
         # Remplissage depuis le fichier routes
-        for airline_code, _, airport_src, _, airport_dest, _, codeshare, stops, *_ \
+        for airline_code, _, airport_src, _, airport_dest, _, codeshare, stops, equipement \
                 in self._reader['routes'].read_content(skip_header=False):
 
             airway_id = self.airway_records[-1].id + 1
@@ -156,6 +155,16 @@ class Loader:
                 if airp_src_icao != "" and airp_dest_icao != "":
                     break
 
+            plane_id = [];
+            # Les equipements sont séparés par un espace dans le fichier
+            for plane in equipement.split(' '):
+                # On retrouve les id des avions
+                for plane_type in self.plane_records:
+                    if plane == plane_type.iata:
+                        plane_id.append(plane_type.id)
+                        # On arrete lorsque on trouve l'avion
+                        break
+
             # On cherche si le chemin est déjà connue (possibilité d'utiliser un not in ?)
             exist = False
             index = 1
@@ -167,6 +176,14 @@ class Loader:
                     exist = True
                     # L'index + 1 du chemin dans path correspond à l'id de l'airway
                     airway_id = index
+                    # On affecte les avions aux airways déjà connues
+                    for plane in plane_id:
+                        self.fly_on_records.append(
+                            FlyOn(
+                                id_airway=airway_id,
+                                id_plane=plane
+                            )
+                        )
                     # On arrete si on trouve un chemin identique
                     break
                 index += 1
@@ -198,6 +215,14 @@ class Loader:
                         rank=1
                     )
                 )
+                # On affecte les avions à la nouvelle airway
+                for plane in plane_id:
+                    self.fly_on_records.append(
+                        FlyOn(
+                            id_airway=airway_id,
+                            id_plane=plane
+                        )
+                    )
 
             # On retrouve l'id de l'airline
             for airline in self.airline_records:
@@ -228,36 +253,6 @@ class Loader:
                         id_airway=airway_id
                     )
                 )
-
-    def load_fly_on(self):
-        """Link airway and plane table
-        """
-        for _, _, airport_src, _, airport_dest, _, _, stops, equipement \
-                in self._reader['routes'].read_content(skip_header=False):
-
-            # On retrouve l'id de l'aeroport source et destination
-            for airport in self.airport_records:
-                if airport_src == airport.iata \
-                        or airport_src == airport.icao:
-                    airp_src = airport.id
-                if airport_dest == airport.iata \
-                        or airport_dest == airport.icao:
-                    airp_dest = airport.id
-
-            for airway in self.airway_records:
-                for step0 in self.step_in_records:
-                    if airway.id == step0.id_airway:
-                        if step0.id_airport == airp_src and step0.rank == 0:
-                            for stepEnd in self.step_in_records:
-                                if airway.id == stepEnd.id_airway:
-                                    if stepEnd.id_airport == airp_dest and stepEnd.rank == stops + 1:
-                                        for plane in equipement.split(' '):
-                                            self.fly_on_records.append(
-                                                FlyOn(
-                                                    id_airway=airway.id,
-                                                    id_plane=plane
-                                                )
-                                            )
 
     def load_airline(self):
         """Load airlines data
