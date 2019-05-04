@@ -28,6 +28,13 @@ class Dal:
         self._initiate_connection()
         atexit.register(self._close_connection)
 
+    def _close_connection(self) -> None:
+        """Close the connection
+
+        Note: the cursor is garbage collected
+        """
+        self._connection.close()
+
     def _initiate_connection(self) -> None:
         """Initiate the connection
 
@@ -35,13 +42,6 @@ class Dal:
         """
         self._connection = sqlite3.connect(DatabaseUtils.sqlite_db)
         self._cursor = self._connection.cursor()
-
-    def _close_connection(self) -> None:
-        """Close the connection
-
-        Note: the cursor is garbage collected
-        """
-        self._connection.close()
 
     @staticmethod
     def dataclass_to_list(dataclass) -> list:
