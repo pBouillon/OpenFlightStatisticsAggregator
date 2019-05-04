@@ -33,7 +33,7 @@ class DatabaseUtils:
     sqlite_db = ':memory:'
 
     """default path to dumb the sql"""
-    sqlitedb_dump = '../../static/sql/dump.sql'
+    sqlitedb_dump = '../static/sql/dump.sql'
 
     """table schemas"""
     sql_tables = [
@@ -58,13 +58,13 @@ class DatabaseUtils:
         """ CREATE TABLE IF NOT EXISTS PLANE (
             id          INTEGER PRIMARY KEY,
             id_plane_type INTEGER,
-            consumption NUMBER,
-            freight     NUMBER,
+            consumption INTEGER,
+            freight     INTEGER,
             id_iata     TEXT,
             id_icao     TEXT,
             model       TEXT,
-            passengers  NUMBER,
-            speed       NUMBER,
+            passengers  INTEGER,
+            speed       INTEGER,
 
             FOREIGN KEY (id_plane_type) REFERENCES PLANE_TYPE(id)
         ); """,
