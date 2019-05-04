@@ -14,7 +14,7 @@ from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
 from db_normalizer.data_loader.loader import Loader
 
-__version__ = '1.8.4'
+__version__ = '1.9.1'
 
 
 def show_header() -> None:
