@@ -15,7 +15,7 @@ from dataclasses import dataclass
 NOT_SET = -1
 
 """Default value for external data"""
-EXTERNAL_DATA = -2
+EXTERNAL_DATA = -1
 
 
 @dataclass
