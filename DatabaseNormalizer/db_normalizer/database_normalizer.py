@@ -12,7 +12,9 @@ import time
 
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
+from db_normalizer.dal.sql_bridge import Dal
 from db_normalizer.data_loader.loader import Loader
+from db_normalizer.dal.utils import DatabaseUtils
 
 __version__ = '1.8.4'
 
@@ -73,15 +75,16 @@ if __name__ == '__main__':
     if input(
         '[WARN] Do you want to load external data ?\n'
         '[WARN] (fetching external resources take a huge amount of time)\n'
-        '[WARN] (y/N) -> \n'
+        '[WARN] (y/N) -> '
     ) == 'y':
         print('[INFO] fetching external data...')
         begin = time.time()
         loader.load_external(smooth=True)
         print(
             f'[INFO] external data loaded in '
-            f'{(time.time() - begin):1.5f} second.s\n'
+            f'{(time.time() - begin):1.5f} second.s'
         )
+    print()
 
     #
     # Show loaded data info
@@ -94,4 +97,18 @@ if __name__ == '__main__':
     print(f'\t{len(loader.dst_records):6}{"":4}DSTs')
     print(f'\t{len(loader.plane_records):6}{"":4}Planes')
     print(f'\t{len(loader.plane_type_records):6}{"":4}Plane types')
-    print(f'\t{len(loader.timezone_records):6}{"":4}Timezones')
+    print(f'\t{len(loader.timezone_records):6}{"":4}Timezones\n')
+
+    #
+    # Initiate a database connection
+    dal = Dal()
+    dal.create_tables()
+    print('[INFO] Tables initialized')
+
+    dal.write_from_loader(loader)
+    print('[INFO] Records stored')
+
+    dal.dump_content()
+    print(
+        f'[INFO] Database\'s content stored in: {DatabaseUtils.sqlitedb_dump}'
+    )
