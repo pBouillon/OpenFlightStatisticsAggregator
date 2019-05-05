@@ -53,6 +53,9 @@ class Loader:
             'routes': Reader(LocalSources.routes),
         }
 
+        """Separator for steps ids of path in the temporary tuple in load_airway_details"""
+        self.path_steps_separators = '-'
+
     def get_airport_ids_from_codes(self, codes: List[str]) -> List[int]:
         """Function for get the airports ids from ICAO or IATA code
         :param codes: ICAO or IATA code
@@ -135,7 +138,7 @@ class Loader:
                 airline_code
             )
             stops_id = ""
-            for stop_icao in stops_icao.split('-'):
+            for stop_icao in stops_icao.split(self.path_steps_separators):
                 # Get the airport id not in list format
                 airport_id, *_ = self.get_airport_ids_from_codes(
                     [stop_icao]
@@ -146,7 +149,7 @@ class Loader:
 
                 stops_id = (stops_id + str(airport_id)) \
                     if stops_id == "" \
-                    else (stops_id + "-" + str(airport_id))
+                    else (stops_id + self.path_steps_separators + str(airport_id))
 
             # We pass this line of flightnumbers.csv if we don't know one airport
             if airport_id == -1:
@@ -178,7 +181,7 @@ class Loader:
 
                 # For each airport in this airway
                 rank = 0
-                for stop_id in stops_id.split('-'):
+                for stop_id in stops_id.split(self.path_steps_separators):
                     # We save the airport in the airway
                     self.step_in_records.append(
                         StepIn(
@@ -214,7 +217,8 @@ class Loader:
             ])
 
             # We pass this line of routes.csv if we don't know one airport
-            if airport_src == -1 or airport_dst == -1:
+            if airport_src == -1 \
+                    or airport_dst == -1:
                 continue
 
             # Get the plane type ids, the plane iata are separated by space in the file
@@ -225,22 +229,22 @@ class Loader:
             # in the temporary list of path,
             if any(
                 # a path as: `src-stop-dest` will have only one stop
-                len(path.split('-')) == stops + 2
-                and int(path.split('-')[0]) == airport_src
-                and int(path.split('-')[-1]) == airport_dst
+                len(path.split(self.path_steps_separators)) == stops + 2
+                and int(path.split(self.path_steps_separators)[0]) == airport_src
+                and int(path.split(self.path_steps_separators)[-1]) == airport_dst
                 for path, _ in path_ids.items()
             ):
                 # if stops = 0, we know the path, so we can find his id
                 if stops == 0:
-                    path = str(airport_src) + "-" + str(airport_dst)
+                    path = str(airport_src) + self.path_steps_separators + str(airport_dst)
                     airway_id, *_ = path_ids[path]
                 # else, we search his id in all the temporary list
                 else:
                     for path, _ in path_ids.items():
                         if (
-                            len(path.split('-')) == stops + 2
-                            and int(path.split('-')[0]) == airport_src
-                            and int(path.split('-')[-1]) == airport_dst
+                            len(path.split(self.path_steps_separators)) == stops + 2
+                            and int(path.split(self.path_steps_separators)[0]) == airport_src
+                            and int(path.split(self.path_steps_separators)[-1]) == airport_dst
                         ):
                             airway_id, *_ = path_ids[path]
                             break
@@ -260,7 +264,7 @@ class Loader:
                 if len(self.airway_records) > 0 \
                 else 1
 
-            path_ids['-'.join((str(airport_src), str(airport_dst)))] = (airway_id, [airline_id])
+            path_ids[self.path_steps_separators.join((str(airport_src), str(airport_dst)))] = (airway_id, [airline_id])
 
             # airway data recording
             self.airway_records.append(
