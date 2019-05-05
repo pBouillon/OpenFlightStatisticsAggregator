@@ -68,6 +68,7 @@ class Dal:
         """
         with open(dest, 'w') as f:
             for line in self._connection.iterdump():
+                line = line.encode('utf8')
                 f.write(f'{line}\n')
 
     def write_from_loader(self, loader: Loader) -> None:
@@ -76,6 +77,16 @@ class Dal:
         :param loader: loader object containing all the data
         """
         # transition functions to write all records of a single dataclass type
+        def write_airway() -> None:
+            self._cursor.executemany(
+                'INSERT INTO AIRWAY VALUES (?, ?)',
+                [
+                    Dal.dataclass_to_list(record)
+                    for record in loader.airway_records
+                ]
+            )
+            self._connection.commit()
+
         def write_dst() -> None:
             self._cursor.executemany(
                 'INSERT INTO DST VALUES (?, ?)',
@@ -118,7 +129,7 @@ class Dal:
 
         def write_country() -> None:
             self._cursor.executemany(
-                'INSERT INTO COUNTRY VALUES (?, ?, ?, ?)',
+                'INSERT INTO COUNTRY VALUES (?, ?, ?, ?, ?)',
                 [
                     Dal.dataclass_to_list(record)
                     for record in loader.country_records
@@ -128,7 +139,7 @@ class Dal:
 
         def write_city() -> None:
             self._cursor.executemany(
-                'INSERT INTO CITY VALUES (?, ?, ?, ?)',
+                'INSERT INTO CITY VALUES (?, ?, ?, ?, ?)',
                 [
                     Dal.dataclass_to_list(record)
                     for record in loader.city_records
@@ -168,7 +179,7 @@ class Dal:
 
         def write_step_in() -> None:
             self._cursor.executemany(
-                'INSERT INTO STEP_IN VALUES (?, ?)',
+                'INSERT INTO STEP_IN VALUES (?, ?, ?)',
                 [
                     Dal.dataclass_to_list(record)
                     for record in loader.step_in_records
@@ -176,7 +187,18 @@ class Dal:
             )
             self._connection.commit()
 
+        def write_fly_on() -> None:
+            self._cursor.executemany(
+                'INSERT INTO FLY_ON VALUES (?, ?)',
+                [
+                    Dal.dataclass_to_list(record)
+                    for record in loader.fly_on_records
+                ]
+            )
+            self._connection.commit()
+
         # load the database by order of dependencies
+        write_airway()
         write_dst()
         write_timezone()
         write_plane_type()
@@ -187,4 +209,5 @@ class Dal:
         write_airport()
         write_use()
         write_step_in()
+        write_fly_on()
 

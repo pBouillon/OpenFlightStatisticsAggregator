@@ -22,25 +22,25 @@ EXTERNAL_DATA = -1
 class Airline:
     """Airline table scheme
     """
-    alias: str
-    callsign: str
-    iata: str
-    icao: str
     id: int
     id_country: int
     is_active: bool
+    alias: str
+    callsign: str
     name: str
+    iata: str
+    icao: str
 
 
 @dataclass
 class Airport:
     """Airport table scheme
     """
+    id: int
+    id_city: int
     altitude: float
     iata: str
     icao: str
-    id: int
-    id_city: int
     latitude: float
     longitude: float
     name: str
@@ -50,8 +50,8 @@ class Airport:
 class Airway:
     """Airway table scheme
     """
-    codeshare: str
     id: int
+    codeshare: str
 
 
 @dataclass
@@ -96,10 +96,10 @@ class FlyOn:
 class Plane:
     """Plane table scheme
     """
-    iata: str
-    icao: str
     id: int
     id_plane_type: int
+    iata: str
+    icao: str
     model: str
     passenger: int = EXTERNAL_DATA
     consumption: float = EXTERNAL_DATA
@@ -112,16 +112,16 @@ class PlaneType:
     """PlaneType table scheme
     """
     id: int
-    type: str
     iata: str
+    type: str
 
 
 @dataclass
 class StepIn:
     """StepIn table scheme
     """
-    id_airway: int
     id_airport: int
+    id_airway: int
     rank: int
 
 
