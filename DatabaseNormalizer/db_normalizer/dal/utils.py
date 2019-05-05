@@ -37,6 +37,11 @@ class DatabaseUtils:
 
     """table schemas"""
     sql_tables = [
+        # airway
+        """ CREATE TABLE IF NOT EXISTS AIRWAY (
+            id          INTEGER PRIMARY KEY,
+            codeshare   TEXT
+        ); """,
         # dst
         """CREATE TABLE IF NOT EXISTS DST (
             id          INTEGER PRIMARY KEY,
@@ -58,12 +63,12 @@ class DatabaseUtils:
         """ CREATE TABLE IF NOT EXISTS PLANE (
             id          INTEGER PRIMARY KEY,
             id_plane_type INTEGER,
-            consumption INTEGER,
-            freight     INTEGER,
             id_iata     TEXT,
             id_icao     TEXT,
             model       TEXT,
             passengers  INTEGER,
+            consumption INTEGER,
+            freight     INTEGER,
             speed       INTEGER,
 
             FOREIGN KEY (id_plane_type) REFERENCES PLANE_TYPE(id)
@@ -73,7 +78,8 @@ class DatabaseUtils:
             id          INTEGER PRIMARY KEY,
             id_dst      INTEGER,
             name        TEXT,
-            superficy   REAL,
+            area        REAL,
+            population  INTEGER,
 
             FOREIGN KEY (id_dst) REFERENCES DST (id)
         ); """,
@@ -82,8 +88,8 @@ class DatabaseUtils:
             id          INTEGER PRIMARY KEY, 
             id_country  INTEGER, 
             id_timezone INTEGER, 
-            inhabitants INTEGER, 
             name        TEXT,
+            inhabitants INTEGER, 
 
             FOREIGN KEY (id_country) REFERENCES COUNTRY (id),
             FOREIGN KEY (id_timezone) REFERENCES TIMEZONE (id)
@@ -96,8 +102,8 @@ class DatabaseUtils:
             alias       TEXT,
             callsing    TEXT,
             name        TEXT,
-            id_iata     TEXT,
-            id_icao     TEXT,
+            iata        TEXT,
+            icao        TEXT,
 
             FOREIGN KEY (id_country) REFERENCES COUNTRY (id)
         ); """,
@@ -124,10 +130,21 @@ class DatabaseUtils:
             FOREIGN KEY (id_airline) REFERENCES AIRLINE (id),
             FOREIGN KEY (id_airway) REFERENCES AIRWAY (id)
         ); """,
+        # use
+        """CREATE TABLE IF NOT EXISTS FLY_ON (
+            id_airway  INTEGER,
+            id_plane   INTEGER,
+
+            PRIMARY KEY (id_airway, id_plane),
+
+            FOREIGN KEY (id_airway) REFERENCES AIRWAY (id),
+            FOREIGN KEY (id_plane) REFERENCES PLANE (id)
+        ); """,
         # step in
         """CREATE TABLE IF NOT EXISTS STEP_IN (
             id_airport  NUMBER,
             id_airway   NUMBER,
+            rank        NUMBER,
 
             PRIMARY KEY (id_airport, id_airway),
 
