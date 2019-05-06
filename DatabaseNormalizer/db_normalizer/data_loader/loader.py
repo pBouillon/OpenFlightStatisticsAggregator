@@ -25,6 +25,9 @@ class Loader:
     Load and extract data from .csv files.
     """
 
+    """Separator for steps ids of path in the temporary tuple in load_airway_details"""
+    path_steps_separators = '-'
+
     def __init__(self):
         """Constructor
         """
@@ -52,9 +55,6 @@ class Loader:
             'planes': Reader(LocalSources.planes),
             'routes': Reader(LocalSources.routes),
         }
-
-        """Separator for steps ids of path in the temporary tuple in load_airway_details"""
-        self.path_steps_separators = '-'
 
     def get_airport_ids_from_codes(self, codes: List[str]) -> List[int]:
         """Function for get the airports ids from ICAO or IATA code
@@ -264,7 +264,11 @@ class Loader:
                 if len(self.airway_records) > 0 \
                 else 1
 
-            path_ids[self.path_steps_separators.join((str(airport_src), str(airport_dst)))] = (airway_id, [airline_id])
+            path_ids[
+                self.path_steps_separators.join(
+                    (str(airport_src), str(airport_dst))
+                )
+            ] = (airway_id, [airline_id])
 
             # airway data recording
             self.airway_records.append(
