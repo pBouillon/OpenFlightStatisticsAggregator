@@ -54,8 +54,8 @@ table(AIRPORT) {
 table(COUNTRY) {
     {field} #id : NUMBER
     {field} +id_dst : NUMBER
-    {field} inhabitants : NUMBER
     {field} name : VARCHAR2(50)
+    {field} population : NUMBER
     {field} superficy : BINARY_FLOAT
 }
 
@@ -75,7 +75,7 @@ table(CITY) {
     {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} +id_timezone : NUMBER
-    {field} inhabitants : NUMBER
+    {field} population : NUMBER
     {field} name : VARCHAR2(100)
 }
 
@@ -85,6 +85,7 @@ table(FLY_ON) {
 }
 
 table(STEP_IN) {
+    {field} #id : NUMBER
     {field} +id_airport : NUMBER
     {field} +id_airway : NUMBER
     {field} rank : NUMBER
