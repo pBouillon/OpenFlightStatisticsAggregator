@@ -56,15 +56,15 @@ class DatabaseUtils:
         # plane type
         """CREATE TABLE IF NOT EXISTS PLANE_TYPE (
             id          INTEGER PRIMARY KEY,
-            id_iata     TEXT,
+            iata_code   TEXT,
             type        TEXT   
         ); """,
         # plane
         """ CREATE TABLE IF NOT EXISTS PLANE (
             id          INTEGER PRIMARY KEY,
             id_plane_type INTEGER,
-            id_iata     TEXT,
-            id_icao     TEXT,
+            iata_code   TEXT,
+            icao_code   TEXT,
             model       TEXT,
             passengers  INTEGER,
             consumption INTEGER,
@@ -89,7 +89,7 @@ class DatabaseUtils:
             id_country  INTEGER, 
             id_timezone INTEGER, 
             name        TEXT,
-            inhabitants INTEGER, 
+            population  INTEGER, 
 
             FOREIGN KEY (id_country) REFERENCES COUNTRY (id),
             FOREIGN KEY (id_timezone) REFERENCES TIMEZONE (id)
@@ -102,8 +102,8 @@ class DatabaseUtils:
             alias       TEXT,
             callsing    TEXT,
             name        TEXT,
-            iata        TEXT,
-            icao        TEXT,
+            iata_code   TEXT,
+            icao_code   TEXT,
 
             FOREIGN KEY (id_country) REFERENCES COUNTRY (id)
         ); """,
@@ -112,8 +112,8 @@ class DatabaseUtils:
             id          INTEGER PRIMARY KEY,
             id_city     INTEGER,
             altitude    REAL,
-            id_iata     TEXT,
-            id_icao     TEXT,
+            iata_code   TEXT,
+            icao_code   TEXT,
             latitude    REAL,
             longitude   REAL,
             name        TEXT,
