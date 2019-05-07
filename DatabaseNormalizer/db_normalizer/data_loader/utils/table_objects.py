@@ -120,6 +120,7 @@ class PlaneType:
 class StepIn:
     """StepIn table scheme
     """
+    id: int
     id_airport: int
     id_airway: int
     rank: int

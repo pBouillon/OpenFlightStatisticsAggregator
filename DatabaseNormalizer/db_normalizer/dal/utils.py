@@ -142,11 +142,12 @@ class DatabaseUtils:
         ); """,
         # step in
         """CREATE TABLE IF NOT EXISTS STEP_IN (
+            id          NUMBER, 
             id_airport  NUMBER,
             id_airway   NUMBER,
             rank        NUMBER,
 
-            PRIMARY KEY (id_airport, id_airway),
+            PRIMARY KEY (id),
 
             FOREIGN KEY (id_airport) REFERENCES AIRPORT (id),
             FOREIGN KEY (id_airway) REFERENCES AIRWAY (id)

@@ -185,6 +185,9 @@ class Loader:
                     # We save the airport in the airway
                     self.step_in_records.append(
                         StepIn(
+                            id=self.step_in_records[-1].id + 1
+                            if len(self.step_in_records) > 0
+                            else 1,
                             id_airport=int(stop_id),
                             id_airway=airway_id,
                             rank=rank
@@ -281,6 +284,9 @@ class Loader:
             # step_in data recording
             self.step_in_records.append(
                 StepIn(
+                    id=self.step_in_records[-1].id + 1
+                    if len(self.step_in_records) > 0
+                    else 1,
                     id_airport=airport_src,
                     id_airway=airway_id,
                     rank=0
@@ -290,6 +296,9 @@ class Loader:
             # step_in data recording
             self.step_in_records.append(
                 StepIn(
+                    id=self.step_in_records[-1].id + 1
+                    if len(self.step_in_records) > 0
+                    else 1,
                     id_airport=airport_dst,
                     id_airway=airway_id,
                     rank=1

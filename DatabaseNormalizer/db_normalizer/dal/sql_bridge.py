@@ -179,7 +179,7 @@ class Dal:
 
         def write_step_in() -> None:
             self._cursor.executemany(
-                'INSERT INTO STEP_IN VALUES (?, ?, ?)',
+                'INSERT INTO STEP_IN VALUES (?, ?, ?, ?)',
                 [
                     Dal.dataclass_to_list(record)
                     for record in loader.step_in_records
