@@ -9,14 +9,13 @@
     :licence: MIT, see LICENSE for more details.
 """
 from typing import List, Dict, Tuple
-
 from db_normalizer.csv_handler.reader import Reader
 from db_normalizer.csv_handler.utils import Csv
 from db_normalizer.data_loader.api_external import fill_country, fill_city
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
-from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources
+from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources, TomporaryLists
 from db_normalizer.exceptions.api_external_exceptions import ResourceNotFoundException
 
 class Loader:
@@ -61,82 +60,70 @@ class Loader:
         :param codes: ICAO or IATA code
         :return: ids of airports
         """
-        # Initialization of ids with as many -1 as there are codes
-        ids = [-1 for _ in codes]
+        ids = []
 
-        # For each airpors save in airport_records
-        for airport in self.airport_records:
-            # Compare all code in the list codes (if several airports are searched)
-            if not any(
-                code == airport.icao
-                or code == airport.iata \
-                for code in codes
-            ):
-                continue
-            
-            # If one comparison is correct, we find the airport concerned
-            for code in codes:
-                if code == airport.icao \
-                        or code == airport.iata:
-                    ids[codes.index(code)] = airport.id
-        
+        for code in codes:
+            if len(code) == 3 \
+                    and code in TomporaryLists.airport_iata:
+                ids.append(TomporaryLists.airport_iata[code])
+            elif len(code) == 4 \
+                    and code in TomporaryLists.airport_icao:
+                ids.append(TomporaryLists.airport_icao[code])
+            else:
+                ids.append(-1)
+
         return ids
 
-    def get_airline_id_from_code(self, code: str) -> int:
+    def get_airline_id_from_code(self, code: str, id_file: int) -> int:
         """Function for get the airline id from ICAO or IATA code
         :param code: ICAO or IATA code
+        :param id_file: id in file (route.csv)
         :return: id of airline
         """
-        for airline in self.airline_records:
-            if code == airline.iata \
-                   or code == airline.icao:
-                return airline.id
-        return -1
 
-    def get_plane_type_from_iata(self, codes: List[str]) -> List[int]:
+        if len(code) == 2 \
+                and code in TomporaryLists.airline_iata:
+            if code in TomporaryLists.airline_iata_double:
+                if id_file in TomporaryLists.airline_id_file_double:
+                    return TomporaryLists.airline_id_file_double[id_file]
+                return -1
+            else:
+                return TomporaryLists.airline_iata[code]
+        elif len(code) == 3 \
+                and code in TomporaryLists.airline_icao:
+            return TomporaryLists.airline_icao[code]
+        else:
+            return -1
+
+    def get_plane_type_from_codes(self, codes: List[str]) -> List[int]:
         """Function for get the plane type ids from ICAO or IATA code
         :param codes: ICAO or IATA code
         :return: ids of plane type
         """
-        # Initialization of ids with as many -1 as there are codes. -1 is the default value
-        # if the plane type code is not identified
-        ids = [-1 for _ in codes]
+        ids = []
 
-        # For each plane type save in airport_records
-        for plane_type in self.plane_records:
-            # Compare all code in the list codes (if several plane type are searched)
-            if not any(
-                code == plane_type.iata
-                for code in codes
-            ):
-                continue
-            
-            # If one comparison is correct, we find the airport concerned
-            for code in codes:
-                if code == plane_type.iata:
-                    ids[codes.index(code)] = plane_type.id
+        for code in codes:
+            if len(code) == 3 \
+                    and code in TomporaryLists.plane_type_iata:
+                ids.append(TomporaryLists.plane_type_iata[code])
+            elif len(code) == 4 \
+                    and code in TomporaryLists.plane_type_icao:
+                ids.append(TomporaryLists.plane_type_icao[code])
+            else:
+                ids.append(-1)
 
         return ids
 
     def load_airway_details(self):
         """Load airway, step_in, fly_on and use tables since flightnumbers.csv and routes.csv
         """
-        # Tuple for save the paths add to airway and fly_on tables
-        # And save the combination airline with airway
-        # To avoid the duplicates in the tables
-        path_ids: Dict[str, Tuple[int, List[int]]] = dict()
-
-        # Initialization of airway_id
-        airway_id = NOT_SET
 
         # Reading of the first file (flightnumbers.csv) with a loop to read line by line
         # And add the datas in the record lists for build the database
         for airline_code, _, stops_icao \
                 in self._reader['flight_numbers'].read_content(skip_header=True):
 
-            airline_id = self.get_airline_id_from_code(
-                airline_code
-            )
+            airline_id = self.get_airline_id_from_code(airline_code, -1)
             stops_id = ""
             for stop_icao in stops_icao.split(self.path_steps_separators):
                 # Get the airport id not in list format
@@ -156,20 +143,22 @@ class Loader:
                 continue
 
             # If the path is know, we take his id
-            if stops_id in path_ids:
-                if airline_id in path_ids[stops_id][1]:
+            if stops_id in TomporaryLists.path_ids:
+                if airline_id in TomporaryLists.path_ids[stops_id][1]:
                     continue
-                airway_id, *_ = path_ids[stops_id]
+
+                airway_id, *_ = TomporaryLists.path_ids[stops_id]
                 # Add the airline id at this path
-                path_ids[stops_id][1].append(airline_id)
+                TomporaryLists.path_ids[stops_id][1].append(airline_id)
 
             # Else, we create a new airway
             else:
-                # Add the new path in the temporary list
-                path_ids[stops_id] = (airway_id, [airline_id])
                 airway_id = self.airway_records[-1].id + 1 \
                     if len(self.airway_records) > 0 \
                     else 1
+
+                # Add the new path in the temporary list
+                TomporaryLists.path_ids[stops_id] = (airway_id, [airline_id], [])
                 
                 # And, we save this new airway
                 self.airway_records.append(
@@ -195,6 +184,8 @@ class Loader:
                     )
                     rank += 1
 
+            if airline_id == -1:
+                continue
             # We link the airline with the airway
             self.use_records.append(
                 Use(
@@ -204,14 +195,13 @@ class Loader:
             )
 
         # Reading of the second file (routes.csv)
-        for airline_code, _, airport_src_code, _, airport_dest_code, \
+        for airline_code, airline_id_file, airport_src_code, _, airport_dest_code, \
             _, codeshare, stops, plane_iatas \
                 in self._reader['routes'].read_content(skip_header=False):
-
             stops = int(stops)
 
             # Get the airline id
-            airline_id = self.get_airline_id_from_code(airline_code)
+            airline_id = self.get_airline_id_from_code(airline_code, airline_id_file)
 
             # Get the airport ids not in list format
             airport_src, airport_dst, *_ = self.get_airport_ids_from_codes([
@@ -225,88 +215,100 @@ class Loader:
                 continue
 
             # Get the plane type ids, the plane iata are separated by space in the file
-            plane_ids = self.get_plane_type_from_iata([
+            plane_ids = self.get_plane_type_from_codes(
                 plane_iatas.split(' ')
-            ])
+            )
+
+            path = str(airport_src) + self.path_steps_separators + str(airport_dst)
+            # if stops = 0, we know the path, so we can find his id
+            if stops == 0 \
+                    and path in TomporaryLists.path_ids:
+                airway_id, *_ = TomporaryLists.path_ids[path]
+                # If the airline is already linked to this airway, we go to the next line of the file
+                if airline_id in TomporaryLists.path_ids[path][1]:
+                    airline_id = -1
+                else:
+                    TomporaryLists.path_ids[path][1].append(airline_id)
 
             # in the temporary list of path,
-            if any(
-                # a path as: `src-stop-dest` will have only one stop
-                len(path.split(self.path_steps_separators)) == stops + 2
-                and int(path.split(self.path_steps_separators)[0]) == airport_src
-                and int(path.split(self.path_steps_separators)[-1]) == airport_dst
-                for path, _ in path_ids.items()
-            ):
-                # if stops = 0, we know the path, so we can find his id
-                if stops == 0:
-                    path = str(airport_src) + self.path_steps_separators + str(airport_dst)
-                    airway_id, *_ = path_ids[path]
-                # else, we search his id in all the temporary list
-                else:
-                    for path, _ in path_ids.items():
+            elif stops > 0:
+                if any(
+                    # a path as: `src-stop-dest` will have only one stop
+                    len(path.split(self.path_steps_separators)) == stops + 2
+                    and int(path.split(self.path_steps_separators)[0]) == airport_src
+                    and int(path.split(self.path_steps_separators)[-1]) == airport_dst
+                    for path, _ in TomporaryLists.path_ids.items()
+                ):
+                    # We search his id in all the temporary list
+                    for path, _ in TomporaryLists.path_ids.items():
                         if (
                             len(path.split(self.path_steps_separators)) == stops + 2
                             and int(path.split(self.path_steps_separators)[0]) == airport_src
                             and int(path.split(self.path_steps_separators)[-1]) == airport_dst
                         ):
-                            airway_id, *_ = path_ids[path]
+                            airway_id, *_ = TomporaryLists.path_ids[path]
                             break
 
-                # If the airline is already linked to this airway, we go to the next line of the file
-                if airline_id in path_ids[path][1]:
+                    # If the airline is already linked to this airway, we go to the next line of the file
+                    if airline_id in TomporaryLists.path_ids[path][1]:
+                        airline_id = -1
+                    else:
+                        TomporaryLists.path_ids[path][1].append(airline_id)
+
+                # The associated airway does not exists and has stops
+                else:
                     continue
 
-                path_ids[path][1].append(airline_id)
+            else:
+                # We create the new airway
+                airway_id = self.airway_records[-1].id + 1 \
+                    if len(self.airway_records) > 0 \
+                    else 1
 
-            # The associated airway does not exists and has no stops
-            elif stops > 0:
-                continue
+                TomporaryLists.path_ids[
+                    self.path_steps_separators.join(
+                        (str(airport_src), str(airport_dst))
+                    )
+                ] = (airway_id, [airline_id], plane_ids)
 
-            # We create the new airway
-            airway_id = self.airway_records[-1].id + 1 \
-                if len(self.airway_records) > 0 \
-                else 1
-
-            path_ids[
-                self.path_steps_separators.join(
-                    (str(airport_src), str(airport_dst))
+                # airway data recording
+                self.airway_records.append(
+                    Airway(
+                        id=airway_id,
+                        codeshare=codeshare
+                    )
                 )
-            ] = (airway_id, [airline_id])
 
-            # airway data recording
-            self.airway_records.append(
-                Airway(
-                    id=airway_id,
-                    codeshare=codeshare
+                # step_in data recording
+                self.step_in_records.append(
+                    StepIn(
+                        id=self.step_in_records[-1].id + 1
+                        if len(self.step_in_records) > 0
+                        else 1,
+                        id_airport=airport_src,
+                        id_airway=airway_id,
+                        rank=0
+                    )
                 )
-            )
 
-            # step_in data recording
-            self.step_in_records.append(
-                StepIn(
-                    id=self.step_in_records[-1].id + 1
-                    if len(self.step_in_records) > 0
-                    else 1,
-                    id_airport=airport_src,
-                    id_airway=airway_id,
-                    rank=0
+                # step_in data recording
+                self.step_in_records.append(
+                    StepIn(
+                        id=self.step_in_records[-1].id + 1
+                        if len(self.step_in_records) > 0
+                        else 1,
+                        id_airport=airport_dst,
+                        id_airway=airway_id,
+                        rank=1
+                    )
                 )
-            )
-
-            # step_in data recording
-            self.step_in_records.append(
-                StepIn(
-                    id=self.step_in_records[-1].id + 1
-                    if len(self.step_in_records) > 0
-                    else 1,
-                    id_airport=airport_dst,
-                    id_airway=airway_id,
-                    rank=1
-                )
-            )
 
             # fly_on data recording
             for plane_id in plane_ids:
+                if plane_id == -1 \
+                        or plane_id in TomporaryLists.path_ids[path][2]:
+                    continue
+                TomporaryLists.path_ids[path][2].append(plane_id)
                 self.fly_on_records.append(
                     FlyOn(
                         id_airway=airway_id,
@@ -314,19 +316,21 @@ class Loader:
                     )
                 )
 
-                # use data recording
-                self.use_records.append(
-                    Use(
-                        id_airway=airway_id,
-                        id_airline=airline_id
-                    )
+            if airline_id == -1:
+                continue
+            # use data recording
+            self.use_records.append(
+                Use(
+                    id_airline=airline_id,
+                    id_airway=airway_id
                 )
+            )
 
     def load_airline(self):
         """Load airlines data
         """
         # unwrapping relevant data from the source file
-        for _, name, alias, iata, icao, \
+        for airline_id, name, alias, iata, icao, \
             callsign, country, active, *_ \
                 in self._reader['airlines'].read_content(skip_header=True):
             # create an airline from the extracted data and add it to
@@ -351,24 +355,15 @@ class Loader:
                     name=name
                 )
             )
-    
-    def load_airway(self):
-        """Load airway data
-        """
-        # unwrapping relevant data from the source file
-        for _, _, _, _, _, \
-            _, codeshare, *_ \
-                in self._reader['routes'].read_content():
-            # create an airway from the extracted data and add it to
-            # the stored records
-            self.airway_records.append(
-                Airway(
-                    id=self.airway_records[-1].id + 1
-                    if len(self.airway_records) > 0
-                    else 1,
-                    codeshare=codeshare
-                )
-            )
+
+            if iata != "" and iata != "\\N" and iata != "-" and iata != "N/A":
+                if iata in TomporaryLists.airline_iata:
+                    TomporaryLists.airline_iata_double.append(iata)
+                    TomporaryLists.airline_id_file_double[iata] = int(airline_id)
+                else:
+                    TomporaryLists.airline_iata[iata] = self.airline_records[-1].id
+            if icao != "" and icao != "\\N" and icao != "-" and icao != "N/A":
+                TomporaryLists.airline_icao[icao] = self.airline_records[-1].id
 
     def load_all_raw(self):
         """Load all data
@@ -533,6 +528,12 @@ class Loader:
                 )
             )
 
+            if airport_iata != "" and airport_iata != "\\N":
+                TomporaryLists.airport_iata[airport_iata] = self.airport_records[-1].id
+
+            if airport_icao != "" and airport_icao != "\\N":
+                TomporaryLists.airport_icao[airport_icao] = self.airport_records[-1].id
+
         # store country records
         for name, data in countries.items():
             country_id, dst_id = data
@@ -581,6 +582,13 @@ class Loader:
                         iata=iata,
                         model=model,
                     ))
+
+                if iata != "" and iata != "\\N":
+                    TomporaryLists.plane_type_iata[iata] = self.plane_records[-1].id
+
+                if icao != "" and icao != "\\N":
+                    TomporaryLists.plane_type_icao[icao] = self.plane_records[-1].id
+
             else:
                 self.plane_type_records.append(
                     PlaneType(
