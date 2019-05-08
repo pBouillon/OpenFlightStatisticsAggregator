@@ -8,6 +8,7 @@
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
 """
+from typing import List, Dict, Tuple
 from db_normalizer.csv_handler.utils import Csv
 from db_normalizer.data_loader.enum.loading_strategy import LoadingStrategy
 
@@ -144,3 +145,37 @@ class LocalSources:
 
     """path to the route csv file"""
     routes = _base_folder + 'routes' + Csv.ext
+
+
+class CrossReferencesBuffer:
+    """Temporary list for reference the codes in files with our ids, to optimize the cross reference
+    """
+
+    """Tuple for save the paths add to airway and fly_on tables
+    And save the combination airline with airway and plane type
+    To avoid the duplicates in the tables"""
+    path_ids: Dict[str, Tuple[int, List[int], List[int]]] = dict()
+
+    """link airport iata with id"""
+    airport_iata: Dict[str, int] = dict()
+
+    """link airport icao with id"""
+    airport_icao: Dict[str, int] = dict()
+
+    """link airline iata with id"""
+    airline_iata: Dict[str, int] = dict()
+
+    """save doubled iata for reference at the id in file"""
+    airline_iata_double = []
+
+    """link airline id in file with our id"""
+    airline_id_file_double: Dict[int, int] = dict()
+
+    """link airline icao with id"""
+    airline_icao: Dict[str, int] = dict()
+
+    """link plane type iata with id"""
+    plane_type_iata: Dict[str, int] = dict()
+    
+    """link plane type icao with id"""
+    plane_type_icao: Dict[str, int] = dict()
