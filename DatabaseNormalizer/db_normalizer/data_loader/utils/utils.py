@@ -146,17 +146,37 @@ class LocalSources:
     """path to the route csv file"""
     routes = _base_folder + 'routes' + Csv.ext
 
-class TomporaryLists:
 
+class CrossReferencesBuffer:
+    """Todo
+    """
+    
     # Tuple for save the paths add to airway and fly_on tables
     # And save the combination airline with airway
     # To avoid the duplicates in the tables
+    """Todo"""
     path_ids: Dict[str, Tuple[int, List[int], List[int]]] = dict()
+
+    """Todo"""
     airport_iata: Dict[str, int] = dict()
+
+    """Todo"""
     airport_icao: Dict[str, int] = dict()
+
+    """Todo"""
     airline_iata: Dict[str, int] = dict()
+
+    """Todo"""
     airline_iata_double = []
+
+    """Todo"""
     airline_id_file_double: Dict[int, int] = dict()
+
+    """Todo"""
     airline_icao: Dict[str, int] = dict()
+
+    """Todo"""
     plane_type_iata: Dict[str, int] = dict()
+    
+    """Todo"""
     plane_type_icao: Dict[str, int] = dict()
