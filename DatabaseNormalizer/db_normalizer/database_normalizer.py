@@ -12,7 +12,7 @@ import time
 
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
-from db_normalizer.dal.sql_bridge import Dal
+from db_normalizer.dal.dal import Dal
 from db_normalizer.data_loader.loader import Loader
 from db_normalizer.dal.utils import DatabaseUtils
 

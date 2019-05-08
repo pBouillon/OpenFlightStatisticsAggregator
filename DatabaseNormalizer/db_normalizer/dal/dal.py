@@ -13,8 +13,11 @@
 import atexit
 import sqlite3
 
+from pathlib2 import Path
+
 from db_normalizer.dal.utils import DatabaseUtils
 from db_normalizer.data_loader.loader import Loader
+from db_normalizer.exceptions.csv_exceptions import BadFileFormatException
 
 
 class Dal:
@@ -52,13 +55,25 @@ class Dal:
         """
         return list(dataclass.__dict__.values())
 
-    def create_tables(self) -> None:
+    def create_tables(self, sql_folder: str = DatabaseUtils.sql_tables_path) -> None:
         """Create all tables from their schemas
 
         :see DatabaseUtils.sql_tables:
         """
-        for table_schema in DatabaseUtils.sql_tables:
-            self._cursor.execute(table_schema)
+        # reach the sql sources folder
+        folder = Path(sql_folder)
+        if not folder.exists() \
+                or not folder.is_dir():
+            raise BadFileFormatException
+
+        # for each file in the folder
+        for file in folder.iterdir():
+            # if it is an sql file, execute it
+            if file.suffix != DatabaseUtils.sql_extension:
+                continue
+            self._cursor.execute(file.read_text())
+
+        # commit transactions changes
         self._connection.commit()
 
     def dump_content(self, dest: str = DatabaseUtils.sqlitedb_dump) -> None:

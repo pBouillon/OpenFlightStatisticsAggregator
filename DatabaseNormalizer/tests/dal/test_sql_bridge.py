@@ -11,7 +11,7 @@
 from dataclasses import dataclass
 from unittest import TestCase
 
-from db_normalizer.dal.sql_bridge import Dal
+from db_normalizer.dal.dal import Dal
 
 
 class TestSqlBridge(TestCase):
