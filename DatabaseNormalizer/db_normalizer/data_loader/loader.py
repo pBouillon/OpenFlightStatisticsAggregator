@@ -15,7 +15,7 @@ from db_normalizer.data_loader.api_external import fill_country, fill_city
 from db_normalizer.data_loader.utils.table_objects \
     import Airline, Timezone, Use, Airway, City, Country, Dst, FlyOn, \
     Plane, PlaneType, StepIn, NOT_SET, Airport
-from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources, TomporaryLists
+from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources, CrossReferencesBuffer
 from db_normalizer.exceptions.api_external_exceptions import ResourceNotFoundException
 
 class Loader:
@@ -61,14 +61,14 @@ class Loader:
         :return: ids of airports
         """
         ids = []
-
+        # we test the size of the codes to know their type and searched in the right list
         for code in codes:
             if len(code) == 3 \
-                    and code in TomporaryLists.airport_iata:
-                ids.append(TomporaryLists.airport_iata[code])
+                    and code in CrossReferencesBuffer.airport_iata:
+                ids.append(CrossReferencesBuffer.airport_iata[code])
             elif len(code) == 4 \
-                    and code in TomporaryLists.airport_icao:
-                ids.append(TomporaryLists.airport_icao[code])
+                    and code in CrossReferencesBuffer.airport_icao:
+                ids.append(CrossReferencesBuffer.airport_icao[code])
             else:
                 ids.append(-1)
 
@@ -81,17 +81,19 @@ class Loader:
         :return: id of airline
         """
 
+        # we test the size of the code to know its type and searched in the right list
         if len(code) == 2 \
-                and code in TomporaryLists.airline_iata:
-            if code in TomporaryLists.airline_iata_double:
-                if id_file in TomporaryLists.airline_id_file_double:
-                    return TomporaryLists.airline_id_file_double[id_file]
+                and code in CrossReferencesBuffer.airline_iata:
+            # if the code is a doubled iata, we must refer to the ids in the file
+            if code in CrossReferencesBuffer.airline_iata_double:
+                if id_file in CrossReferencesBuffer.airline_id_file_double:
+                    return CrossReferencesBuffer.airline_id_file_double[id_file]
                 return -1
             else:
-                return TomporaryLists.airline_iata[code]
+                return CrossReferencesBuffer.airline_iata[code]
         elif len(code) == 3 \
-                and code in TomporaryLists.airline_icao:
-            return TomporaryLists.airline_icao[code]
+                and code in CrossReferencesBuffer.airline_icao:
+            return CrossReferencesBuffer.airline_icao[code]
         else:
             return -1
 
@@ -101,14 +103,14 @@ class Loader:
         :return: ids of plane type
         """
         ids = []
-
+        # we test the size of the codes to know their type and searched in the right list
         for code in codes:
             if len(code) == 3 \
-                    and code in TomporaryLists.plane_type_iata:
-                ids.append(TomporaryLists.plane_type_iata[code])
+                    and code in CrossReferencesBuffer.plane_type_iata:
+                ids.append(CrossReferencesBuffer.plane_type_iata[code])
             elif len(code) == 4 \
-                    and code in TomporaryLists.plane_type_icao:
-                ids.append(TomporaryLists.plane_type_icao[code])
+                    and code in CrossReferencesBuffer.plane_type_icao:
+                ids.append(CrossReferencesBuffer.plane_type_icao[code])
             else:
                 ids.append(-1)
 
@@ -143,13 +145,15 @@ class Loader:
                 continue
 
             # If the path is know, we take his id
-            if stops_id in TomporaryLists.path_ids:
-                if airline_id in TomporaryLists.path_ids[stops_id][1]:
+            if stops_id in CrossReferencesBuffer.path_ids:
+                # If the airline is already registered for this path,
+                # we go to the next line of the file because there is no information to add
+                if airline_id in CrossReferencesBuffer.path_ids[stops_id][1]:
                     continue
 
-                airway_id, *_ = TomporaryLists.path_ids[stops_id]
+                airway_id, *_ = CrossReferencesBuffer.path_ids[stops_id]
                 # Add the airline id at this path
-                TomporaryLists.path_ids[stops_id][1].append(airline_id)
+                CrossReferencesBuffer.path_ids[stops_id][1].append(airline_id)
 
             # Else, we create a new airway
             else:
@@ -158,7 +162,7 @@ class Loader:
                     else 1
 
                 # Add the new path in the temporary list
-                TomporaryLists.path_ids[stops_id] = (airway_id, [airline_id], [])
+                CrossReferencesBuffer.path_ids[stops_id] = (airway_id, [], [])
                 
                 # And, we save this new airway
                 self.airway_records.append(
@@ -186,6 +190,8 @@ class Loader:
 
             if airline_id == -1:
                 continue
+
+            CrossReferencesBuffer.path_ids[stops_id][1].append(airline_id)
             # We link the airline with the airway
             self.use_records.append(
                 Use(
@@ -222,40 +228,31 @@ class Loader:
             path = str(airport_src) + self.path_steps_separators + str(airport_dst)
             # if stops = 0, we know the path, so we can find his id
             if stops == 0 \
-                    and path in TomporaryLists.path_ids:
-                airway_id, *_ = TomporaryLists.path_ids[path]
-                # If the airline is already linked to this airway, we go to the next line of the file
-                if airline_id in TomporaryLists.path_ids[path][1]:
-                    airline_id = -1
-                else:
-                    TomporaryLists.path_ids[path][1].append(airline_id)
+                    and path in CrossReferencesBuffer.path_ids:
+                airway_id, *_ = CrossReferencesBuffer.path_ids[path]
 
-            # in the temporary list of path,
+            # if stops > 0, we don't know, but we can find a path of the same size, same airport source
+            # and same airport destinaition which is very likely to be the desired path
             elif stops > 0:
                 if any(
                     # a path as: `src-stop-dest` will have only one stop
                     len(path.split(self.path_steps_separators)) == stops + 2
                     and int(path.split(self.path_steps_separators)[0]) == airport_src
                     and int(path.split(self.path_steps_separators)[-1]) == airport_dst
-                    for path, _ in TomporaryLists.path_ids.items()
+                    for path, _ in CrossReferencesBuffer.path_ids.items()
                 ):
                     # We search his id in all the temporary list
-                    for path, _ in TomporaryLists.path_ids.items():
+                    for path, _ in CrossReferencesBuffer.path_ids.items():
                         if (
                             len(path.split(self.path_steps_separators)) == stops + 2
                             and int(path.split(self.path_steps_separators)[0]) == airport_src
                             and int(path.split(self.path_steps_separators)[-1]) == airport_dst
                         ):
-                            airway_id, *_ = TomporaryLists.path_ids[path]
+                            airway_id, *_ = CrossReferencesBuffer.path_ids[path]
                             break
 
-                    # If the airline is already linked to this airway, we go to the next line of the file
-                    if airline_id in TomporaryLists.path_ids[path][1]:
-                        airline_id = -1
-                    else:
-                        TomporaryLists.path_ids[path][1].append(airline_id)
-
-                # The associated airway does not exists and has stops
+                # we pass the paths of which we do not know the intermediate steps
+                # and which have no resemblance with the known path
                 else:
                     continue
 
@@ -265,11 +262,11 @@ class Loader:
                     if len(self.airway_records) > 0 \
                     else 1
 
-                TomporaryLists.path_ids[
+                CrossReferencesBuffer.path_ids[
                     self.path_steps_separators.join(
                         (str(airport_src), str(airport_dst))
                     )
-                ] = (airway_id, [airline_id], plane_ids)
+                ] = (airway_id, [], [])
 
                 # airway data recording
                 self.airway_records.append(
@@ -305,10 +302,11 @@ class Loader:
 
             # fly_on data recording
             for plane_id in plane_ids:
+                # save data if we know id and not already recorded
                 if plane_id == -1 \
-                        or plane_id in TomporaryLists.path_ids[path][2]:
+                        or plane_id in CrossReferencesBuffer.path_ids[path][2]:
                     continue
-                TomporaryLists.path_ids[path][2].append(plane_id)
+                CrossReferencesBuffer.path_ids[path][2].append(plane_id)
                 self.fly_on_records.append(
                     FlyOn(
                         id_airway=airway_id,
@@ -316,8 +314,11 @@ class Loader:
                     )
                 )
 
-            if airline_id == -1:
+            if airline_id == -1 \
+                    or airline_id in CrossReferencesBuffer.path_ids[path][1]:
                 continue
+
+            CrossReferencesBuffer.path_ids[path][1].append(airline_id)
             # use data recording
             self.use_records.append(
                 Use(
@@ -356,14 +357,16 @@ class Loader:
                 )
             )
 
+            # Add iata and icao in the temporary list, to facilitate cross-referencing
             if iata != "" and iata != "\\N" and iata != "-" and iata != "N/A":
-                if iata in TomporaryLists.airline_iata:
-                    TomporaryLists.airline_iata_double.append(iata)
-                    TomporaryLists.airline_id_file_double[iata] = int(airline_id)
+                # The iata can be doubled, so we have to register the duplicate and use the file identifiers instead
+                if iata in CrossReferencesBuffer.airline_iata:
+                    CrossReferencesBuffer.airline_iata_double.append(iata)
+                    CrossReferencesBuffer.airline_id_file_double[iata] = int(airline_id)
                 else:
-                    TomporaryLists.airline_iata[iata] = self.airline_records[-1].id
+                    CrossReferencesBuffer.airline_iata[iata] = self.airline_records[-1].id
             if icao != "" and icao != "\\N" and icao != "-" and icao != "N/A":
-                TomporaryLists.airline_icao[icao] = self.airline_records[-1].id
+                CrossReferencesBuffer.airline_icao[icao] = self.airline_records[-1].id
 
     def load_all_raw(self):
         """Load all data
@@ -528,11 +531,12 @@ class Loader:
                 )
             )
 
-            if airport_iata != "" and airport_iata != "\\N":
-                TomporaryLists.airport_iata[airport_iata] = self.airport_records[-1].id
+            # Add iata and icao in the temporary list, to facilitate cross-referencing
+            if airport_iata != "" and airport_iata != "\\N" and airport_iata != "-" and airport_iata != "N/A":
+                CrossReferencesBuffer.airport_iata[airport_iata] = self.airport_records[-1].id
 
-            if airport_icao != "" and airport_icao != "\\N":
-                TomporaryLists.airport_icao[airport_icao] = self.airport_records[-1].id
+            if airport_icao != "" and airport_icao != "\\N" and airport_icao != "-" and airport_icao != "N/A":
+                CrossReferencesBuffer.airport_icao[airport_icao] = self.airport_records[-1].id
 
         # store country records
         for name, data in countries.items():
@@ -583,11 +587,12 @@ class Loader:
                         model=model,
                     ))
 
-                if iata != "" and iata != "\\N":
-                    TomporaryLists.plane_type_iata[iata] = self.plane_records[-1].id
+                # Add iata and icao in the temporary list, to facilitate cross-referencing
+                if iata != "" and iata != "\\N" and iata != "-" and iata != "N/A":
+                    CrossReferencesBuffer.plane_type_iata[iata] = self.plane_records[-1].id
 
-                if icao != "" and icao != "\\N":
-                    TomporaryLists.plane_type_icao[icao] = self.plane_records[-1].id
+                if icao != "" and icao != "\\N" and icao != "-" and icao != "N/A":
+                    CrossReferencesBuffer.plane_type_icao[icao] = self.plane_records[-1].id
 
             else:
                 self.plane_type_records.append(

@@ -148,35 +148,34 @@ class LocalSources:
 
 
 class CrossReferencesBuffer:
-    """Todo
+    """Temporary list for reference the codes in files with our ids, to optimize the cross reference
     """
-    
-    # Tuple for save the paths add to airway and fly_on tables
-    # And save the combination airline with airway
-    # To avoid the duplicates in the tables
-    """Todo"""
+
+    """Tuple for save the paths add to airway and fly_on tables
+    And save the combination airline with airway and plane type
+    To avoid the duplicates in the tables"""
     path_ids: Dict[str, Tuple[int, List[int], List[int]]] = dict()
 
-    """Todo"""
+    """link airport iata with id"""
     airport_iata: Dict[str, int] = dict()
 
-    """Todo"""
+    """link airport icao with id"""
     airport_icao: Dict[str, int] = dict()
 
-    """Todo"""
+    """link airline iata with id"""
     airline_iata: Dict[str, int] = dict()
 
-    """Todo"""
+    """save doubled iata for reference at the id in file"""
     airline_iata_double = []
 
-    """Todo"""
+    """link airline id in file with our id"""
     airline_id_file_double: Dict[int, int] = dict()
 
-    """Todo"""
+    """link airline icao with id"""
     airline_icao: Dict[str, int] = dict()
 
-    """Todo"""
+    """link plane type iata with id"""
     plane_type_iata: Dict[str, int] = dict()
     
-    """Todo"""
+    """link plane type icao with id"""
     plane_type_icao: Dict[str, int] = dict()
