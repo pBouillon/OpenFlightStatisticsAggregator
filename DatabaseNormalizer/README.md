@@ -17,7 +17,7 @@ Le projet est en **Python 3.6+** et sa structure basée sur celle du très cél�
 Les tests unitaires associés au projet sont disponibles dans le dossier `tests/`.
 Pour leur execution, executer: `python -m unittest discover --start-directory tests`:
 
-```shell
+```powershell
 PS D:\_Programmes\project-grpa2\DatabaseNormalizer> python -m unittest discover --start-directory tests
 ....................
 ----------------------------------------------------------------------
