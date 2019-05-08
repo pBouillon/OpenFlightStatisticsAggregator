@@ -9,6 +9,7 @@
     :licence: MIT, see LICENSE for more details.
 """
 import time
+from typing import List
 
 from db_normalizer.csv_handler.normalizer import Normalizer
 from db_normalizer.csv_handler.utils import Dat
@@ -16,11 +17,22 @@ from db_normalizer.dal.dal import Dal
 from db_normalizer.data_loader.loader import Loader
 from db_normalizer.dal.utils import DatabaseUtils
 
-__version__ = '1.9.1'
+
+"""program's current version"""
+__version__ = '1.9.2'
+
+
+def pretty_print_collection(name: str, collection: List) -> None:
+    """pretty display for the records collection
+
+    :param name: collection's name
+    :param collection: records collection
+    """
+    print(f'\t- {name: >12}: {len(collection): >8}')
 
 
 def show_header() -> None:
-    """Program's startup header
+    """program's startup header
     """
     print('\n'.join([
         '*****',
@@ -36,10 +48,9 @@ def show_header() -> None:
     ]))
 
 
-if __name__ == '__main__':
-    # Displays program's startup
-    show_header()
-
+def main():
+    """program's logic execution
+    """
     #
     # Creating the normalizer object for .dat files
     print('[INFO] normalizing .dat files ...')
@@ -53,14 +64,14 @@ if __name__ == '__main__':
     normalizer.convert_to_csv_from_folder(
         dat_folder='../static/data/dat_files'
     )
-    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
+    print(f'[INFO] done in {(time.time() - begin):1.3f} second.s\n')
 
     #
     # Load data in the loader
     print('[INFO] initializing loader ...')
     begin = time.time()
     loader = Loader()
-    print(f'[INFO] done in {(time.time() - begin):1.5f} second.s\n')
+    print(f'[INFO] done in {(time.time() - begin):1.3f} second.s\n')
 
     # Extracting data
     print('[INFO] extracting data ...')
@@ -68,7 +79,7 @@ if __name__ == '__main__':
     loader.load_all_raw()
     print(
         f'[INFO] {loader.records} records loaded in '
-        f'{(time.time() - begin):1.5f} second.s\n'
+        f'{(time.time() - begin):1.3f} second.s\n'
     )
 
     # Fetching additional data
@@ -82,33 +93,52 @@ if __name__ == '__main__':
         loader.load_external(smooth=True)
         print(
             f'[INFO] external data loaded in '
-            f'{(time.time() - begin):1.5f} second.s'
+            f'{(time.time() - begin):1.3f} second.s'
         )
     print()
 
     #
     # Show loaded data info
     print('Recorded:')
-    print(f'\t{len(loader.airline_records):6}{"":4}Airlines')
-    print(f'\t{len(loader.airport_records):6}{"":4}Airports')
-    print(f'\t{len(loader.airway_records):6}{"":4}Airways')
-    print(f'\t{len(loader.city_records):6}{"":4}Cities')
-    print(f'\t{len(loader.country_records):6}{"":4}Countries')
-    print(f'\t{len(loader.dst_records):6}{"":4}DSTs')
-    print(f'\t{len(loader.plane_records):6}{"":4}Planes')
-    print(f'\t{len(loader.plane_type_records):6}{"":4}Plane types')
-    print(f'\t{len(loader.timezone_records):6}{"":4}Timezones\n')
+    [
+        pretty_print_collection(name, collection)
+        for name, collection
+        in loader.records_lists.items()
+    ]
+    print()
 
     #
     # Initiate a database connection
     dal = Dal()
+
+    # Create tables
+    begin = time.time()
     dal.create_tables()
-    print('[INFO] Tables initialized')
+    print(
+        f'[INFO] tables created in '
+        f'{(time.time() - begin):1.3f} second.s'
+    )
 
+    # Load tracked records in the database
+    begin = time.time()
     dal.write_from_loader(loader)
-    print('[INFO] Records stored')
+    print(
+        f'[INFO] records stored in database in '
+        f'{(time.time() - begin):1.3f} second.s'
+    )
 
+    # Dumps the sql
+    begin = time.time()
     dal.dump_content()
     print(
-        f'[INFO] Database\'s content stored in: {DatabaseUtils.sqlitedb_dump}'
+        f'[INFO] SQL dump created in \'{DatabaseUtils.sqlitedb_dump}\' in '
+        f'{(time.time() - begin):1.3f} second.s\n'
     )
+
+
+if __name__ == '__main__':
+    # Displays program's startup
+    show_header()
+
+    # execute logic
+    main()

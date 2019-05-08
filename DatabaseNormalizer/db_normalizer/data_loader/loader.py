@@ -18,6 +18,7 @@ from db_normalizer.data_loader.utils.table_objects \
 from db_normalizer.data_loader.utils.utils import LocalSources, ExternalSources, CrossReferencesBuffer
 from db_normalizer.exceptions.api_external_exceptions import ResourceNotFoundException
 
+
 class Loader:
     """References Loader
 
@@ -55,7 +56,8 @@ class Loader:
             'routes': Reader(LocalSources.routes),
         }
 
-    def get_airport_ids_from_codes(self, codes: List[str]) -> List[int]:
+    @staticmethod
+    def get_airport_ids_from_codes(codes: List[str]) -> List[int]:
         """Function for get the airports ids from ICAO or IATA code
         :param codes: ICAO or IATA code
         :return: ids of airports
@@ -74,7 +76,8 @@ class Loader:
 
         return ids
 
-    def get_airline_id_from_code(self, code: str, id_file: int) -> int:
+    @staticmethod
+    def get_airline_id_from_code(code: str, id_file: int) -> int:
         """Function for get the airline id from ICAO or IATA code
         :param code: ICAO or IATA code
         :param id_file: id in file (route.csv)
@@ -97,7 +100,8 @@ class Loader:
         else:
             return -1
 
-    def get_plane_type_from_codes(self, codes: List[str]) -> List[int]:
+    @staticmethod
+    def get_plane_type_from_codes(codes: List[str]) -> List[int]:
         """Function for get the plane type ids from ICAO or IATA code
         :param codes: ICAO or IATA code
         :return: ids of plane type
@@ -673,6 +677,26 @@ class Loader:
         :return: the total of the stored records
         """
         return sum(len(records) for _, records in self._tables.items())
+
+    @property
+    def records_lists(self) -> Dict[str, List]:
+        """Get all records per type
+        :return: a dict of all records per name
+        """
+        return {
+            'Airlines': self.airway_records,
+            'Airports': self.airport_records,
+            'Airways': self.airway_records,
+            'Cities': self.city_records,
+            'Countries': self.country_records,
+            'DSTs': self.dst_records,
+            'Fly On': self.fly_on_records,
+            'Planes': self.plane_records,
+            'Plane Types': self.plane_type_records,
+            'Steps': self.step_in_records,
+            'Timezones': self.timezone_records,
+            'Uses': self.use_records
+        }
 
     @property
     def step_in_records(self) -> List[StepIn]:

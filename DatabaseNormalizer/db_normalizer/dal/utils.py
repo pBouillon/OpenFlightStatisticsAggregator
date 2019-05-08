@@ -38,5 +38,5 @@ class DatabaseUtils:
     """table schemas"""
     sql_tables_path = '../static/sql/sqlite_sources'
 
-    """"""
+    """sql default file extension"""
     sql_extension = '.sql'
