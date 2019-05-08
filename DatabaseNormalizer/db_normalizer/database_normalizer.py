@@ -23,11 +23,10 @@ __version__ = '1.9.2'
 
 
 def pretty_print_collection(name: str, collection: List) -> None:
-    """
+    """pretty display for the records collection
 
-    :param name:
-    :param collection:
-    :return:
+    :param name: collection's name
+    :param collection: records collection
     """
     print(f'\t- {name: >12}: {len(collection): >8}')
 
