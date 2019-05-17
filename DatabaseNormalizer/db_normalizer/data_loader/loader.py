@@ -584,7 +584,7 @@ class Loader:
         # unwrapping relevant data from the source file
         for model, iata, icao, *_ \
                 in self._reader['planes'].read_content():
-            # In fisrt time, we record only the plane
+            # In first time, we record only the plane
             if icao != Csv.null_value:
                 self.plane_records.append(
                     Plane(
@@ -598,11 +598,9 @@ class Loader:
                     ))
 
                 CrossReferencesBuffer.plane_name[model] = self.plane_records[-1].id
-
                 # Add iata and icao in the temporary list, to facilitate cross-referencing
                 if iata != "" and iata != "\\N" and iata != "-" and iata != "N/A":
                     CrossReferencesBuffer.plane_iata[iata] = self.plane_records[-1].id
-
                 if icao != "" and icao != "\\N" and icao != "-" and icao != "N/A":
                     CrossReferencesBuffer.plane_icao[icao] = self.plane_records[-1].id
 
@@ -619,14 +617,17 @@ class Loader:
                         type=model,
                         iata=iata
                     ))
-                if (iata != "" and iata != "\\N" and iata != "-" and iata != "N/A"
-                        and any(model in plane_name
-                                for plane_name, *_ in CrossReferencesBuffer.plane_name.items()
-                                )
-                ):
+                if iata != "" \
+                        and iata != "\\N" \
+                        and iata != "-" \
+                        and iata != "N/A" \
+                        and any(
+                            model in plane_name
+                            for plane_name, *_
+                            in CrossReferencesBuffer.plane_name.items()
+                                ):
                     CrossReferencesBuffer.plane_type_iata[iata] = []
                     for plane_name, plane_id, *_ in CrossReferencesBuffer.plane_name.items():
-
                         # Add iata in the temporary list, to facilitate cross-referencing
                         if model in plane_name:
                             CrossReferencesBuffer.plane_type_iata[iata].append(plane_id)
