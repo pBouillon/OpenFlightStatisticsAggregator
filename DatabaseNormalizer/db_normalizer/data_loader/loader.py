@@ -110,11 +110,17 @@ class Loader:
         # we test the size of the codes to know their type and searched in the right list
         for code in codes:
             if len(code) == 3 \
-                    and code in CrossReferencesBuffer.plane_type_iata:
-                ids.append(CrossReferencesBuffer.plane_type_iata[code])
+                    and (code in CrossReferencesBuffer.plane_iata
+                         or code in CrossReferencesBuffer.plane_type_iata):
+                # if the code refers to the type of plane, we must link all plane ids of this type
+                if code in CrossReferencesBuffer.plane_type_iata:
+                    for plane_id in CrossReferencesBuffer.plane_type_iata[code]:
+                        ids.append(plane_id)
+                else:
+                    ids.append(CrossReferencesBuffer.plane_iata[code])
             elif len(code) == 4 \
-                    and code in CrossReferencesBuffer.plane_type_icao:
-                ids.append(CrossReferencesBuffer.plane_type_icao[code])
+                    and code in CrossReferencesBuffer.plane_icao:
+                ids.append(CrossReferencesBuffer.plane_icao[code])
             else:
                 ids.append(-1)
 
@@ -578,7 +584,7 @@ class Loader:
         # unwrapping relevant data from the source file
         for model, iata, icao, *_ \
                 in self._reader['planes'].read_content():
-            # records with no ico are a PlaneType
+            # In fisrt time, we record only the plane
             if icao != Csv.null_value:
                 self.plane_records.append(
                     Plane(
@@ -591,14 +597,20 @@ class Loader:
                         model=model,
                     ))
 
+                CrossReferencesBuffer.plane_name[model] = self.plane_records[-1].id
+
                 # Add iata and icao in the temporary list, to facilitate cross-referencing
                 if iata != "" and iata != "\\N" and iata != "-" and iata != "N/A":
-                    CrossReferencesBuffer.plane_type_iata[iata] = self.plane_records[-1].id
+                    CrossReferencesBuffer.plane_iata[iata] = self.plane_records[-1].id
 
                 if icao != "" and icao != "\\N" and icao != "-" and icao != "N/A":
-                    CrossReferencesBuffer.plane_type_icao[icao] = self.plane_records[-1].id
+                    CrossReferencesBuffer.plane_icao[icao] = self.plane_records[-1].id
 
-            else:
+        for model, iata, icao, *_ \
+                in self._reader['planes'].read_content():
+
+            # In second time, we record the plane type and link them with plane in temporary list
+            if icao == Csv.null_value:
                 self.plane_type_records.append(
                     PlaneType(
                         id=self.plane_type_records[-1].id + 1
@@ -607,6 +619,17 @@ class Loader:
                         type=model,
                         iata=iata
                     ))
+                if (iata != "" and iata != "\\N" and iata != "-" and iata != "N/A"
+                        and any(model in plane_name
+                                for plane_name, *_ in CrossReferencesBuffer.plane_name.items()
+                                )
+                ):
+                    CrossReferencesBuffer.plane_type_iata[iata] = []
+                    for plane_name, plane_id, *_ in CrossReferencesBuffer.plane_name.items():
+
+                        # Add iata in the temporary list, to facilitate cross-referencing
+                        if model in plane_name:
+                            CrossReferencesBuffer.plane_type_iata[iata].append(plane_id)
 
     @property
     def airline_records(self) -> List[Airline]:
