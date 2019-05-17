@@ -617,10 +617,10 @@ class Loader:
                         type=model,
                         iata=iata
                     ))
-                if iata != "" \
-                        and iata != "\\N" \
-                        and iata != "-" \
-                        and iata != "N/A" \
+                if iata \
+                        and iata != '\\N' \
+                        and iata != '-' \
+                        and iata != 'N/A' \
                         and any(
                             model in plane_name
                             for plane_name, *_
