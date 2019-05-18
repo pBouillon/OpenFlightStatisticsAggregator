@@ -174,8 +174,14 @@ class CrossReferencesBuffer:
     """link airline icao with id"""
     airline_icao: Dict[str, int] = dict()
 
-    """link plane type iata with id"""
-    plane_type_iata: Dict[str, int] = dict()
+    """link plane iata with id"""
+    plane_iata: Dict[str, int] = dict()
     
-    """link plane type icao with id"""
-    plane_type_icao: Dict[str, int] = dict()
+    """link plane icao with id"""
+    plane_icao: Dict[str, int] = dict()
+
+    """link plane type iata with plane ids"""
+    plane_type_iata: Dict[str, List[int]] = dict()
+
+    """link plane name with id"""
+    plane_name: Dict[str, int] = dict()
