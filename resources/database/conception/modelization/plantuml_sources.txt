@@ -5,62 +5,68 @@
 hide methods
 hide stereotypes
 
-table(COUNTRY) {
+
+table(AIRWAY) {
     {field} #id : NUMBER
-    {field} +id_dst : NUMBER
-    {field} inhabitants : NUMBER    
-    {field} name : VARCHAR(50)
-    {field} superficy(km²) : BINARY_FLOAT
+    {field} codeshare : VARCHAR2(1)
 }
 
 table(DST) {
     {field} #id : NUMBER
-    {field} name : VARCHAR(15)
+    {field} name : VARCHAR2(15)
 }
 
 table(PLANE_TYPE) {
     {field} #id : NUMBER
-    {field} type : VARCHAR(50)
-    {field} iata_code : VARCHAR(3)
+    {field} iata_code : VARCHAR2(3)
+    {field} type : VARCHAR2(30)
+    
 }
 
 table(TIMEZONE) {
     {field} #id : NUMBER
-    {field} from_utc : NUMBER
-    {field} name : VARCHAR(100)
+    {field} name : VARCHAR2(100)
+    {field} padding : NUMBER
 }
 
 table(AIRLINE) {
     {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} active : BOOL
-    {field} alias : VARCHAR(50)
-    {field} callsing : VARCHAR(50)
-    {field} name : VARCHAR(100)
-    {field} iata_code : VARCHAR(2)
-    {field} icao_code : VARCHAR(3)
+    {field} alias : VARCHAR2(50)
+    {field} callsing : VARCHAR2(50)
+    {field} name : VARCHAR2(100)
+    {field} iata_code : VARCHAR2(2)
+    {field} icao_code : VARCHAR2(3)
 }
 
 table(AIRPORT) {
     {field} #id : NUMBER
     {field} +id_city : NUMBER
     {field} altitude : BINARY_FLOAT
+    {field} iata_code : VARCHAR2(3)
+    {field} icao_code : VARCHAR2(4)
     {field} latitude : BINARY_FLOAT
     {field} longitude : BINARY_FLOAT
-    {field} name : VARCHAR(150)
-    {field} iata_code : VARCHAR(3)
-    {field} icao_code : VARCHAR(4)
-    
+    {field} name : VARCHAR2(150)
+}
+
+table(COUNTRY) {
+    {field} #id : NUMBER
+    {field} +id_dst : NUMBER
+    {field} name : VARCHAR2(50)
+    {field} population : NUMBER
+    {field} superficy : BINARY_FLOAT
 }
 
 table(PLANE) {
     {field} #id : NUMBER
     {field} +id_plane_type : NUMBER
-    {field} name : VARCHAR(50)
     {field} consumption : NUMBER
     {field} freight : NUMBER
-    {field} iata_code : VARCHAR(3)
-    {field} icao_code : VARCHAR(4)
+    {field} iata_code : VARCHAR2(3)
+    {field} icao_code : VARCHAR2(4)
+    {field} model : VARCHAR2(30)
     {field} passengers : NUMBER
     {field} speed : NUMBER
 }
@@ -69,28 +75,35 @@ table(CITY) {
     {field} #id : NUMBER
     {field} +id_country : NUMBER
     {field} +id_timezone : NUMBER
-    {field} name :VARCHAR(100)
+    {field} population : NUMBER
+    {field} name : VARCHAR2(100)
 }
 
-table(AIRWAY) {
-    {field} #id : NUMBER
-    {field} +id_airline : NUMBER
-    {field} +id_airport_dest : NUMBER
-    {field} +id_airport_src : NUMBER
-    {field} stops : NUMBER
-}
-
-table(PLANE_AIRWAY) {
-    {field} #id : NUMBER
+table(FLY_ON) {
     {field} +id_airway : NUMBER
     {field} +id_plane : NUMBER
-    {field} +id_plane_type : NUMBER
+}
+
+table(STEP_IN) {
+    {field} #id : NUMBER
+    {field} +id_airport : NUMBER
+    {field} +id_airway : NUMBER
+    {field} rank : NUMBER
+}
+
+table(USE) {
+    {field} +id_airline : NUMBER
+    {field} +id_airway : NUMBER
 }
 
 
-AIRPORT "1,n" --{ "1,1" AIRWAY
+AIRPORT "1,n" --{ "1,1" STEP_IN
 
-AIRWAY "1,n" --{ "1,1" PLANE_AIRWAY
+AIRLINE "1,n" --{ "1,1" USE
+
+AIRWAY "1,n" --{ "1,1" USE
+AIRWAY "1,n" --{ "1,1" STEP_IN
+AIRWAY "1,n" --{ "1,1" FLY_ON
 
 CITY "1,n" --{ "1,1" AIRPORT
 
@@ -99,9 +112,8 @@ COUNTRY "1,n" --{ "1,1" CITY
 
 DST "1,n" --{ "1,1" COUNTRY
 
-PLANE "1,n" --{ "1,1" PLANE_AIRWAY
+PLANE "1,n" --{ "1,1" FLY_ON
 
-PLANE_TYPE "1,n" --{ "1,1" PLANE_AIRWAY
 PLANE_TYPE "1,n" --{ "1,1" PLANE
 
 TIMEZONE "1,n" --{ "1,1" CITY

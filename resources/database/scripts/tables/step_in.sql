@@ -1,0 +1,17 @@
+CREATE TABLE STEP_IN
+(
+	id 			NUMBER 	NOT NULL
+    id_airport	NUMBER  NOT NULL,
+    id_airway	NUMBER	NOT NULL,
+    rank        NUMBER  NOT NULL,
+
+    CONSTRAINT PK_STEP_IN PRIMARY KEY (id),
+
+    CONSTRAINT FK_AIRPORT
+        FOREIGN KEY (id_airport)
+        REFERENCES  AIRPORT(id),
+
+    CONSTRAINT FK_AIRWAY
+        FOREIGN KEY (id_airway)
+        REFERENCES  AIRWAY(id)
+)
