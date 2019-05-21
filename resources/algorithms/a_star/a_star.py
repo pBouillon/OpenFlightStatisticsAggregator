@@ -17,7 +17,6 @@ def build_graph():
                     |           2       6   |1
                     H --------------------- I
                                 3
-
     """
     s = Edge(name='s', x=0, y=0)
     a = Edge(name='A', x=0, y=1)
@@ -77,7 +76,6 @@ def build_graph():
 
 def astar(graph: Graph, source: str, target: str) -> List[str]:
     """Find the shortest path between `source` and `target`
-
     :param graph: the graph to work on
     :param source: the source node
     :param target: the target node
@@ -144,8 +142,7 @@ def astar(graph: Graph, source: str, target: str) -> List[str]:
 
 
 def heuristic_cost_estimate(node, target) -> float:
-    """
-    Calculate the heuristic of th node
+    """Calculate the heuristic of th node
     :param node: node to test
     :param target: the final node
     :return: the heuristic between the node to test and the target
@@ -154,8 +151,7 @@ def heuristic_cost_estimate(node, target) -> float:
 
 
 def reconstruct_path(ancestor, node, source) -> List[str]:
-    """
-    reconstruct the shortest path
+    """Reconstruct the shortest path
     :param ancestor: list of ancestor for each node
     :param node: node from which the path is rebuilt
     :param source: the starting node
