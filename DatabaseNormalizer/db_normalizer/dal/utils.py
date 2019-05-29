@@ -30,7 +30,7 @@ class DatabaseUtils:
     service_name = 'TNCY'
 
     """destination for the sqlite3 temp database"""
-    sqlite_db = ':memory:'
+    sqlite_db = '../static/sql/sql_dump/ppii.db'
 
     """default path to dumb the sql"""
     sqlitedb_dump = '../static/sql/sql_dump/generated_sql.sql'
