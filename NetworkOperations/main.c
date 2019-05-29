@@ -41,7 +41,7 @@ void show_help()
 
 
 /**
- * program's entrypoiint
+ * program's entry point
  */
 int main(int argc, char **argv)
 {
@@ -57,9 +57,10 @@ int main(int argc, char **argv)
     }
 
     // acting depending on the provided mode
-    switch (atoi(argv[MODE]))
+    switch (atoi(argv[MODE])) // NOLINT(cert-err34-c)
     {
         case CLIENT_MODE:
+            // TODO: pass the 
             break;
         case SERVER_MODE:
             break;
