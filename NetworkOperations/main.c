@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     // check args
     if (argc !=  ARGS_REQUIRED)
     {
-        show_header() ;
+        show_help() ;
         perror("bad arg number\n") ;
         return EXIT_FAILURE ;
     }
@@ -60,12 +60,12 @@ int main(int argc, char **argv)
     switch (atoi(argv[MODE])) // NOLINT(cert-err34-c)
     {
         case CLIENT_MODE:
-            // TODO: pass the 
+            // TODO: pass the
             break;
         case SERVER_MODE:
             break;
         default:
-            show_header() ;
+            show_help() ;
             perror("unknown mode") ;
             return EXIT_FAILURE ;
     }
