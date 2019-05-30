@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "server/server.h"
 
-#define     ARGS_REQUIRED   2
-#define     MODE            2
-#define     SERVER_MODE     1
-#define     CLIENT_MODE     2
+
+#define     ARGS_REQUIRED           2
+#define     MODE                    2
+
+#define     SERVER_ARGS_EXPECTED    3
+#define     SERVER_MODE             1
+#define     SERVER_PORT             2
+
+#define     CLIENT_ADDR             2
+#define     CLIENT_ARGS_EXPECTED    4
+#define     CLIENT_MODE             2
+#define     CLIENT_PORT             3
+
 
 #define     TEXT_INTRO      "*****\n" \
                               "**  - Projet PPII - \n" \
@@ -37,6 +47,9 @@ void show_help()
     printf("mode:\n") ;
     printf("\t- %d: server mode\n", SERVER_MODE) ;
     printf("\t- %d: client mode\n", CLIENT_MODE) ;
+    printf("usage per mode:\n") ;
+    printf("\tserver: ./main serv_addr\n") ;
+    printf("\tclient: ./main client_addr client_port\n") ;
 } /* show_help */
 
 
@@ -45,25 +58,42 @@ void show_help()
  */
 int main(int argc, char **argv)
 {
+    int chosen_mode ;
+
     // show header
     show_header() ;
 
-    // check args
-    if (argc !=  ARGS_REQUIRED)
+    if (argc < ARGS_REQUIRED)
     {
         show_help() ;
-        perror("bad arg number\n") ;
+        perror ("at least one mode expected") ;
         return EXIT_FAILURE ;
     }
 
-    // acting depending on the provided mode
-    switch (atoi(argv[MODE])) // NOLINT(cert-err34-c)
+    chosen_mode = atoi(argv[1]) ;
+
+    switch (MODE)
     {
         case CLIENT_MODE:
-            // TODO: pass the
-            break;
+            if (argc != CLIENT_ARGS_EXPECTED)
+            {
+                show_help() ;
+                perror ("bad arg count") ;
+                return EXIT_FAILURE ;
+            }
+            start_client(argv[CLIENT_ADDR], argv[CLIENT_PORT]) ;
+            break ;
+        
         case SERVER_MODE:
-            break;
+            if (argc != SERVER_ARGS_EXPECTED)
+            {
+                show_help() ;
+                perror ("bad arg count") ;
+                return EXIT_FAILURE ;
+            }
+            start_server(argv[SERVER_PORT]) ;
+            break ;
+        
         default:
             show_help() ;
             perror("unknown mode") ;
