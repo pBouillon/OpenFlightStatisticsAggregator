@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <netinet/in.h>
 #include "server.h"
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 /**
  * \fn launch_server
@@ -10,7 +13,7 @@
  *
  * \param port the port of the server
  */
-int start_server(int port)
+void start_server(int port)
 {
     /* --- initialisation --- */
 
@@ -88,7 +91,7 @@ int start_server(int port)
         clients_tab[i] = SOCKET_NOT_SET ;
     }
 
-    FD_ZERO(&allset) ;
+    FD_ZERO(&all_set) ;
     FD_ZERO(&read_set) ;
     FD_SET(sockfd, &read_set) ;
 
@@ -98,13 +101,15 @@ int start_server(int port)
     // listening to connections
     for (;;)
     {
-        allset = rset ;
+        all_set = read_set ;
 
         fd_index = select(
             max_sockfd,
-            (struct sockaddr *) &cli_addr,
-            &clilen
-        )
+            &all_set,
+            NULL,
+            NULL,
+            NULL
+        ) ;
         if (fd_index < 0)
         {
             perror("unable to perform select") ;
@@ -112,7 +117,7 @@ int start_server(int port)
         }
 
         // on connection request
-        if (FD_ISSET(sockfd, &allset))
+        if (FD_ISSET(sockfd, &all_set))
         {
             clilen = sizeof(cli_addr) ;
             new_sockfd = accept(
@@ -154,7 +159,7 @@ int start_server(int port)
                 client_sock = clients_tab[i] ;
 
                 if (client_sock >= 0
-                    && FD_ISSET(sock))
+                    && FD_ISSET(client_sock, &all_set))
                 {
                     max_sockfd =  new_sockfd + 1 ;
                     --fd_index ;
@@ -165,7 +170,7 @@ int start_server(int port)
                     client_sock = clients_tab[i] ;
 
                     if (client_sock >= 0
-                        && FD_ISSET(client_sock, &allset))
+                        && FD_ISSET(client_sock, &all_set))
                     {
                         // TODO: handle connection using `client_sock`
 
