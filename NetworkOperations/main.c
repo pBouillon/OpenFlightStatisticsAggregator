@@ -12,10 +12,10 @@
 #define     SERVER_PORT             2
 
 #define     CLIENT_ADDR             2
-#define     CLIENT_ARGS_EXPECTED    4
+#define     CLIENT_ARGS_EXPECTED    5
 #define     CLIENT_MODE             2
 #define     CLIENT_PORT             3
-
+#define     CLIENT_REQ              4
 
 #define     TEXT_INTRO      "*****\n" \
                               "**  - Projet PPII - \n" \
@@ -49,7 +49,7 @@ void show_help()
     printf("\t- %d: client mode\n", CLIENT_MODE) ;
     printf("usage per mode:\n") ;
     printf("\tserver: ./main serv_addr\n") ;
-    printf("\tclient: ./main client_addr client_port\n") ;
+    printf("\tclient: ./main client_addr client_port request\n") ;
 } /* show_help */
 
 
@@ -58,8 +58,6 @@ void show_help()
  */
 int main(int argc, char **argv)
 {
-    int chosen_mode ;
-
     // show header
     show_header() ;
 
@@ -70,9 +68,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE ;
     }
 
-    chosen_mode = atoi(argv[1]) ;
-
-    switch (MODE)
+    switch (atoi(argv[MODE]))
     {
         case CLIENT_MODE:
             if (argc != CLIENT_ARGS_EXPECTED)
@@ -81,7 +77,11 @@ int main(int argc, char **argv)
                 perror ("bad arg count") ;
                 return EXIT_FAILURE ;
             }
-            start_client(argv[CLIENT_ADDR], argv[CLIENT_PORT]) ;
+            start_client(
+                argv[CLIENT_ADDR], 
+                argv[CLIENT_PORT],
+                argv[CLIENT_REQ]
+            ) ;
             break ;
         
         case SERVER_MODE:

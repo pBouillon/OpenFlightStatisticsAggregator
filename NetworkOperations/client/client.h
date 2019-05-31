@@ -6,6 +6,6 @@
 
 /* --- methods --- */
 // start the client
-void start_client() ;
+void start_client(char *server_addr, char *server_port, char *intent);
 
 #endif //NETWORKOPERATIONS_CLIENT_H
