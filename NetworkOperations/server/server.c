@@ -42,6 +42,35 @@ void process_query(int sockfd)
     }
 } /* extract_query */
 
+void read_cli(int sockfd)
+{
+    int nrcv, nsnd ;
+    char msg[200] ;
+
+    memset((void *)  msg, 0, sizeof(msg) ) ;
+    if ( (nrcv= read ( sockfd, msg, sizeof(msg)-1) ) < 0 )  {
+        printf ("read error on socket") ;
+        exit (TCP_ERROR_READ) ;
+    }
+
+    msg[nrcv]='\0';
+    printf ("servselect :message recu=%s nombre octets recus = %d \n",msg,nrcv) ;
+    char *tocken = strtok(msg, "/") ;
+    while (tocken)
+    {
+        puts(tocken) ;
+        tocken = strtok(NULL, "/") ;
+    }
+
+
+    if ( (nsnd = write (sockfd, msg, nrcv) ) <0 ) {
+        printf ("servselect : write error on socket") ;
+        exit(-1) ;
+    }
+    printf ("nsnd = %d \n", nsnd) ;
+    exit(nsnd) ;
+}
+
 
 /**
  * \fn launch_server
@@ -135,6 +164,12 @@ void start_server(int port)
     min_sockfd = -1 ;
 
     // listening to connections
+    if (listen(sockfd, SOMAXCONN) < 0)
+    {
+        perror("unable to perform listen") ;
+        exit(TCP_ERROR_LISTEN) ;
+    }
+
     for (;;)
     {
         all_set = read_set ;
@@ -208,7 +243,7 @@ void start_server(int port)
                     if (client_sock >= 0
                         && FD_ISSET(client_sock, &all_set))
                     {
-                        // TODO: handle connection using `client_sock`
+                        read_cli(sockfd) ;
 
                         close(client_sock) ;
                         clients_tab[i] = SOCKET_NOT_SET ;
