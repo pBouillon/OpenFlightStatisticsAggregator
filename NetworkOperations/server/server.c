@@ -7,6 +7,41 @@
 #include <string.h>
 #include <unistd.h>
 
+
+/**
+ * \fn process_query
+ * \brief extract and execute user's intent
+ * 
+ * \param sockfd dialog socket
+ */
+void process_query(int sockfd)
+{
+    // user intent and query payload
+    int intent ;
+    char **payload ;
+
+    // parse the request -> strtok
+    // TODO
+
+    switch (intent) 
+    {
+        case INTENT_FETCH:
+            // performed on 'table/column/nb'
+            // TODO
+            break ;
+        
+        case INTENT_PATH:
+            // performs on 'flight/duration="shortest",&dest="____"'
+            // TODO
+            break ;
+        
+        default:
+            perror("unable to process the user intent") ;
+            exit(SERVER_UNKNOWN_REQ) ; // FIXME: close sockets and connection on exit
+    }
+} /* extract_query */
+
+
 /**
  * \fn launch_server
  * \brief starts the server process
