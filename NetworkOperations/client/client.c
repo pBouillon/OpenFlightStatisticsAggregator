@@ -24,6 +24,10 @@
 /**
  * \fn launch_client
  * \brief starts the client process
+ * 
+ * \param server_addr address of the server to reach
+ * \param server_port port of the server to reach
+ * \param intent query to send to the server
  */
 void start_client(char *server_addr, char *server_port, char *intent)
 {
@@ -32,11 +36,14 @@ void start_client(char *server_addr, char *server_port, char *intent)
     // server IP on 32 bits
     struct in_addr serv_addr ;
 
+    // communication utility
     socklen_t addrlen ;
-
     char response_buffer[RESPONSE_BUFFER_LEN] ;
 
+    // socket descriptor
     int sockfd ;
+
+    // store return codes
     int rc ;
 
     // create socket
@@ -112,5 +119,6 @@ void start_client(char *server_addr, char *server_port, char *intent)
 
     // TODO: handle response
 
+    // close the communication
     close(sockfd) ;
 } /* start_client */
