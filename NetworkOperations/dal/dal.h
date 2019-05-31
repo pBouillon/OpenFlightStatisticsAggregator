@@ -1,6 +1,8 @@
 #ifndef NETWORKOPERATIONS_DAL_H
 #define NETWORKOPERATIONS_DAL_H
 
+#include <sqlite3.h>
+
 /* --- constants --- */
 // custom errors
 #define     DB_ERROR_CONENCT    1
