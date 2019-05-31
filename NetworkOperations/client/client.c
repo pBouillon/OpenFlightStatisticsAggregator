@@ -67,7 +67,7 @@ void start_client(char *server_addr, char *server_port, char *intent)
     ) ;
 
     serv_in.sin_family = AF_INET ;
-    serv_in.port = htons(atoi(server_port)) ;
+    serv_in.sin_port = htons(atoi(server_port)) ;
 
     rc = inet_aton(server_addr, &serv_addr) ;
     if (rc < 0)
