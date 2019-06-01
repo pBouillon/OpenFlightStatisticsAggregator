@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-    graph
+    structures
     --------
 
-    Basic graph implementation
+    Basic structures implementation
 
     :authors: Bouillon Pierre, Cesari Alexandre.
     :licence: MIT, see LICENSE for more details.
@@ -15,13 +15,13 @@ from typing import List, Dict
 class Graph:
     """References Graph
 
-    Minimal implementation of a graph
+    Minimal implementation of a structures
     """
 
     def __init__(self):
         self._graph = dict()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return json.dumps(self._graph)
 
     def get_children(self, edge: str) -> List[str]:
