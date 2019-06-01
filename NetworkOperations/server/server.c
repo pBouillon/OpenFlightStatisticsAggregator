@@ -243,6 +243,7 @@ void start_server(int port)
                     if (client_sock >= 0
                         && FD_ISSET(client_sock, &all_set))
                     {
+                        // handle client request
                         read_cli(sockfd) ;
 
                         close(client_sock) ;

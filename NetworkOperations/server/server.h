@@ -20,6 +20,6 @@
 void process_query(int sockfd) ;
 
 // start the server
-void start_server() ;
+void start_server(int port) ;
 
 #endif //NETWORKOPERATIONS_SERVER_H

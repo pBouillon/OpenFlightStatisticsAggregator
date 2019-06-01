@@ -93,7 +93,7 @@ int main(int argc, char **argv)
                 perror ("bad arg count") ;
                 return EXIT_FAILURE ;
             }
-            start_server(argv[SERVER_PORT]) ;
+            start_server(atoi(argv[SERVER_PORT])) ;
             break ;
         
         default:
