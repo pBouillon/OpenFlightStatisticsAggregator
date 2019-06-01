@@ -80,12 +80,12 @@ int main(int argc, char **argv)
                 return EXIT_FAILURE ;
             }
             start_client(
-                argv[CLIENT_ADDR], 
+                argv[CLIENT_ADDR],
                 argv[CLIENT_PORT],
                 argv[CLIENT_REQ]
             ) ;
             break ;
-        
+
         case SERVER_MODE:
             if (argc != SERVER_ARGS_EXPECTED)
             {
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
             }
             start_server(atoi(argv[SERVER_PORT])) ;
             break ;
-        
+
         default:
             show_help() ;
             perror("unknown mode") ;
