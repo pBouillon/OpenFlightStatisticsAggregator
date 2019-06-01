@@ -75,13 +75,13 @@ void start_client(char *server_addr, char *server_port, char *intent)
     serv_in.sin_family = AF_INET ;
     serv_in.sin_port = htons(atoi(server_port)) ;
 
-    hp = (struct hostent *)gethostbyname (server_addr) ;
+    hp = gethostbyname(server_addr) ;
     if (hp == NULL)
     {
         perror("invalid IP address") ;
         exit (TCP_ERROR_INET_ATON) ;
     }
-    serv_in.sin_addr = * ((struct in_addr *)(hp->h_addr)) ;
+    serv_in.sin_addr = *((struct in_addr *)(hp->h_addr)) ;
 
     print_log("client", "initializing server's information") ;
 

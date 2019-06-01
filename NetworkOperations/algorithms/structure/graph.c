@@ -19,6 +19,7 @@ struct graph* create_graph(struct node* head)
     {
         head->children_ids[i] = VALUE_NOT_SET ;
         head->costs[i] = VALUE_NOT_SET ;
+        head->heuristique[i] = VALUE_NOT_SET ;
     }
 
     graph->nodes[0] = head ;
@@ -36,7 +37,7 @@ struct graph* create_graph(struct node* head)
  * \param father father of the child to add
  * \param cost cost of the edge from father to child
  */
-void add_node(struct graph* graph, struct node *child, struct node *father, int cost)
+void add_node(struct graph* graph, struct node *child, struct node *father, int cost, int heuristique)
 {
     // register the node in the graph
     child->node_id = graph->stored_nodes++ ;
@@ -47,6 +48,7 @@ void add_node(struct graph* graph, struct node *child, struct node *father, int 
     {
         child->children_ids[i] = VALUE_NOT_SET ;
         child->costs[i] = VALUE_NOT_SET ;
+        child->heuristique[i] = VALUE_NOT_SET ;
     }
 
     // link the node to its father
@@ -61,6 +63,7 @@ void add_node(struct graph* graph, struct node *child, struct node *father, int 
         // append the child to the other with its cost
         father->children_ids[i] = child->node_id ;
         father->costs[i] = cost ;
+        father->heuristique[i] = heuristique ;
 
         // end the loop
         break ;

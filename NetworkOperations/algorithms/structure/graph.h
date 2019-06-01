@@ -28,6 +28,7 @@ struct node {
     int node_id ;
     char *name ;
     int costs[MAX_CHILREN_CAPACITY] ;
+    int heuristique[MAX_CHILREN_CAPACITY] ;
     int children_ids[MAX_CHILREN_CAPACITY] ;
 } ;
 

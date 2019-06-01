@@ -6,15 +6,6 @@
 /**
  *
  */
-int a_star()
-{
-    return 0 ;
-} /* a_star */
-
-
-/**
- *
- */
 int dijkstra(struct graph* graph)
 {
     int explored_nodes[graph->stored_nodes] ;

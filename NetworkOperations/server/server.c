@@ -215,6 +215,7 @@ void start_server(int port)
         perror("unable to perform listen") ;
         exit(TCP_ERROR_LISTEN) ;
     }
+    print_log("server", "listening...") ;
 
     for (;;)
     {
@@ -248,6 +249,7 @@ void start_server(int port)
                 perror("unable to accept the incoming connection") ;
                 exit(TCP_ERROR_ACCEPT) ;
             }
+            print_log("server", "new client") ;
 
             // add the client to the known clients
             i = 0 ;
