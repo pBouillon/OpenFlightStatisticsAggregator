@@ -19,7 +19,9 @@
 
 /* custom imports */
 #include "client.h"
+#include "../log/logger.h"
 #include "../tcp/tcp_errors.h"
+
 
 /**
  * \fn launch_client
@@ -59,6 +61,8 @@ void start_client(char *server_addr, char *server_port, char *intent)
         exit(TCP_ERROR_SOCKET) ;
     }
 
+    print_log("client", "socket created") ;
+
     // initialize structure
     memset(
         &serv_in,
@@ -77,6 +81,8 @@ void start_client(char *server_addr, char *server_port, char *intent)
     }
     serv_in.sin_addr = serv_addr ;
 
+    print_log("client", "initializing server's information") ;
+
     // connection
     addrlen = sizeof(serv_in) ;
     rc = connect(
@@ -91,6 +97,8 @@ void start_client(char *server_addr, char *server_port, char *intent)
         exit(TCP_ERROR_CONNECT) ;
     }
 
+    print_log("client", "connected to the server") ;
+
     // send the query
     rc = write(
         sockfd,
@@ -104,6 +112,8 @@ void start_client(char *server_addr, char *server_port, char *intent)
         exit(TCP_ERROR_WRITE) ;
     }
 
+    print_log("client", "data sent to the server") ;
+
     // receive server's response
     rc = read(
         sockfd,
@@ -116,6 +126,8 @@ void start_client(char *server_addr, char *server_port, char *intent)
         perror("unable to retrieve response from the server") ;
         exit(TCP_ERROR_READ) ;
     }
+
+    print_log("client", "response received") ;
 
     // TODO: handle response
 
