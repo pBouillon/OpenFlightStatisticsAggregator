@@ -41,20 +41,55 @@ void process_query(int sockfd)
         exit(TCP_ERROR_READ) ;
     }
 
-    // TODO
-    // récupérer juste la partie interessante de la requete: "GET la/requete" -> "larequete"
+    // récupérer juste la partie interessante de la requete: "GET la/requete" -> "la/requete"
+    int i;
+    char *request;
+    for (i = 3; i <= strlen(msg); i++)
+    {
+        request[i-3] = msg[i];
+    }
 
-    // TODO
     // faire le traitement de chaque partie de la requete
     // pour chaque partie entre /
     // mettre la partie dans payload
     // exemple: airport/city
     // donne: payloed = ["airport", "city"]
+    char *tocken = strtok(request, "/") ;
+    i = 0;
+    while(tocken)
+    {
+        payload[i] = tocken ;
+        tocken = strtok(NULL , "/") ;
+        i++ ;
+    }
 
     // TODO
     // selon la requete, assigner une valeur à intent
-    // si airport/... alors intent = INTENT_FETCH
+    // si table/... alors intent = INTENT_FETCH
     // si flight/duration/etc...= INTENT_PATH
+    if (strstr(payload[0], "airport") != NULL)
+    {
+        intent = INTENT_RETRIEVE_AIRPORT ;
+        if (strstr(payload[1], "=") == NULL)
+        {
+            perror("malformated request") ;
+            exit(TCP_ERROR_READ) ;
+        }
+        int j = 0 ;
+        for (i = (strstr(payload[1], "=") + 1); i <= (strlen(payload[1]) - 1); i++)
+        {
+            payload[1][j] = payload[1][i] ;
+            j++ ;
+        }
+    }
+    else if (strstr(payload[0], "flight") != NULL)
+    {
+        intent = INTENT_PATH ;
+    }
+    else
+    {
+        intent = INTENT_FETCH ;
+    }
 
     // process the request
     switch (intent) 
@@ -68,7 +103,9 @@ void process_query(int sockfd)
             // performs on 'flight/duration="shortest",&dest="____"'
             // TODO: dijkstra / a*
             break ;
-        
+        case INTENT_RETRIEVE_AIRPORT:
+            retrieve_airport(rcv_buff, payload[1]) ;
+
         default:
             perror("unable to process the user intent") ;
             exit(SERVER_UNKNOWN_REQ) ; // FIXME: close sockets and connection on exit

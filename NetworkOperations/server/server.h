@@ -5,8 +5,9 @@
 /* --- constants --- */
 
 // user intents
-#define     INTENT_FETCH        1
-#define     INTENT_PATH         2
+#define     INTENT_FETCH            1
+#define     INTENT_PATH             2
+#define     INTENT_RETRIEVE_AIRPORT 3
 
 // server custom errors
 #define     SERVER_UNKNOWN_REQ  1
