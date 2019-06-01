@@ -50,6 +50,7 @@ struct graph* create_graph(struct node* head)
     return &graph ;
 } /* graph */
 
+
 /**
  * \fn add_node
  * \brief add a new node to the graph
