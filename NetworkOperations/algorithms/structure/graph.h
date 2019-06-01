@@ -1,4 +1,9 @@
 #ifndef NETWORKOPERATIONS_GRAPH_H
 #define NETWORKOPERATIONS_GRAPH_H
 
+#define     MAX_GRAPH_CAPACITY      1024
+#define     MAX_CHILREN_CAPACITY    64
+
+#define     VALUE_NOT_SET           -1
+
 #endif //NETWORKOPERATIONS_GRAPH_H
