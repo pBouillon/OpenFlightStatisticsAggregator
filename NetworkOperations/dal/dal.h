@@ -16,5 +16,6 @@
 /* --- methods --- */
 // fetch some rows of a specefic column in a table
 void fetch(char **rcv_buff, char *table, char *column, int limit) ;
+void retrieve_airport (char **rcv_buff, char *restriction) ;
 
 #endif //NETWORKOPERATIONS_DAL_H
