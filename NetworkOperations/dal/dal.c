@@ -70,3 +70,50 @@ void fetch(char **rcv_buff, char *table, char *column, int limit)
     sqlite3_close(db) ;
 } /* fetch */
 
+void RetrieveAirport(char **rcv_buff, char *restriction)
+{
+    int rc ;
+    sqlite3 *db ;
+    char *err_msg = 0 ;
+    char *sql_request ;
+    sqlite3_stmt *stmt ;
+
+    // checking buffer size
+    rc = sizeof(rcv_buff) / sizeof(rcv_buff[0]) ;
+    if (rc > DB_MAX_ROW)
+    {
+        perror("bad buffer provided") ;
+        exit(DB_ERROR_REQUEST) ;
+    }
+
+    // reach the database
+    rc = sqlite3_open(DB_PATH, &db) ;
+
+    if (rc != SQLITE_OK)
+    {
+        perror("unable to reach the database") ;
+        exit(DB_ERROR_CONENCT) ;
+    }
+
+    // prepare the request
+    sql_request = "select a.name from airport a, country c where a.id_country = c.id AND country = '?1';" ;
+    sqlite3_prepare_v2(db, sql_request, -1, &stmt, NULL) ;
+    sqlite3_bind_text(stmt, 1, restriction, -1, SQLITE_STATIC) ;
+
+    // perform the request
+    for (int i = 0; sqlite3_step(stmt) == SQLITE_ROW; ++i)
+    {
+        // copy line result in the return buffer
+        sprintf(
+                rcv_buff[i],
+                "%s",
+                sqlite3_column_text(stmt, 0)
+        ) ;
+    }
+
+    // close the connection
+    sqlite3_finalize(stmt) ;
+    sqlite3_free(err_msg) ;
+    sqlite3_close(db) ;
+} /* fetch */
+
