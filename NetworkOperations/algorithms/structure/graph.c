@@ -3,29 +3,6 @@
 
 #include "graph.h"
 
-/**
- * \struct graph
- * \tparam head graph's first node
- */
-struct graph {
-    int stored_nodes ;
-    struct node* nodes[MAX_GRAPH_CAPACITY] ;
-} ;
-
-/**
- * \struct node
- * \tparam node_id id of the current node
- * \tparam name name of the node
- * \tparam costs array of costs from this node
- * \tparam array of node's children
- */
-struct node {
-    int node_id ;
-    char *name ;
-    int costs[MAX_CHILREN_CAPACITY] ;
-    int children_ids[MAX_CHILREN_CAPACITY] ;
-} ;
-
 
 /**
  * \fn create_graph
