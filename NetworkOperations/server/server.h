@@ -14,6 +14,9 @@
 // default value for empty socket
 #define     SOCKET_NOT_SET      -1
 
+// max message length
+#define     USER_MSG_LEN        256
+#define     USER_SEGMENT_LEN    128
 
 /* --- methods --- */
 // extract and process user's intent

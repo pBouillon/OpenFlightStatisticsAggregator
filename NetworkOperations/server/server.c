@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "server.h"
+#include "../dal/dal.h"
 #include "../log/logger.h"
 #include "../tcp/tcp_errors.h"
 
@@ -20,21 +21,52 @@ void process_query(int sockfd)
 {
     // user intent and query payload
     int intent ;
-    char **payload ;
+    char msg[USER_MSG_LEN] ;
+    char *payload[USER_SEGMENT_LEN] ;
+    char rcv_buff[DB_MAX_ROW][DB_MAX_ROW_LEN] ;
 
-    // parse the request -> strtok
+    // read the user request
+    intent = (sockfd, msg, USER_MSG_LEN - 1) ;
+
+    if (intent < 0)
+    {
+        perror("unable to retrieve user message") ;
+        exit(TCP_ERROR_READ) ;
+    }
+
+    // parse the request
+    if ( strstr(msg, "GET ") == NULL)
+    {
+        perror ("malformated request") ;
+        exit(TCP_ERROR_READ) ;
+    }
+
     // TODO
+    // récupérer juste la partie interessante de la requete: "GET la/requete" -> "larequete"
 
+    // TODO
+    // faire le traitement de chaque partie de la requete
+    // pour chaque partie entre /
+    // mettre la partie dans payload
+    // exemple: airport/city
+    // donne: payloed = ["airport", "city"]
+
+    // TODO
+    // selon la requete, assigner une valeur à intent
+    // si airport/... alors intent = INTENT_FETCH
+    // si flight/duration/etc...= INTENT_PATH
+
+    // process the request
     switch (intent) 
     {
         case INTENT_FETCH:
             // performed on 'table/column/nb'
-            // TODO
+            fetch(rcv_buff, payload[0], payload[1], atoi(payload[2])) ;
             break ;
         
         case INTENT_PATH:
             // performs on 'flight/duration="shortest",&dest="____"'
-            // TODO
+            // TODO: dijkstra / a*
             break ;
         
         default:
@@ -42,38 +74,6 @@ void process_query(int sockfd)
             exit(SERVER_UNKNOWN_REQ) ; // FIXME: close sockets and connection on exit
     }
 } /* extract_query */
-
-/**
- * TODO
- */
-void read_cli(int sockfd)
-{
-    int nrcv, nsnd ;
-    char msg[200] ;
-
-    memset((void *)  msg, 0, sizeof(msg) ) ;
-    if ( (nrcv= read ( sockfd, msg, sizeof(msg)-1) ) < 0 )  {
-        printf ("read error on socket") ;
-        exit (TCP_ERROR_READ) ;
-    }
-
-    msg[nrcv]='\0';
-    printf ("servselect :message recu=%s nombre octets recus = %d \n",msg,nrcv) ;
-    char *tocken = strtok(msg, "/") ;
-    while (tocken)
-    {
-        puts(tocken) ;
-        tocken = strtok(NULL, "/") ;
-    }
-
-
-    if ( (nsnd = write (sockfd, msg, nrcv) ) <0 ) {
-        printf ("servselect : write error on socket") ;
-        exit(-1) ;
-    }
-    printf ("nsnd = %d \n", nsnd) ;
-    exit(nsnd) ;
-}
 
 
 /**
@@ -255,7 +255,7 @@ void start_server(int port)
                         print_log("server", "communication received") ;
 
                         // handle client request
-                        read_cli(sockfd) ;
+                        process_query(sockfd) ;
 
                         close(client_sock) ;
                         clients_tab[i] = SOCKET_NOT_SET ;
