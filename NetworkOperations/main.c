@@ -6,7 +6,7 @@
 
 
 #define     ARGS_REQUIRED           2
-#define     MODE                    2
+#define     MODE                    1
 
 #define     SERVER_ARGS_EXPECTED    3
 #define     SERVER_MODE             1
@@ -35,7 +35,7 @@
  */
 void show_header()
 {
-    printf("%s\n", TEXT_INTRO) ;
+    printf("%s\n\n", TEXT_INTRO) ;
 } /* show_header */
 
 
@@ -50,8 +50,8 @@ void show_help()
     printf("\t- %d: server mode\n", SERVER_MODE) ;
     printf("\t- %d: client mode\n", CLIENT_MODE) ;
     printf("usage per mode:\n") ;
-    printf("\tserver: ./main serv_addr\n") ;
-    printf("\tclient: ./main client_addr client_port request\n") ;
+    printf("\tserver: ./main server_port\n") ;
+    printf("\tclient: ./main client_addr client_port request\n\n") ;
 } /* show_help */
 
 

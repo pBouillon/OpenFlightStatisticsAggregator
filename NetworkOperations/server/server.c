@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 #include "server.h"
+#include "../log/logger.h"
 #include "../tcp/tcp_errors.h"
 
 /**
@@ -42,6 +43,9 @@ void process_query(int sockfd)
     }
 } /* extract_query */
 
+/**
+ * TODO
+ */
 void read_cli(int sockfd)
 {
     int nrcv, nsnd ;
@@ -90,13 +94,13 @@ void start_server(int port)
 
     int nb_fd ;
 
-    // TODO
+    // TODO: doc
     int fd_index ;
 
-    // TODO
+    // TODO: doc
     int max_sockfd, min_sockfd ;
 
-    // TODO
+    // TODO: doc
     socklen_t clilen ;
 
     struct sockaddr_in cli_addr ;
@@ -124,6 +128,8 @@ void start_server(int port)
         exit(TCP_ERROR_SOCKET) ;
     }
 
+    print_log("server", "socket created") ;
+
     // initialize the server structure
     memset(
         (char*) &serv_addr,
@@ -150,6 +156,8 @@ void start_server(int port)
         exit(TCP_ERROR_BIND) ;
     }
 
+    print_log("server", "socket server binded") ;
+
     // initializing stored socket fd
     for (i = 0; i < FD_SETSIZE; ++i)
     {
@@ -164,6 +172,7 @@ void start_server(int port)
     min_sockfd = -1 ;
 
     // listening to connections
+    print_log("server", "started polling") ;
     if (listen(sockfd, SOMAXCONN) < 0)
     {
         perror("unable to perform listen") ;
@@ -199,7 +208,7 @@ void start_server(int port)
 
             if (new_sockfd < 0)
             {
-                perror("unable to accept the incomming connection") ;
+                perror("unable to accept the incoming connection") ;
                 exit(TCP_ERROR_ACCEPT) ;
             }
 
@@ -243,6 +252,8 @@ void start_server(int port)
                     if (client_sock >= 0
                         && FD_ISSET(client_sock, &all_set))
                     {
+                        print_log("server", "communication received") ;
+
                         // handle client request
                         read_cli(sockfd) ;
 
