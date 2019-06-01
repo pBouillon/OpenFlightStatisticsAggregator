@@ -70,7 +70,10 @@ void fetch(char **rcv_buff, char *table, char *column, int limit)
     sqlite3_close(db) ;
 } /* fetch */
 
-void RetrieveAirport(char **rcv_buff, char *restriction)
+/**
+ * TODO: doc
+ */
+void retrieve_airport(char **rcv_buff, char *restriction)
 {
     int rc ;
     sqlite3 *db ;
