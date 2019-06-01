@@ -26,7 +26,7 @@ void process_query(int sockfd)
     char rcv_buff[DB_MAX_ROW][DB_MAX_ROW_LEN] ;
 
     // read the user request
-    intent = (sockfd, msg, USER_MSG_LEN - 1) ;
+    intent = read(sockfd, msg, USER_MSG_LEN - 1) ;
 
     if (intent < 0)
     {
@@ -35,9 +35,9 @@ void process_query(int sockfd)
     }
 
     // parse the request
-    if ( strstr(msg, "GET ") == NULL)
+    if (strstr(msg, "GET ") == NULL)
     {
-        perror ("malformated request") ;
+        perror("malformated request") ;
         exit(TCP_ERROR_READ) ;
     }
 
