@@ -250,7 +250,10 @@ void start_server(int port)
             }
 
             // add the client to the known clients
-            for (i = 0; i < FD_SETSIZE && clients_tab[i] >= 0; ++i) { } ;
+            i = 0 ;
+            while(i < FD_SETSIZE  && clients_tab[i] >= 0){
+                i++ ;
+            }
             
             if (i == FD_SETSIZE)
             {
@@ -271,7 +274,7 @@ void start_server(int port)
                 --fd_index ;
             }
 
-            for (i = 0; fd_index > 0 && i < min_sockfd; ++i)
+            for (i = 0; fd_index > 0 && i < min_sockfd; i++)
             {
                 client_sock = clients_tab[i] ;
 
@@ -282,7 +285,7 @@ void start_server(int port)
                     --fd_index ;
                 }
 
-                for (i = 0; fd_index > 0 && i < min_sockfd; ++i)
+                for (i = 0; fd_index > 0 && i < min_sockfd; i++)
                 {
                     client_sock = clients_tab[i] ;
 

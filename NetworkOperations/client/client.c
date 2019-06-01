@@ -16,6 +16,7 @@
 
 /* EXIT constants */
 #include <stdlib.h>
+#include <netdb.h>
 
 /* custom imports */
 #include "client.h"
@@ -38,6 +39,7 @@ void start_client(char *server_addr, char *server_port, char *intent)
     // server IP on 32 bits
     struct in_addr serv_addr ;
 
+    struct hostent *hp ;
     // communication utility
     socklen_t addrlen ;
     char response_buffer[RESPONSE_BUFFER_LEN] ;
@@ -73,13 +75,13 @@ void start_client(char *server_addr, char *server_port, char *intent)
     serv_in.sin_family = AF_INET ;
     serv_in.sin_port = htons(atoi(server_port)) ;
 
-    rc = inet_aton(server_addr, &serv_addr) ;
-    if (rc < 0)
+    hp = (struct hostent *)gethostbyname (server_addr) ;
+    if (hp == NULL)
     {
         perror("invalid IP address") ;
         exit (TCP_ERROR_INET_ATON) ;
     }
-    serv_in.sin_addr = serv_addr ;
+    serv_in.sin_addr = * ((struct in_addr *)(hp->h_addr)) ;
 
     print_log("client", "initializing server's information") ;
 
