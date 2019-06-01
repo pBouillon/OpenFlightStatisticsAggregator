@@ -10,11 +10,11 @@
 """
 from typing import List
 
-from resources.algorithms.utils.graph import Graph
+from resources.algorithms.dijkstra.graph import Graph
 
 
 def get_default_graph() -> Graph:
-    """Generate a basic graph to work with
+    """Generate a basic structures to work with
 
     Representation:
 
@@ -26,7 +26,7 @@ def get_default_graph() -> Graph:
           6 \ ____ B ___ / 2
 
 
-    :return: the generated graph
+    :return: the generated structures
     """
     graph = Graph()
     graph.set_distance('s', {'A': 3, 'B': 6})
@@ -39,7 +39,7 @@ def get_default_graph() -> Graph:
 def dijkstra(graph: Graph, source: str, target: str) -> List[str]:
     """Find the shortest path between `source` and `target`
 
-    :param graph: the graph to work on
+    :param graph: the structures to work on
     :param source: the source node
     :param target: the target node
     :return: a list of the edges from the `source` to the `target` resulting in
@@ -98,7 +98,7 @@ def main():
     graph = get_default_graph()
     shortest_path = dijkstra(graph, 's', 't')
 
-    print(f'working with the graph:\n\t{graph}')
+    print(f'working with the structures:\n\t{graph}')
     print(f'shortest path:\n\t{shortest_path}')
 
 
