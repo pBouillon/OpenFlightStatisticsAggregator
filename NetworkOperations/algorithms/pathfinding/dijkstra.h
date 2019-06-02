@@ -4,8 +4,12 @@
 #include "../structure/graph.h"
 
 int a_star() ;
-int dijkstra(struct graph* graph) ;
-int get_shortest_path(int algorithm, struct graph* graph) ;
+int dijkstra(
+    int* path_ids,
+    struct graph* graph,
+    struct node* source,
+    struct node* dest
+) ;
 int is_node_non_explored(int *nodes_status) ;
 
 #endif //NETWORKOPERATIONS_DIJKSTRA_H
