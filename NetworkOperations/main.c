@@ -13,7 +13,7 @@
 #define     SERVER_PORT             2
 
 #define     CLIENT_ADDR             2
-#define     CLIENT_ARGS_EXPECTED    4
+#define     CLIENT_ARGS_EXPECTED    5
 #define     CLIENT_MODE             2
 #define     CLIENT_PORT             3
 #define     CLIENT_REQ              4

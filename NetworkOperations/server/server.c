@@ -290,26 +290,16 @@ void start_server(int port)
                 {
                     max_sockfd =  new_sockfd + 1 ;
                     --fd_index ;
-                }
+                    print_log("server", "communication received") ;
 
-                for (i = 0; fd_index > 0 && i < min_sockfd; i++)
-                {
-                    client_sock = clients_tab[i] ;
+                    // handle client request
+                    process_query(sockfd) ;
 
-                    if (client_sock >= 0
-                        && FD_ISSET(client_sock, &all_set))
-                    {
-                        print_log("server", "communication received") ;
+                    close(client_sock) ;
+                    clients_tab[i] = SOCKET_NOT_SET ;
+                    FD_CLR(client_sock, &read_set) ;
 
-                        // handle client request
-                        process_query(sockfd) ;
-
-                        close(client_sock) ;
-                        clients_tab[i] = SOCKET_NOT_SET ;
-                        FD_CLR(client_sock, &read_set) ;
-
-                        --fd_index ;
-                    }
+                    --fd_index ;
                 }
             }
         }
