@@ -16,10 +16,10 @@
  * \return the total cost from `source` to `dest`
  */
 int dijkstra(
-    int* path_ids,
-    struct graph* graph,
-    struct node* source,
-    struct node* dest
+        int* path_ids,
+        struct graph* graph,
+        struct node* source,
+        struct node* dest
 )
 {
     int cpt = 0 ;
@@ -32,7 +32,7 @@ int dijkstra(
 
     int current_node ;
     int new_distance ;
-    int* node_children ;
+    int* child_node ;
 
     // if there is no need to run the algorithm, return 0
     if (source->node_id == dest->node_id)
@@ -68,19 +68,21 @@ int dijkstra(
             // remove this node to explore
             is_node_explored[i] = TRUE ;
 
-            // update costs
-            node_children = graph->nodes[i]->children_ids ;
-            while (node_children)
+            // update costs for all connected nodes
+            child_node = graph->nodes[i]->children_ids ;
+            while (child_node)
             {
-                // TODO
-                // new_distance = distance[current_node] + dist[current -> child]
+                new_distance =
+                        cost_from_source[current_node]
+                        + get_cost(graph, current_node, *child_node) ;
 
-                // TODO
-                // if new_distance < current_dist[child]:
-                //     current_dist[child] = new_distance
-                //     ancestor[child] = current
+                if (new_distance < cost_from_source[*child_node])
+                {
+                    cost_from_source[*child_node] = new_distance ;
+                    ancestor_id[*child_node] = current_node ;
+                }
 
-                ++node_children ;
+                ++child_node ;
             }
         }
     }
@@ -144,15 +146,14 @@ int get_cost(struct graph* g, int from_id, int to_id)
  * \fn is_node_non_explored
  * \brief evaluate if there is any non-explored node
  *
- * \return 1 (TRUE) if it remains at least one node non-explored
+ * \return 1 (TRUE) if it remains at least one node non-explored;
  *         0 (FALSE) otherwise
  */
 int is_node_non_explored(int *nodes_status)
 {
     while (nodes_status)
     {
-        if (*nodes_status == TRUE)
-        {
+        if (*nodes_status == TRUE) {
             return TRUE ;
         }
         ++nodes_status ;
