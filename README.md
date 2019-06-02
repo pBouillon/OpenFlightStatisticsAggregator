@@ -180,8 +180,7 @@ But: _Par pays, la liste des compagnies qui sont présentes dans tous les aérop
 
 Requête:  
 
-```sql
-```
+_Non réalisée_
 
 ## Partie II: communication C
 
