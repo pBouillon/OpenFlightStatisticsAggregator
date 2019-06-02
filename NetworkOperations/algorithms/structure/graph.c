@@ -37,7 +37,12 @@ struct graph* create_graph(struct node* head)
  * \param father father of the child to add
  * \param cost cost of the edge from father to child
  */
-void add_node(struct graph* graph, struct node *child, struct node *father, int cost, int heuristique)
+void add_node(
+    struct graph* graph,
+    struct node *child,
+    struct node *father,
+    int cost
+)
 {
     // register the node in the graph
     child->node_id = graph->stored_nodes++ ;

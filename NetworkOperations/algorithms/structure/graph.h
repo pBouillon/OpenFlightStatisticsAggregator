@@ -32,5 +32,15 @@ struct node {
     int children_ids[MAX_CHILREN_CAPACITY] ;
 } ;
 
+// add a node to an existing graph
+void add_node(
+    struct graph *graph,
+    struct node *child,
+    struct node *father,
+    int cost
+) ;
+
+// create a new graph containing one node
+struct graph *create_graph(struct node *head) ;
 
 #endif //NETWORKOPERATIONS_GRAPH_H
