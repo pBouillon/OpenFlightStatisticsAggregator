@@ -40,6 +40,15 @@ int dijkstra(
         return total_cost ;
     }
 
+    // clear destination buffer using a non-used available variable
+    child_node = path_ids ;
+    while (child_node)
+    {
+        *child_node = VALUE_NOT_SET ;
+        ++child_node ;
+    }
+    
+
     // initializing the open set to all nodes and cost to inf
     for (int i = 0; i < sizeof(open_set); ++i)
     {
