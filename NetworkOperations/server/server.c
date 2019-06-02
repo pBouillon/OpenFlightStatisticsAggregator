@@ -135,7 +135,7 @@ void start_server(int port)
     int fd_index ;
 
     // TODO: doc
-    int max_sockfd, min_sockfd ;
+    int len, max_sockfd, min_sockfd ;
 
     // TODO: doc
     socklen_t clilen ;
@@ -194,6 +194,11 @@ void start_server(int port)
     }
 
     print_log("server", "socket server binded") ;
+
+    if (getsockname (sockfd,(struct sockaddr *) &serv_addr,&len) == -1)
+        perror("error while retrieving the port");
+
+    printf("\tPort: %d\n",ntohs(serv_addr.sin_port));
 
     // initializing stored socket fd
     for (i = 0; i < FD_SETSIZE; ++i)
