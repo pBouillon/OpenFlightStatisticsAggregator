@@ -101,13 +101,15 @@ int dijkstra(
  * \fn is_node_non_explored
  * \brief evaluate if there is any non-explored node
  *
- * \return 1 (TRUE) if no nodes are explored; 0 otherwise (FALSE)
+ * \return 1 (TRUE) if it remains at least one node non-explored
+ *         0 (FALSE) otherwise
  */
 int is_node_non_explored(int *nodes_status)
 {
     while (nodes_status)
     {
-        if (*nodes_status == TRUE) {
+        if (*nodes_status == TRUE)
+        {
             return TRUE ;
         }
         ++nodes_status ;
