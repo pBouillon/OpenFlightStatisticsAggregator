@@ -17,7 +17,7 @@
  * 
  * \param sockfd dialog socket
  */
-void process_query(int sockfd)
+void process_query(int client_sock)
 {
     // user intent and query payload
     int intent ;
@@ -26,7 +26,7 @@ void process_query(int sockfd)
     char rcv_buff[DB_MAX_ROW][DB_MAX_ROW_LEN] ;
 
     // read the user request
-    intent = read(sockfd, msg, USER_MSG_LEN - 1) ;
+    intent = read(client_sock, msg, USER_MSG_LEN - 1) ;
 
     if (intent < 0)
     {
@@ -43,7 +43,7 @@ void process_query(int sockfd)
 
     // récupérer juste la partie interessante de la requete: "GET la/requete" -> "la/requete"
     int i;
-    char *request;
+    char request[strlen(msg) - 3];
     for (i = 3; i <= strlen(msg); i++)
     {
         request[i-3] = msg[i];
@@ -75,12 +75,10 @@ void process_query(int sockfd)
             perror("malformated request") ;
             exit(TCP_ERROR_READ) ;
         }
-        int j = 0 ;
-        for (i = (strstr(payload[1], "=") + 1); i <= (strlen(payload[1]) - 1); i++)
-        {
-            payload[1][j] = payload[1][i] ;
-            j++ ;
-        }
+        tocken = strtok(payload[1], "=") ;
+        tocken = strtok(NULL , "=") ;
+        payload[1] = tocken ;
+
     }
     else if (strstr(payload[0], "flight") != NULL)
     {
@@ -90,6 +88,8 @@ void process_query(int sockfd)
     {
         intent = INTENT_FETCH ;
     }
+    char country[strlen(payload[1]) - 8] ;
+
 
     // process the request
     switch (intent) 
@@ -100,10 +100,11 @@ void process_query(int sockfd)
             break ;
         
         case INTENT_PATH:
-            // performs on 'flight/duration="shortest",&dest="____"'
-            // TODO: dijkstra / a*
+            // performs on 'flight/source/destination'
+            shortest_path(rcv_buff,payload[1],payload[2]) ;
             break ;
         case INTENT_RETRIEVE_AIRPORT:
+
             retrieve_airport(rcv_buff, payload[1]) ;
 
         default:
@@ -293,7 +294,7 @@ void start_server(int port)
                     print_log("server", "communication received") ;
 
                     // handle client request
-                    process_query(sockfd) ;
+                    process_query(client_sock) ;
 
                     close(client_sock) ;
                     clients_tab[i] = SOCKET_NOT_SET ;

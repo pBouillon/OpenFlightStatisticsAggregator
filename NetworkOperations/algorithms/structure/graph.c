@@ -14,7 +14,6 @@ struct graph* create_graph(struct node* head)
 {
     struct graph* graph = (struct graph*) malloc(sizeof(struct graph)) ;
 
-    head->node_id = 0 ;
     for (int i = 0; i < MAX_CHILREN_CAPACITY; ++i)
     {
         head->children_ids[i] = VALUE_NOT_SET ;
@@ -44,7 +43,6 @@ void add_node(
 )
 {
     // register the node in the graph
-    child->node_id = graph->stored_nodes++ ;
     graph->nodes[graph->stored_nodes] = child ;
 
     // initialize the child node
