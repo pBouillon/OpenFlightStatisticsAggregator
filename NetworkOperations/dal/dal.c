@@ -202,7 +202,7 @@ void shortest_path(char **rcv_buff, char *source, char *destination)
     char *sql_request ;
     sqlite3_stmt *stmt ;
     struct graph* graph ;
-    struct node* src, dest ;
+    struct node *src, *dest ;
 
 
 
@@ -258,7 +258,31 @@ void shortest_path(char **rcv_buff, char *source, char *destination)
     graph = create_graph(src) ;
     node[0] = atoi(rcv_buff[0]) ;
     add_child(atoi(rcv_buff[0]), atof(rcv_buff[1]), atof(rcv_buff[2]), graph, &node, 1) ;
-    d
+
+    // prepare the request
+    sql_request = "select a.id from airport a where a.name = '?1';" ;
+    sqlite3_prepare_v2(db, sql_request, -1, &stmt, NULL) ;
+    sqlite3_bind_text(stmt, 1, destination, -1, SQLITE_STATIC) ;
+
+    if(sqlite3_step(stmt) != 1)
+    {
+        perror("bad source") ;
+        exit(DB_ERROR_CONENCT) ;
+    }
+
+    // copy line result in the return buffer
+    sprintf(
+            rcv_buff[0],
+            "%s",
+            sqlite3_column_text(stmt, 0)
+    ) ;
+
+    // close the connection
+    sqlite3_finalize(stmt) ;
+    sqlite3_free(err_msg) ;
+    dest->node_id = atoi(rcv_buff[0]);
+
+    dijkstra(NULL, graph, src, dest) ;
 
     sqlite3_close(db) ;
 
