@@ -182,3 +182,23 @@ Requête:
 
 ```sql
 ```
+
+## Partie II: communication C
+
+### Installation
+
+Se rendre dans la partie du projet correspondante, et executer le `Makefile`.
+
+
+### Organisation du projet
+
+- `main.c` sert de point d'accès à cette partie du projet
+- `dal/` regroupe les outils de communication avec la base de données
+- `tcp/` regroupe des valeurs remarquables utilisées dans le projet (pour les erreurs par exemple)
+- `log/` regroupe les outils permettant de logger des valeurs ou textes dans la console
+- `client/` et `server/` regroupent la logique propre à chaque membre destiné à communiquer sur le réseau
+- `algorithms/` regroupe la structure de graph utilisée ainsi que les outils qui l'accompagne; mais aussi l'implémentation de _a\*_ et _dijkstra_
+
+## Partie III:
+
+_non communiquée_
