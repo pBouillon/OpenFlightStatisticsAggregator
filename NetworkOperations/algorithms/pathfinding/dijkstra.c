@@ -98,6 +98,49 @@ int dijkstra(
 
 
 /**
+ * \fn get_cost
+ * \brief get the cost from a node to another
+ *
+ * \param g graph in which perform the search
+ * \param from_id id of the source node
+ * \param to id of the target node
+ * \return the cost between `from_id` and `to_id` if exists
+ *         else -1 (VALUE_NOT_SET)
+ */
+int get_cost(struct graph* g, int from_id, int to_id)
+{
+    int cost = VALUE_NOT_SET ;
+    int total_nodes = g->stored_nodes ;
+
+    // if these nodes are not in range, return an error
+    if (from_id >= total_nodes
+        || to_id >= total_nodes)
+    {
+        return cost ;
+    }
+
+    // looking for the destination
+    struct node* from_node = g->nodes[from_id] ;
+    for (int i = 0; i < sizeof(from_node->children_ids); ++i)
+    {
+        // if this children is not the one we are looking for, continue
+        if (from_node->children_ids[i] != to_id)
+        {
+            continue ;
+        }
+
+        // on the correct child, get its cost
+        cost = from_node->costs[i] ;
+
+        // exit the search
+        break ;
+    }
+
+    return cost ;
+} /* get_cost */
+
+
+/**
  * \fn is_node_non_explored
  * \brief evaluate if there is any non-explored node
  *
